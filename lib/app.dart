@@ -1,5 +1,4 @@
 import 'package:emprestapro/common/constants/routes.dart';
-import 'package:emprestapro/features/home/home_page.dart';
 import 'package:emprestapro/features/home/home_page_view.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/features/sign_up/sign_up_page.dart';

@@ -12,6 +12,8 @@ class EvolutionContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 100,
+      height: 25,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
@@ -28,7 +30,7 @@ class EvolutionContainer extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              '$value%',
+              '${value.toStringAsFixed(2)}%',
               style: TextStyle(
                 color:
                     value > 0 ? AppColors.primaryGreen : AppColors.primaryRed,

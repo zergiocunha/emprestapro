@@ -1,8 +1,7 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/widgets/custom_bottom_app_bar.dart';
-import 'package:emprestapro/common/widgets/custom_floating_action_button.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
-import 'package:emprestapro/features/home/home_page.dart';
+import 'package:emprestapro/features/home/loans_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/features/sign_up/sign_up_page.dart';
 import 'package:emprestapro/locator.dart';
@@ -16,7 +15,7 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  final homeController = locator.get<HomeController>();
+  final homeController = locator.get<LoansController>();
 
   @override
   void initState() {
@@ -26,7 +25,7 @@ class _HomePageViewState extends State<HomePageView> {
 
   @override
   void dispose() {
-    locator.resetLazySingleton<HomeController>();
+    locator.resetLazySingleton<LoansController>();
     super.dispose();
   }
 
@@ -39,7 +38,7 @@ class _HomePageViewState extends State<HomePageView> {
         physics: const NeverScrollableScrollPhysics(),
         controller: homeController.pageController,
         children: const [
-          HomePage(),
+          LoansPage(),
           SignUpPage(),
           SignInPage(),
         ],
