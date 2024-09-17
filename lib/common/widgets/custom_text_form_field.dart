@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class CutomTextFormField extends StatefulWidget {
   final String? labelText;
   final String? hintText;
+  final Color? fillColor;
 
   const CutomTextFormField({
     super.key,
     this.labelText,
     this.hintText,
+    this.fillColor,
   });
 
   @override
@@ -18,27 +20,28 @@ class CutomTextFormField extends StatefulWidget {
 class _CutomTextFormFieldState extends State<CutomTextFormField> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 24,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: widget.labelText,
-              labelStyle: const TextStyle(color: AppColors.secoundaryText),
-              hintText: widget.hintText,
-              hintStyle: const TextStyle(color: AppColors.secoundaryText),
-              filled: true,
-              fillColor: AppColors.secoundaryBackground,
-              border: const OutlineInputBorder(borderSide: BorderSide.none),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            labelStyle: const TextStyle(color: AppColors.secoundaryText),
+            alignLabelWithHint: true,
+            hintText: widget.hintText,
+            hintStyle: const TextStyle(color: AppColors.secoundaryText),
+            filled: true,
+            fillColor: widget.fillColor ?? AppColors.secoundaryBackground,
+            border: const OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.all(
+                Radius.circular(30),
+              ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

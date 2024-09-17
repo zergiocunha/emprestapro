@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get_it: ^7.7.0
 
 dev_dependencies:
   flutter_test:
@@ -21,3 +22,6 @@ flutter:
   assets:
     - assets/images/logo_nome.png
     - assets/images/chart.png
+    - assets/images/black_cilinder.png
+    - assets/images/orange_cilinder.png
+    - assets/images/black_circle.png
