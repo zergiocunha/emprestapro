@@ -1,4 +1,4 @@
-package com.example.emprestapro
+package empresta.pro
 
 import io.flutter.embedding.android.FlutterActivity
 
