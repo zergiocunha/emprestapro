@@ -1,0 +1,4 @@
+enum UserType {
+  creditor,
+  consumer,
+}
