@@ -18,7 +18,7 @@ class EvolutionContainer extends StatelessWidget {
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
         ),
-        color: value > 0 ? AppColors.secundaryGreen : AppColors.secondaryRed,
+        color: value >= 0 ? AppColors.secundaryGreen : AppColors.secondaryRed,
       ),
       child: Padding(
         padding: const EdgeInsets.only(
@@ -33,13 +33,13 @@ class EvolutionContainer extends StatelessWidget {
               '${value.toStringAsFixed(2)}%',
               style: TextStyle(
                 color:
-                    value > 0 ? AppColors.primaryGreen : AppColors.primaryRed,
+                    value >= 0 ? AppColors.primaryGreen : AppColors.primaryRed,
               ),
             ),
             const SizedBox(width: 5),
             Icon(
-              value > 0 ? Icons.trending_up : Icons.trending_down,
-              color: value > 0 ? AppColors.primaryGreen : AppColors.primaryRed,
+              value >= 0 ? Icons.trending_up : Icons.trending_down,
+              color: value >= 0 ? AppColors.primaryGreen : AppColors.primaryRed,
             ),
           ],
         ),

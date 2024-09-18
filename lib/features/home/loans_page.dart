@@ -19,11 +19,14 @@ class _LoansPageState extends State<LoansPage>
     super.initState();
   }
 
+  double evolutionCalc(double amountCredit, double amountDividend) {
+    return (amountDividend / amountCredit) * 100;
+  }
+
   @override
   Widget build(BuildContext context) {
     const double amountCredit = 12583;
-    const double amountDividend = 1885.45;
-    const double evolution = (amountDividend / amountCredit) * 100;
+    const double amountDividend = 1000;
     final DateTime lastLoanDate = DateTime.now();
     final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
@@ -76,8 +79,11 @@ class _LoansPageState extends State<LoansPage>
                 LoansInformationContainers(
                   amountCredit: amountCredit,
                   lastLoanDate: lastLoanDate,
-                  amountDividend: amountCredit,
-                  evolution: evolution,
+                  amountDividend: amountDividend,
+                  evolution: evolutionCalc(
+                    amountCredit,
+                    amountDividend,
+                  ),
                 ),
               ],
             ),
@@ -116,8 +122,9 @@ class LoansInformationContainers extends StatelessWidget {
         LoansInformationContainer(
           containerName: 'Dividendo',
           amount: amountDividend,
-          amountColor:
-              amountCredit > 0 ? AppColors.primaryGreen : AppColors.primaryRed,
+          amountColor: amountDividend >= 0
+              ? AppColors.primaryGreen
+              : AppColors.primaryRed,
           secondaryName: 'Evolução',
           secondaryWidget: EvolutionContainer(
             value: evolution,

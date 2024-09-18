@@ -14,9 +14,4 @@ class LoansController extends ChangeNotifier {
   set setPageController(PageController newPageController) {
     _pageController = newPageController;
   }
-
-  void _changeState(LoansState newState) {
-    _state = newState;
-    notifyListeners();
-  }
 }
