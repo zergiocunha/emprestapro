@@ -1,7 +1,7 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/widgets/custom_bottom_app_bar.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
-import 'package:emprestapro/features/home/loans_page.dart';
+import 'package:emprestapro/features/loans/loans_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/features/sign_up/sign_up_page.dart';
 import 'package:emprestapro/locator.dart';
@@ -15,7 +15,7 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  final homeController = locator.get<LoansController>();
+  final homeController = locator.get<HomeController>();
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _HomePageViewState extends State<HomePageView> {
 
   @override
   void dispose() {
-    locator.resetLazySingleton<LoansController>();
+    locator.resetLazySingleton<HomeController>();
     super.dispose();
   }
 

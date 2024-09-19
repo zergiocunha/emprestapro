@@ -1,6 +1,13 @@
+// ignore_for_file: type_literal_in_constant_pattern, use_build_context_synchronously
+
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/constants/routes.dart';
+import 'package:emprestapro/common/utils.dart/validator.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/features/sign_up/sign_up_controller.dart';
+import 'package:emprestapro/features/sign_up/sign_up_state.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -10,38 +17,44 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
+class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _signUpController = locator.get<SignUpController>();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _signUpController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-
-    _animation = Tween<double>(
-      begin: 200, // Início fora da tela (ou abaixo da tela)
-      end: 0, // Posição original
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-
-    // Iniciar a animação ao abrir o widget
-    _controller.forward();
+    _signUpController.addListener(_handleSignUpstateChange);
+    _signUpController.setPageController = PageController();
   }
 
-  @override
-  void dispose() {
-    // Libera o AnimationController imediatamente
-    _controller.dispose();
-
-    // Certifica-se de chamar o super.dispose() diretamente
-    super.dispose();
+  void _handleSignUpstateChange() {
+    final state = _signUpController.state;
+    switch (state.runtimeType) {
+      case SignUpLoadingState:
+        showDialog(
+          context: context,
+          builder: (context) => const CircularProgressIndicator(),
+        );
+        break;
+      case SignUpSuccessState:
+        break;
+      case SignUpErrorState:
+        Navigator.pop(context);
+        break;
+    }
   }
 
   @override
@@ -94,91 +107,108 @@ class _SignUpPageState extends State<SignUpPage>
             left: 0,
             right: 0,
             bottom: 0,
-            child: AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(0, _animation.value),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Form(
+                      key: _formKey,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Form(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 32),
-                                CutomTextFormField(
-                                  labelText: 'Nome',
-                                  hintText: 'Seu nome',
-                                  fillColor: AppColors.secoundaryBackground,
-                                ),
-                                SizedBox(height: 16),
-                                CutomTextFormField(
-                                  labelText: 'Email',
-                                  hintText: 'Seu email',
-                                  fillColor: AppColors.secoundaryBackground,
-                                ),
-                                SizedBox(height: 16),
-                                CutomTextFormField(
-                                  labelText: 'Escolha uma senha',
-                                  hintText: 'Escolha uma senha',
-                                  fillColor: AppColors.secoundaryBackground,
-                                ),
-                                SizedBox(height: 16),
-                                CutomTextFormField(
-                                  labelText: 'Confirme a senha',
-                                  hintText: 'Confirme a senha',
-                                  fillColor: AppColors.secoundaryBackground,
-                                ),
-                                SizedBox(height: 16),
-                                CustomElevatedButtom(
-                                  label: 'Cadastrar',
-                                  size: 200,
-                                ),
-                              ],
+                          const SizedBox(height: 32),
+                          CutomTextFormField(
+                            controller: _nameController,
+                            labelText: 'Nome',
+                            hintText: 'Seu nome',
+                            fillColor: AppColors.secoundaryBackground,
+                            validator: Validator.validateName,
+                          ),
+                          const SizedBox(height: 16),
+                          CutomTextFormField(
+                            controller: _emailController,
+                            labelText: 'Email',
+                            hintText: 'Seu email',
+                            fillColor: AppColors.secoundaryBackground,
+                            validator: Validator.validateEmail,
+                          ),
+                          const SizedBox(height: 16),
+                          CutomTextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            labelText: 'Escolha uma senha',
+                            hintText: '********',
+                            fillColor: AppColors.secoundaryBackground,
+                            validator: Validator.validatePassword,
+                          ),
+                          const SizedBox(height: 16),
+                          CutomTextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            labelText: 'Confirme a senha',
+                            hintText: '********',
+                            fillColor: AppColors.secoundaryBackground,
+                            validator: (value) =>
+                                Validator.validatePasswordConfirmation(
+                              value,
+                              _passwordController.text,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 16,
-                              bottom: 64,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _controller.reverse().then((_) {
-                                        Navigator.pop(context);
-                                      });
-                                    },
-                                    child: const Text(
-                                      'Já possui uma conta?',
-                                      style: TextStyle(
-                                          color: AppColors.secoundaryText),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                          const SizedBox(height: 16),
+                          CustomElevatedButtom(
+                            label: 'Cadastrar',
+                            size: 200,
+                            onPressed: () async {
+                              final valid = _formKey.currentState != null &&
+                                  _formKey.currentState!.validate();
+                              if (valid) {
+                                await _signUpController.signUp(
+                                  name: _nameController.text,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                );
+                                Navigator.popAndPushNamed(
+                                  context,
+                                  NamedRoute.home,
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                        bottom: 64,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Já possui uma conta?',
+                              style: TextStyle(color: AppColors.secoundaryText),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                );
-              },
+                  ],
+                ),
+              ),
             ),
           ),
         ],

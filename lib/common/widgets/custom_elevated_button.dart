@@ -5,11 +5,13 @@ class CustomElevatedButtom extends StatefulWidget {
   final String label;
   final Color? backgroundColor;
   final double? size;
+  final VoidCallback? onPressed;
 
   const CustomElevatedButtom({
     super.key,
     required this.label,
     this.backgroundColor,
+    this.onPressed,
     this.size,
   });
 
@@ -21,14 +23,10 @@ class _CustomElevatedButtomState extends State<CustomElevatedButtom> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: widget.onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: widget.backgroundColor ?? AppColors.primaryGreen,
         minimumSize: Size(widget.size ?? 120, 50),
-        // padding: const EdgeInsets.symmetric(horizontal: 16),
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.all(Radius.circular(30)),
-        // ),
       ),
       child: Text(
         widget.label,

@@ -1,23 +1,21 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirestoreService() : _db = FirebaseFirestore.instance;
 
-  Future<void> addUser(String id, Map<String, dynamic> userData) async {
-    try {
-      await _db.collection('users').doc(id).set(userData);
-    } catch (e) {
-      print('Error adding user: $e');
-    }
-  }
+  final FirebaseFirestore _db;
 
-  Future<Map<String, dynamic>?> getUser(String id) async {
+  Future<void> insertUser({
+    required String uid,
+    Map<String, dynamic> params = const {},
+  }) async {
     try {
-      DocumentSnapshot doc = await _db.collection('users').doc(id).get();
-      return doc.data() as Map<String, dynamic>?;
+      await _db.collection('users').doc(uid).set(params);
+
     } catch (e) {
-      print('Error fetching user: $e');
-      return null;
+      log('Erro ao registrar usuário: $e');
     }
   }
 }
