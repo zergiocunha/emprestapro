@@ -5,12 +5,18 @@ class CutomTextFormField extends StatefulWidget {
   final String? labelText;
   final String? hintText;
   final Color? fillColor;
+  final TextEditingController? controller;
+  final bool? obscureText;
+  final FormFieldValidator<String>? validator;
 
   const CutomTextFormField({
     super.key,
     this.labelText,
     this.hintText,
     this.fillColor,
+    this.controller,
+    this.obscureText,
+    this.validator,
   });
 
   @override
@@ -25,6 +31,9 @@ class _CutomTextFormFieldState extends State<CutomTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+        controller: widget.controller,
+        obscureText: widget.obscureText ?? false,
+        validator: widget.validator,
           decoration: InputDecoration(
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: AppColors.secoundaryText),

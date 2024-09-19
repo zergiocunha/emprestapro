@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340844839278",
+    "project_id": "empresta-pro",
+    "storage_bucket": "empresta-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340844839278:android:9bbffd6679e3f1c95cc17f",
+        "android_client_info": {
+          "package_name": "empresta.pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNmKB7cT8a4X8gwpIj5nMNAostFGZzP80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,45 @@
+import 'package:emprestapro/common/constants/validation_messages.dart';
+
+class Validator {
+  Validator._();
+
+  static String? validateName(String? value) {
+    final condition = RegExp(r"((\ *)[\wáéíóúñ]+(\ *)+)+");
+    if (value!.isEmpty) {
+      return ValidationMessages.name;
+    } else if (!condition.hasMatch(value)) {
+      return ValidationMessages.invalidName;
+    }
+    return null;
+  }
+
+  static String? validateEmail(String? value) {
+    final condition = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+    if (value!.isEmpty) {
+      return ValidationMessages.email;
+    } else if (!condition.hasMatch(value)) {
+      return ValidationMessages.invalidEmail;
+    }
+    return null;
+  }
+
+  static String? validatePassword(String? value) {
+    final condition =
+        RegExp(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
+    if (value!.isEmpty) {
+      return ValidationMessages.password;
+    } else if (!condition.hasMatch(value)) {
+      return ValidationMessages.invalidPassword;
+    }
+    return null;
+  }
+
+  static String? validatePasswordConfirmation(String? first, String? second) {
+    if (first!.isEmpty) {
+      return ValidationMessages.repeatPassowrd;
+    } else if (second != first) {
+      return ValidationMessages.invalidRepeatPassowrd;
+    }
+    return null;
+  }
+}

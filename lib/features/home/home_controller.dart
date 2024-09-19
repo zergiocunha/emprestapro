@@ -1,12 +1,12 @@
-import 'package:emprestapro/features/home/loans_state.dart';
+import 'package:emprestapro/features/home/home_state.dart';
 import 'package:flutter/material.dart';
 
-class LoansController extends ChangeNotifier {
-  LoansController();
+class HomeController extends ChangeNotifier {
+  HomeController();
 
-  LoansState _state = LoansInitialState();
+  final HomeState _state = HomeInitialState();
 
-  LoansState get state => _state;
+  HomeState get state => _state;
 
   late PageController _pageController;
   PageController get pageController => _pageController;
