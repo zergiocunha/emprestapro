@@ -78,6 +78,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.primaryGreen,
       body: Stack(
         clipBehavior: Clip.antiAlias,
@@ -85,7 +86,7 @@ class _SignInPageState extends State<SignInPage> {
         alignment: AlignmentDirectional.topCenter,
         children: [
           Positioned(
-            top: 0,
+            top: 20,
             left: 0,
             right: 0,
             child: Padding(
@@ -117,7 +118,7 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
           Positioned(
-            top: 120,
+            top: 340,
             bottom: 0,
             left: 0,
             right: 0,

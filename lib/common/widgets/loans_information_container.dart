@@ -30,7 +30,7 @@ class _LoansInformationContainerState extends State<LoansInformationContainer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: AppColors.secoundaryBackground,
+        gradient: AppColors.background3D,
         borderRadius: BorderRadius.all(
           Radius.circular(16),
         ),
@@ -45,12 +45,7 @@ class _LoansInformationContainerState extends State<LoansInformationContainer> {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-              top: 10,
-              bottom: 10,
-            ),
+            padding: const EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

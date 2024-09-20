@@ -5,6 +5,7 @@ class CutomTextFormField extends StatefulWidget {
   final String? labelText;
   final String? hintText;
   final Color? fillColor;
+  final Color? inputTextColor;
   final TextEditingController? controller;
   final bool? obscureText;
   final FormFieldValidator<String>? validator;
@@ -14,6 +15,7 @@ class CutomTextFormField extends StatefulWidget {
     this.labelText,
     this.hintText,
     this.fillColor,
+    this.inputTextColor,
     this.controller,
     this.obscureText,
     this.validator,
@@ -34,6 +36,7 @@ class _CutomTextFormFieldState extends State<CutomTextFormField> {
         controller: widget.controller,
         obscureText: widget.obscureText ?? false,
         validator: widget.validator,
+        style: TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
           decoration: InputDecoration(
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: AppColors.secoundaryText),

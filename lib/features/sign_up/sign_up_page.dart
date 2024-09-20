@@ -79,6 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.primaryGreen,
       body: Stack(
         clipBehavior: Clip.antiAlias,
@@ -171,7 +172,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           const SizedBox(height: 16),
                           CutomTextFormField(
-                            controller: _passwordController,
                             obscureText: true,
                             labelText: 'Confirme a senha',
                             hintText: '********',

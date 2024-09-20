@@ -1,7 +1,7 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/widgets/custom_bottom_app_bar.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
-import 'package:emprestapro/features/loans/loans_page.dart';
+import 'package:emprestapro/features/home/home_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/features/sign_up/sign_up_page.dart';
 import 'package:emprestapro/locator.dart';
@@ -38,7 +38,7 @@ class _HomePageViewState extends State<HomePageView> {
         physics: const NeverScrollableScrollPhysics(),
         controller: homeController.pageController,
         children: const [
-          LoansPage(),
+          HomePage(),
           SignUpPage(),
           SignInPage(),
         ],
