@@ -1,14 +1,11 @@
-import 'package:emprestapro/interfaces/i_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService extends IAuthService {
+class AuthService {
   AuthService() : _auth = FirebaseAuth.instance;
 
   final FirebaseAuth _auth;
 
-  @override
-  Future<User> signUpWithEmailPassword(
-      String name, String email, String password) async {
+  Future<User> signUp(String email, String password) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -21,9 +18,27 @@ class AuthService extends IAuthService {
         return user;
       }
 
-      throw Exception('Erro ao registrar usuário no Auth');
+      throw Exception('Error to sign up');
     } catch (e) {
-      throw Exception('Erro ao registrar usuário no Auth: $e');
+      throw Exception('AuthService - signUp - Error: $e');
+    }
+  }
+
+  Future<User> signIn(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = userCredential.user;
+
+      if (user != null) {
+        return user;
+      }
+
+      throw Exception('Erro ao logar');
+    } catch (e) {
+      throw Exception('AuthService - signIn - Error: $e');
     }
   }
 }

@@ -57,6 +57,25 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  validateAndSignUp() async {
+    final valid =
+        _formKey.currentState != null && _formKey.currentState!.validate();
+    if (valid) {
+      final logged = await _signUpController.signUp(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      if (logged) {
+        Navigator.popAndPushNamed(
+          context,
+          NamedRoute.home,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,19 +187,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             label: 'Cadastrar',
                             size: 200,
                             onPressed: () async {
-                              final valid = _formKey.currentState != null &&
-                                  _formKey.currentState!.validate();
-                              if (valid) {
-                                await _signUpController.signUp(
-                                  name: _nameController.text,
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                );
-                                Navigator.popAndPushNamed(
-                                  context,
-                                  NamedRoute.home,
-                                );
-                              }
+                              await validateAndSignUp();
                             },
                           ),
                         ],
