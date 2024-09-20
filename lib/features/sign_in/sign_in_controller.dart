@@ -1,18 +1,17 @@
 import 'package:emprestapro/common/extensions/data_ext.dart';
-import 'package:emprestapro/common/models/user_model.dart';
-import 'package:emprestapro/features/sign_up/sign_up_state.dart';
+import 'package:emprestapro/features/sign_in/sign_in_state.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignUpController extends ChangeNotifier {
+class SignInController extends ChangeNotifier {
   final AuthService _authService;
   final FirestoreService _firestoreService;
   final SecureStorageService secureStorage;
 
-  SignUpController(
+  SignInController(
     this._firestoreService,
     this._authService,
     this.secureStorage,
@@ -21,10 +20,10 @@ class SignUpController extends ChangeNotifier {
   late PageController _pageController;
   PageController get pageController => _pageController;
 
-  SignUpState _state = SignUpInitialState();
-  SignUpState get state => _state;
+  SignInState _state = SignInInitialState();
+  SignInState get state => _state;
 
-  void _changeState(SignUpState newState) {
+  void _changeState(SignInState newState) {
     _state = newState;
     notifyListeners();
   }
@@ -37,29 +36,20 @@ class SignUpController extends ChangeNotifier {
     _pageController = newPageController;
   }
 
-  Future<bool> signUp({
-    required String name,
+  Future<bool> signIn({
     required String email,
     required String password,
   }) async {
-    _changeState(SignUpLoadingState());
+    _changeState(SignInLoadingState());
 
     try {
-      User user = await _authService.signUp(
+      User user = await _authService.signIn(
         email,
         password,
       );
 
-      final userMap = user.toMap();
-
-      final userModel = UserModel.fromMap(
-        map: userMap,
-        displayName: name,
-      );
-
-      _firestoreService.insertUser(
+      await _firestoreService.getUser(
         uid: user.uid,
-        userModel: userModel,
       );
 
       await secureStorage.write(
@@ -67,10 +57,10 @@ class SignUpController extends ChangeNotifier {
         value: user.toMap().toString(),
       );
 
-      _changeState(SignUpSuccessState());
+      _changeState(SignInSuccessState());
       return true;
     } catch (e) {
-      _changeState(SignUpErrorState(e.toString()));
+      _changeState(SignInErrorState(e.toString()));
       return false;
     }
   }

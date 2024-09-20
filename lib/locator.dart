@@ -1,4 +1,5 @@
 import 'package:emprestapro/features/home/home_controller.dart';
+import 'package:emprestapro/features/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/features/sign_up/sign_up_controller.dart';
 import 'package:emprestapro/features/splash/splash_controller.dart';
 import 'package:emprestapro/services/auth_service.dart';
@@ -23,6 +24,12 @@ void setupDependencies() {
   locator.registerFactory<FirestoreService>(() => FirestoreService());
 
   locator.registerFactory<SignUpController>(() => SignUpController(
+        locator.get<FirestoreService>(),
+        locator.get<AuthService>(),
+        locator.get<SecureStorageService>(),
+      ));
+
+  locator.registerFactory<SignInController>(() => SignInController(
         locator.get<FirestoreService>(),
         locator.get<AuthService>(),
         locator.get<SecureStorageService>(),

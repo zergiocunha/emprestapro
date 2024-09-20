@@ -2,12 +2,12 @@ import 'package:emprestapro/common/constants/enums/user_type.dart';
 
 class UserModel {
   final String? id;
-  final String? name;
+  final String? displayName;
   final String? email;
   final String? phoneNumber;
   final String? photoUrl;
-  final DateTime? creationDate;
-  final DateTime? updateDate;
+  final DateTime? creationTime;
+  final DateTime? updateTime;
   final DateTime? lastSignInTime;
   final UserType? userType;
   final bool? active;
@@ -15,12 +15,12 @@ class UserModel {
 
   UserModel({
     this.id,
-    this.name,
+    this.displayName,
     this.email,
     this.phoneNumber,
     this.photoUrl,
-    this.creationDate,
-    this.updateDate,
+    this.creationTime,
+    this.updateTime,
     this.lastSignInTime,
     this.userType,
     this.active = true,
@@ -30,12 +30,12 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name,
+      'displayName': displayName,
       'email': email,
       'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
-      'creationDate': creationDate!.toIso8601String(),
-      'updateDate': updateDate?.toIso8601String(),
+      'creationDate': creationTime!.toIso8601String(),
+      'updateDate': updateTime?.toIso8601String(),
       'lastSignInTime': lastSignInTime?.toIso8601String(),
       'userType': userType?.name,
       'active': active,
@@ -43,15 +43,18 @@ class UserModel {
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map, String? name) {
+  factory UserModel.fromMap({
+    required Map<String, dynamic> map,
+    String? displayName,
+  }) {
     return UserModel(
       id: map['uid'],
-      name: name ?? map['displayName'],
+      displayName: displayName ?? map['displayName'],
       email: map['email'],
       phoneNumber: map['phoneNumber'],
       photoUrl: map['photoUrl'],
-      creationDate: DateTime.parse(map['creationTime']),
-      updateDate: null,
+      creationTime: DateTime.parse(map['creationTime']),
+      updateTime: null,
       lastSignInTime: DateTime.parse(map['lastSignInTime']),
       userType: UserType.creditor,
       active: true,
