@@ -91,17 +91,18 @@ class HomeInfoContainer extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Text(
-                    '$daysLeft Days Left',
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 12,
+              if (daysLeft > 0)
+                Row(
+                  children: [
+                    Text(
+                      '$daysLeft Days Left',
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ],
           ),
         ),
