@@ -1,19 +1,24 @@
 import 'package:emprestapro/common/extensions/data_ext.dart';
+import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
 import 'package:emprestapro/features/sign_up/sign_up_state.dart';
+import 'package:emprestapro/repositories/creditor_repository.dart';
+import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
-import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class SignUpController extends ChangeNotifier {
   final AuthService _authService;
-  final FirestoreService _firestoreService;
+  final UserRepository _userRepository;
+  final CreditorRepository _creditorRepository;
   final SecureStorageService secureStorage;
 
   SignUpController(
-    this._firestoreService,
+    this._userRepository,
+    this._creditorRepository,
     this._authService,
     this.secureStorage,
   );
@@ -57,9 +62,15 @@ class SignUpController extends ChangeNotifier {
         displayName: name,
       );
 
-      _firestoreService.insertUser(
+      _userRepository.insert(
         uid: user.uid,
         userModel: userModel,
+      );
+
+      final creditorModel = _createCreditorModel(userModel);
+
+      _creditorRepository.insert(
+        creditorModel: creditorModel,
       );
 
       await secureStorage.write(
@@ -73,5 +84,20 @@ class SignUpController extends ChangeNotifier {
       _changeState(SignUpErrorState(e.toString()));
       return false;
     }
+  }
+
+  CreditorModel _createCreditorModel(UserModel userModel){
+    return CreditorModel(
+      uid: const Uuid().v1(),
+      name: userModel.displayName,
+      active: true,
+      creationTime: userModel.creationTime,
+      email: userModel.email,
+      imageUrl: userModel.photoUrl,
+      loanIds: [],
+      phone: userModel.phoneNumber,
+      updateTime: userModel.updateTime,
+      userId: userModel.uid,
+    );
   }
 }

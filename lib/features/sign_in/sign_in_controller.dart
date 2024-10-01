@@ -1,18 +1,18 @@
 import 'package:emprestapro/common/extensions/data_ext.dart';
 import 'package:emprestapro/features/sign_in/sign_in_state.dart';
+import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
-import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInController extends ChangeNotifier {
   final AuthService _authService;
-  final FirestoreService _firestoreService;
+  final UserRepository _userRepository;
   final SecureStorageService secureStorage;
 
   SignInController(
-    this._firestoreService,
+    this._userRepository,
     this._authService,
     this.secureStorage,
   );
@@ -48,7 +48,7 @@ class SignInController extends ChangeNotifier {
         password,
       );
 
-      await _firestoreService.getUser(
+      await _userRepository.get(
         uid: user.uid,
       );
 

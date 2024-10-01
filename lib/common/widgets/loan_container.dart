@@ -35,7 +35,7 @@ class _LoanContainerState extends State<LoanContainer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: AppColors.primaryGreen,
+        gradient: AppColors.primaryGreen3D,
         borderRadius: BorderRadius.all(
           Radius.circular(16),
         ),

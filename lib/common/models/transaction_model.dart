@@ -1,36 +1,36 @@
 import 'package:emprestapro/common/constants/enums/transaction_status.dart';
 
 class TransactionModel {
-  final String id;
+  final String uid;
   final String consumerId;
   final String loanId;
   final double amount;
-  final DateTime transactionDate;
-  final DateTime creationDate;
-  final DateTime updateDate;
+  final DateTime transactionTime;
+  final DateTime creationTime;
+  final DateTime updateTime;
   final TransactionStatus status;
 
   TransactionModel({
-    required this.id,
+    required this.uid,
     required this.consumerId,
     required this.loanId,
     required this.amount,
-    required this.transactionDate,
-    required this.creationDate,
-    required this.updateDate,
+    required this.transactionTime,
+    required this.creationTime,
+    required this.updateTime,
     required this.status,
   });
 
   // Método para converter um TransactionModel para um Map (útil para salvar no banco de dados)
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'uid': uid,
       'consumerId': consumerId,
       'loanId': loanId,
       'amount': amount,
-      'transactionDate': transactionDate.toIso8601String(),
-      'creationDate': creationDate.toIso8601String(),
-      'updateDate': updateDate.toIso8601String(),
+      'transactionTime': transactionTime.toIso8601String(),
+      'creationTime': creationTime.toIso8601String(),
+      'updateTime': updateTime.toIso8601String(),
       'status': status.name,
     };
   }
@@ -38,13 +38,13 @@ class TransactionModel {
   // Método para criar uma TransactionModel a partir de um Map
   factory TransactionModel.fromMap(Map<String, dynamic> map) {
     return TransactionModel(
-      id: map['id'],
+      uid: map['uid'],
       consumerId: map['consumerId'],
       loanId: map['loanId'],
       amount: map['amount'],
-      transactionDate: DateTime.parse(map['transactionDate']),
-      creationDate: DateTime.parse(map['creationDate']),
-      updateDate: DateTime.parse(map['updateDate']),
+      transactionTime: DateTime.parse(map['transactionTime']),
+      creationTime: DateTime.parse(map['creationTime']),
+      updateTime: DateTime.parse(map['updateTime']),
       status: TransactionStatus.values.byName(map['status']),
     );
   }
