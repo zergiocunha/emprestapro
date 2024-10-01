@@ -1,7 +1,7 @@
 import 'package:emprestapro/common/constants/enums/user_type.dart';
 
 class UserModel {
-  final String? id;
+  final String? uid;
   final String? displayName;
   final String? email;
   final String? phoneNumber;
@@ -14,7 +14,7 @@ class UserModel {
   final bool? emailVerified;
 
   UserModel({
-    this.id,
+    this.uid,
     this.displayName,
     this.email,
     this.phoneNumber,
@@ -29,13 +29,13 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'uid': uid,
       'displayName': displayName,
       'email': email,
       'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
-      'creationDate': creationTime!.toIso8601String(),
-      'updateDate': updateTime?.toIso8601String(),
+      'creationTime': creationTime!.toIso8601String(),
+      'updateTime': updateTime?.toIso8601String(),
       'lastSignInTime': lastSignInTime?.toIso8601String(),
       'userType': userType?.name,
       'active': active,
@@ -48,7 +48,7 @@ class UserModel {
     String? displayName,
   }) {
     return UserModel(
-      id: map['uid'],
+      uid: map['uid'],
       displayName: displayName ?? map['displayName'],
       email: map['email'],
       phoneNumber: map['phoneNumber'],

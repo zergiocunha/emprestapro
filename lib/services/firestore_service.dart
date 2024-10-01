@@ -1,38 +1,33 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emprestapro/common/models/user_model.dart';
 
 class FirestoreService {
   FirestoreService() : _db = FirebaseFirestore.instance;
 
   final FirebaseFirestore _db;
 
-  Future<void> insertUser({
+  Future<void> insert({
+    required String collection,
     required String uid,
-    required UserModel userModel,
+    required Map<String, dynamic> params,
   }) async {
     try {
-      await _db.collection('users').doc(uid).set(userModel.toMap());
+      await _db.collection(collection).doc(uid).set(params);
     } catch (e) {
-      log('FirestoreService - insertUser - Error: $e');
+      log('FirestoreService - insert - Error: $e');
     }
   }
 
-  Future<UserModel> getUser({
+  Future<Map<String, dynamic>> get({
+    required String collection,
     required String uid,
   }) async {
     try {
-      final result = await _db.collection('users').doc(uid).get();
-      if (result.exists) {
-        log('FirestoreService - getUser - result: ${result.data()}');
-        return UserModel.fromMap(
-          map: result.data()!,
-          displayName: result.data()!['displayName'],
-        );
-      }
-      return UserModel();
+      final result = await _db.collection(collection).doc(uid).get();
+      log('FirestoreService - get - result: ${result.data()}');
+      return result.data() ?? {};
     } catch (e) {
-      throw ('FirestoreService - insertUser - Error: $e');
+      throw ('FirestoreService - insert - Error: $e');
     }
   }
 }

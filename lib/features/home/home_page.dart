@@ -1,12 +1,27 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/widgets/alert_container.dart';
 import 'package:emprestapro/features/home/widgets/home_app_bar.dart';
 import 'package:emprestapro/features/home/widgets/home_info_container.dart';
 import 'package:emprestapro/features/home/widgets/quick_service_container.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final homeController = locator.get<HomeController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

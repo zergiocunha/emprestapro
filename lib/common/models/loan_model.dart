@@ -1,46 +1,50 @@
 class LoanModel {
-  final String id;
+  final String uid;
   final String consumerId;
   final List<String> transactionIds;
   final double amount;
+  final double fees;
   final DateTime dueDate;
-  final DateTime creationDate;
-  final DateTime updateDate;
+  final DateTime creationTime;
+  final DateTime updateTime;
   final bool concluded;
 
   LoanModel({
-    required this.id,
+    required this.uid,
     required this.consumerId,
     required this.transactionIds,
     required this.amount,
+    required this.fees,
     required this.dueDate,
-    required this.creationDate,
-    required this.updateDate,
+    required this.creationTime,
+    required this.updateTime,
     required this.concluded,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'uid': uid,
       'consumerId': consumerId,
       'amount': amount,
+      'fees': fees,
       'transactionIds': transactionIds,
       'dueDate': dueDate.toIso8601String(),
-      'creationDate': creationDate.toIso8601String(),
-      'updateDate': updateDate.toIso8601String(),
+      'creationTime': creationTime.toIso8601String(),
+      'updateTime': updateTime.toIso8601String(),
       'concluded': concluded,
     };
   }
 
   factory LoanModel.fromMap(Map<String, dynamic> map) {
     return LoanModel(
-      id: map['id'],
+      uid: map['uid'],
       consumerId: map['consumerId'],
       transactionIds: map['transactionIds'],
       amount: map['amount'],
+      fees: map['fees'],
       dueDate: DateTime.parse(map['dueDate']),
-      creationDate: DateTime.parse(map['creationDate']),
-      updateDate: DateTime.parse(map['updateDate']),
+      creationTime: DateTime.parse(map['creationTime']),
+      updateTime: DateTime.parse(map['updateTime']),
       concluded: map['concluded'],
     );
   }

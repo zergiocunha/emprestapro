@@ -1,10 +1,15 @@
 import 'package:emprestapro/features/home/home_state.dart';
+import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 
 class HomeController extends ChangeNotifier {
-  HomeController();
+  HomeController({
+    required UserRepository userRepository,
+  }) : _userRepository = userRepository;
 
-  final HomeState _state = HomeInitialState();
+  final UserRepository _userRepository;
+
+  HomeState _state = HomeInitialState();
   final ValueNotifier<bool> showFloatingButton = ValueNotifier<bool>(true);
 
   HomeState get state => _state;
@@ -16,8 +21,12 @@ class HomeController extends ChangeNotifier {
     _pageController = newPageController;
   }
 
-  void jumpToWalletPage() {
-    pageController.jumpToPage(2);
-    showFloatingButton.value = false;
+  void _changeState(HomeState newState) {
+    _state = newState;
+    notifyListeners();
+  }
+
+  Future<void> getUserData() async {
+    // _userRepository.get();
   }
 }
