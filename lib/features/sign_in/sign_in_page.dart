@@ -167,7 +167,7 @@ class _SignInPageState extends State<SignInPage> {
                                     TextStyle(color: AppColors.secoundaryText),
                               ),
                             ),
-                            CustomElevatedButtom(
+                            CustomElevatedButton(
                               label: 'Login',
                               onPressed: () async => await validateAndSignIn(),
                             )

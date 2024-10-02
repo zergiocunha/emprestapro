@@ -57,7 +57,7 @@ mixin CustomModalSheetMixin<T extends StatefulWidget> on State<T> {
                     ),
                     child: actions != null ? 
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: actions,)
-                    :CustomElevatedButtom(
+                    :CustomElevatedButton(
                       label: buttonText!,
                       onPressed: onPressed ?? () => Navigator.pop(context),
                     ),

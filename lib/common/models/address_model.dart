@@ -1,24 +1,24 @@
 class AddressModel {
-  final String uid;
-  final String country;
-  final String state;
-  final String city;
-  final String street;
-  final String number;
-  final String zipCode;
-  final DateTime creationTime;
-  final DateTime updateTime;
+  final String? uid;
+  final String? country;
+  final String? state;
+  final String? city;
+  final String? street;
+  final String? number;
+  final String? zipCode;
+  final DateTime? creationTime;
+  final DateTime? updateTime;
 
   AddressModel({
-    required this.uid,
-    required this.country,
-    required this.state,
-    required this.city,
-    required this.street,
-    required this.number,
-    required this.zipCode,
-    required this.creationTime,
-    required this.updateTime,
+    this.uid,
+    this.country,
+    this.state,
+    this.city,
+    this.street,
+    this.number,
+    this.zipCode,
+    this.creationTime,
+    this.updateTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -30,8 +30,8 @@ class AddressModel {
       'street': street,
       'number': number,
       'zipCode': zipCode,
-      'creationTime': creationTime.toIso8601String(),
-      'updateTime': updateTime.toIso8601String(),
+      'creationTime': creationTime?.toIso8601String(),
+      'updateTime': updateTime?.toIso8601String(),
     };
   }
 

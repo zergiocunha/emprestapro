@@ -1,4 +1,4 @@
-import 'package:emprestapro/features/loans/add_loans/add_loans_state.dart';
+import 'package:emprestapro/features/add_loans/add_loans_state.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 

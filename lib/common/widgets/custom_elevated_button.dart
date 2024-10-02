@@ -1,13 +1,13 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:flutter/material.dart';
 
-class CustomElevatedButtom extends StatefulWidget {
+class CustomElevatedButton extends StatefulWidget {
   final String label;
   final Color? backgroundColor;
   final double? size;
   final VoidCallback? onPressed;
 
-  const CustomElevatedButtom({
+  const CustomElevatedButton({
     super.key,
     required this.label,
     this.backgroundColor,
@@ -16,10 +16,10 @@ class CustomElevatedButtom extends StatefulWidget {
   });
 
   @override
-  State<CustomElevatedButtom> createState() => _CustomElevatedButtomState();
+  State<CustomElevatedButton> createState() => _CustomElevatedButtonState();
 }
 
-class _CustomElevatedButtomState extends State<CustomElevatedButtom> {
+class _CustomElevatedButtonState extends State<CustomElevatedButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(

@@ -183,7 +183,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          CustomElevatedButtom(
+                          CustomElevatedButton(
                             label: 'Cadastrar',
                             size: 200,
                             onPressed: () async {
