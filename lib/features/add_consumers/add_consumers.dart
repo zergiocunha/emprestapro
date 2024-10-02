@@ -194,7 +194,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   children: [
                     CustomElevatedButton(
                       label: 'Cancelar',
-                      backgroundColor: AppColors.primaryRed,
+                      backgroundColor: AppColors.secoundaryRed,
                       onPressed: () {
                         Navigator.pop(context);
                       },
