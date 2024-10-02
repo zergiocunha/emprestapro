@@ -1,5 +1,7 @@
 import 'package:emprestapro/common/constants/collections.dart';
 import 'package:emprestapro/common/models/user_model.dart';
+import 'package:emprestapro/data/data_result.dart';
+import 'package:emprestapro/data/exceptions.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 
 class UserRepository {
@@ -8,7 +10,7 @@ class UserRepository {
   });
   final FirestoreService firestoreService;
 
-  Future<UserModel> get({required String uid}) async {
+  Future<DataResult<UserModel>> get({required String uid}) async {
     try {
       final result = await firestoreService.get(
         collection: Collections.users,
@@ -16,18 +18,21 @@ class UserRepository {
       );
 
       if (result.isEmpty) {
-        return UserModel();
+        throw const UserDataException(code: 'not-found');
       }
-      return UserModel.fromMap(
+
+      final userModel = UserModel.fromMap(
         map: result,
         displayName: result['displayName'],
       );
-    } catch (e) {
-      throw(e.toString());
+
+      return DataResult.success(userModel);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
     }
   }
 
-  Future<void> insert({
+  Future<DataResult<bool>> insert({
     required String uid,
     required UserModel userModel,
   }) async {
@@ -37,8 +42,10 @@ class UserRepository {
         uid: uid,
         params: userModel.toMap(),
       );
-    } catch (e) {
-      throw(e.toString());
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
     }
   }
 }

@@ -6,7 +6,6 @@ import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,12 +49,12 @@ class SignUpController extends ChangeNotifier {
     _changeState(SignUpLoadingState());
 
     try {
-      User user = await _authService.signUp(
+      final user = await _authService.signUp(
         email,
         password,
       );
 
-      final userMap = user.toMap();
+      final userMap = user.data!.toMap();
 
       final userModel = UserModel.fromMap(
         map: userMap,
@@ -63,7 +62,7 @@ class SignUpController extends ChangeNotifier {
       );
 
       _userRepository.insert(
-        uid: user.uid,
+        uid: user.data!.uid,
         userModel: userModel,
       );
 
@@ -73,12 +72,17 @@ class SignUpController extends ChangeNotifier {
         creditorModel: creditorModel,
       );
 
-      await secureStorage.write(
-        key: "CURRENT_USER",
-        value: user.toMap().toString(),
-      );
+      user.fold(
+        (error) => _changeState(SignUpErrorState(error.message)),
+        (data) async {
+          await secureStorage.write(
+            key: "CURRENT_USER",
+            value: userModel.toJson(),
+          );
 
-      _changeState(SignUpSuccessState());
+          _changeState(SignUpSuccessState());
+        },
+      );
       return true;
     } catch (e) {
       _changeState(SignUpErrorState(e.toString()));
@@ -86,7 +90,7 @@ class SignUpController extends ChangeNotifier {
     }
   }
 
-  CreditorModel _createCreditorModel(UserModel userModel){
+  CreditorModel _createCreditorModel(UserModel userModel) {
     return CreditorModel(
       uid: const Uuid().v1(),
       name: userModel.displayName,

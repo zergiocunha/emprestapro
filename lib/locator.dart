@@ -1,4 +1,5 @@
 import 'package:emprestapro/features/home/home_controller.dart';
+import 'package:emprestapro/features/loans/add_loans/add_loans_controller.dart';
 import 'package:emprestapro/features/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/features/sign_up/sign_up_controller.dart';
 import 'package:emprestapro/features/splash/splash_controller.dart';
@@ -57,15 +58,22 @@ void setupDependencies() {
 
   locator.registerFactory<SignInController>(
     () => SignInController(
-      locator.get<UserRepository>(),
       locator.get<AuthService>(),
       locator.get<SecureStorageService>(),
+      locator.get<UserRepository>(),
     ),
   );
 
   locator.registerLazySingleton<HomeController>(
     () => HomeController(
-      userRepository: locator.get<UserRepository>(),
+      secureStorageService: locator.get<SecureStorageService>(),
+      creditorRepository: locator.get<CreditorRepository>(),
+    ),
+  );
+
+  locator.registerLazySingleton<AddLoanController>(
+    () => AddLoanController(
+      secureStorageService: locator.get<SecureStorageService>(),
     ),
   );
 }

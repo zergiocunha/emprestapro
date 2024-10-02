@@ -30,4 +30,25 @@ class FirestoreService {
       throw ('FirestoreService - insert - Error: $e');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getByField({
+    required String collection,
+    required String fieldName,
+    required String value,
+  }) async {
+    try {
+      final querySnapshot = await _db
+          .collection(collection)
+          .where(fieldName, isEqualTo: value)
+          .get();
+
+      final documents = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      log('FirestoreService - getByField - documents: $documents');
+      return documents;
+    } catch (e) {
+      log('FirestoreService - getByField - Error: $e');
+      throw ('FirestoreService - getByField - Error: $e');
+    }
+  }
 }

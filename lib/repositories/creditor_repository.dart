@@ -1,5 +1,7 @@
 import 'package:emprestapro/common/constants/collections.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
+import 'package:emprestapro/data/data_result.dart';
+import 'package:emprestapro/data/exceptions.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 
 class CreditorRepository {
@@ -8,7 +10,7 @@ class CreditorRepository {
   });
   final FirestoreService firestoreService;
 
-  Future<CreditorModel> get({required String uid}) async {
+  Future<DataResult<CreditorModel>> get({required String uid}) async {
     try {
       final result = await firestoreService.get(
         collection: Collections.creditors,
@@ -16,17 +18,43 @@ class CreditorRepository {
       );
 
       if (result.isEmpty) {
-        return CreditorModel();
+        throw const CreditorDataException(code: 'not-found');
       }
-      return CreditorModel.fromMap(
+      final creditorModel = CreditorModel.fromMap(
         map: result,
       );
-    } catch (e) {
-      throw(e.toString());
+
+      return DataResult.success(creditorModel);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
     }
   }
 
-  Future<void> insert({
+  Future<DataResult<CreditorModel>> getByField({
+    required String fieldName,
+    required String value,
+  }) async {
+    try {
+      final result = await firestoreService.getByField(
+        collection: Collections.creditors,
+        fieldName: fieldName,
+        value: value,
+      );
+
+      if (result.isEmpty) {
+        throw const CreditorDataException(code: 'not-found');
+      }
+      final creditorModel = CreditorModel.fromMap(
+        map: result.first,
+      );
+
+      return DataResult.success(creditorModel);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
+
+  Future<DataResult<bool>> insert({
     required CreditorModel creditorModel,
   }) async {
     try {
@@ -35,8 +63,10 @@ class CreditorRepository {
         uid: creditorModel.uid!,
         params: creditorModel.toMap(),
       );
-    } catch (e) {
-      throw(e.toString());
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
     }
   }
 }

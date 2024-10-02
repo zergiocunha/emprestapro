@@ -1,4 +1,5 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/widgets/alert_container.dart';
 import 'package:emprestapro/features/home/widgets/home_app_bar.dart';
@@ -17,15 +18,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final homeController = locator.get<HomeController>();
 
+  Future<void> getDatas() async {
+    await homeController.getCreditor();
+    if (mounted) setState(() {});
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    getDatas();
   }
 
   @override
   Widget build(BuildContext context) {
-    const String displayName = 'Sergio Cunha';
     const String lastReceiptDate = 'Aug 31, 2021';
     const String nextReceiptDate = 'Sep 20, 2024';
     const double loanReceived = 12450.00;
@@ -42,10 +47,13 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.background,
       body: ListView(
         children: [
-          const HomeAppBar(
-            photoUrl: photoUrl,
-            displayName: displayName,
-            amount: amount,
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+            child: HomeAppBar(
+              photoUrl: photoUrl,
+              displayName: homeController.creditorModel.name ?? '',
+              amount: amount,
+            ),
           ),
           if (alertCount > 0)
             const Padding(
@@ -113,19 +121,21 @@ class _HomePageState extends State<HomePage> {
                         QuickServiceContainer(
                           quickContainerIcon: Icons.account_balance_wallet,
                           quickContainerTitle1: 'Emrpréstimos',
-                          onTap: (){},
+                          onTap: () {},
                         ),
                         const SizedBox(width: 16),
                         QuickServiceContainer(
                           quickContainerIcon: Icons.add_circle_outline,
                           quickContainerTitle1: 'Novo',
-                          onTap: (){},
+                          onTap: () {
+                            Navigator.pushNamed(context, NamedRoute.addLoan);
+                          },
                         ),
                         const SizedBox(width: 16),
                         QuickServiceContainer(
                           quickContainerIcon: Icons.show_chart,
                           quickContainerTitle1: 'Progresso',
-                          onTap: (){},
+                          onTap: () {},
                         ),
                       ],
                     ),
@@ -165,13 +175,13 @@ class _HomePageState extends State<HomePage> {
                         QuickServiceContainer(
                           quickContainerIcon: Icons.add_shopping_cart,
                           quickContainerTitle1: 'Nova',
-                          onTap: (){},
+                          onTap: () {},
                         ),
                         const SizedBox(width: 16),
                         QuickServiceContainer(
                           quickContainerIcon: Icons.receipt_long,
                           quickContainerTitle1: 'Histórico',
-                          onTap: (){},
+                          onTap: () {},
                         ),
                       ],
                     ),

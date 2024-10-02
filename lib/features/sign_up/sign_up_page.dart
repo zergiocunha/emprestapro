@@ -146,7 +146,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Column(
                         children: [
                           const SizedBox(height: 32),
-                          CutomTextFormField(
+                          CustomTextFormField(
                             controller: _nameController,
                             labelText: 'Nome',
                             hintText: 'Seu nome',
@@ -154,7 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             validator: Validator.validateName,
                           ),
                           const SizedBox(height: 16),
-                          CutomTextFormField(
+                          CustomTextFormField(
                             controller: _emailController,
                             labelText: 'Email',
                             hintText: 'Seu email',
@@ -162,7 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             validator: Validator.validateEmail,
                           ),
                           const SizedBox(height: 16),
-                          CutomTextFormField(
+                          CustomTextFormField(
                             controller: _passwordController,
                             obscureText: true,
                             labelText: 'Escolha uma senha',
@@ -171,7 +171,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             validator: Validator.validatePassword,
                           ),
                           const SizedBox(height: 16),
-                          CutomTextFormField(
+                          CustomTextFormField(
                             obscureText: true,
                             labelText: 'Confirme a senha',
                             hintText: '********',

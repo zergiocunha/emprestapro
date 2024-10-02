@@ -1,20 +1,18 @@
-import 'package:emprestapro/common/extensions/data_ext.dart';
 import 'package:emprestapro/features/sign_in/sign_in_state.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInController extends ChangeNotifier {
   final AuthService _authService;
-  final UserRepository _userRepository;
   final SecureStorageService secureStorage;
+  final UserRepository _userReposiory;
+
 
   SignInController(
-    this._userRepository,
     this._authService,
-    this.secureStorage,
+    this.secureStorage, this._userReposiory,
   );
 
   late PageController _pageController;
@@ -36,32 +34,33 @@ class SignInController extends ChangeNotifier {
     _pageController = newPageController;
   }
 
-  Future<bool> signIn({
+  Future<void> signIn({
     required String email,
     required String password,
   }) async {
     _changeState(SignInLoadingState());
 
-    try {
-      User user = await _authService.signIn(
-        email,
-        password,
-      );
+    final userData = await _authService.signIn(
+      email,
+      password,
+    );
 
-      await _userRepository.get(
-        uid: user.uid,
-      );
+    final result = await _userReposiory.get(uid: userData.data!.uid!);
 
-      await secureStorage.write(
-        key: "CURRENT_USER",
-        value: user.toMap().toString(),
-      );
+    result.fold(
+      (error) => _changeState(SignInErrorState(error.message)),
+      (data) async {
+        
+        await secureStorage.write(
+          key: "CURRENT_USER",
+          value: data.toJson(),
+        );
 
-      _changeState(SignInSuccessState());
-      return true;
-    } catch (e) {
-      _changeState(SignInErrorState(e.toString()));
-      return false;
-    }
+        result.fold(
+          (error) => _changeState(SignInErrorState(error.message)),
+          (_) => _changeState(SignInSuccessState()),
+        );
+      },
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:emprestapro/common/constants/enums/user_type.dart';
 
 class UserModel {
@@ -34,7 +36,7 @@ class UserModel {
       'email': email,
       'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
-      'creationTime': creationTime!.toIso8601String(),
+      'creationTime': creationTime?.toIso8601String(),
       'updateTime': updateTime?.toIso8601String(),
       'lastSignInTime': lastSignInTime?.toIso8601String(),
       'userType': userType?.name,
@@ -59,6 +61,29 @@ class UserModel {
       userType: UserType.creditor,
       active: true,
       emailVerified: map['emailVerified'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory UserModel.fromJson(String source) {
+    return UserModel.fromMap(
+      map: json.decode(source) as Map<String, dynamic>,
+    );
+  }
+
+  UserModel copyWith({
+    String? uid,
+    String? name,
+    String? email,
+    String? password,
+    String? photoUrl,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      displayName: name ?? displayName,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
     );
   }
 }
