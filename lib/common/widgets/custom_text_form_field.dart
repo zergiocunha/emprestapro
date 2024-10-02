@@ -1,7 +1,7 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:flutter/material.dart';
 
-class CutomTextFormField extends StatefulWidget {
+class CustomTextFormField extends StatefulWidget {
   final String? labelText;
   final String? hintText;
   final Color? fillColor;
@@ -10,7 +10,7 @@ class CutomTextFormField extends StatefulWidget {
   final bool? obscureText;
   final FormFieldValidator<String>? validator;
 
-  const CutomTextFormField({
+  const CustomTextFormField({
     super.key,
     this.labelText,
     this.hintText,
@@ -22,10 +22,10 @@ class CutomTextFormField extends StatefulWidget {
   });
 
   @override
-  State<CutomTextFormField> createState() => _CutomTextFormFieldState();
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
 
-class _CutomTextFormFieldState extends State<CutomTextFormField> {
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Column(

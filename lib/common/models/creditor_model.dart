@@ -53,7 +53,7 @@ class CreditorModel {
       imageUrl: map['imageUrl'],
       email: map['email'],
       creationTime: DateTime.parse(map['creationTime']),
-      updateTime: DateTime.parse(map['updateTime']),
+      updateTime: map['updateTime'] != null ?DateTime.parse(map['updateTime']) : null,
       loanIds: List<String>.from(map['loanIds']),
       active: map['active'],
     );

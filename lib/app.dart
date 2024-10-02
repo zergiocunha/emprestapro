@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/features/home/home_page_view.dart';
+import 'package:emprestapro/features/loans/add_loans/add_loans_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/features/sign_up/sign_up_page.dart';
 import 'package:emprestapro/features/splash/splash_page.dart';
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
         NamedRoute.signUp: (context) => const SignUpPage(),
         NamedRoute.signIn: (context) => const SignInPage(),
         NamedRoute.home: (context) => const HomePageView(),
+        NamedRoute.addLoan: (context) => const AddLoanPage(),
       },
     );
   }

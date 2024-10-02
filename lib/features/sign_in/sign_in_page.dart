@@ -60,18 +60,16 @@ class _SignInPageState extends State<SignInPage> {
     final valid =
         _formKey.currentState != null && _formKey.currentState!.validate();
     if (valid) {
-      final logged = await _signInController.signIn(
+      await _signInController.signIn(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
-      if (logged) {
-        Navigator.popAndPushNamed(
-          // ignore: use_build_context_synchronously
-          context,
-          NamedRoute.home,
-        );
-      }
+      Navigator.popAndPushNamed(
+        // ignore: use_build_context_synchronously
+        context,
+        NamedRoute.home,
+      );
     }
   }
 
@@ -142,14 +140,14 @@ class _SignInPageState extends State<SignInPage> {
                   child: Column(
                     children: [
                       const SizedBox(height: 16),
-                      CutomTextFormField(
+                      CustomTextFormField(
                         labelText: 'Email',
                         hintText: 'Insira seu email...',
                         controller: _emailController,
                         validator: Validator.validateEmail,
                       ),
                       const SizedBox(height: 16),
-                      CutomTextFormField(
+                      CustomTextFormField(
                         labelText: 'Senha',
                         hintText: 'Insira sua senha...',
                         obscureText: true,

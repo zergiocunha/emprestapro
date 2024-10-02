@@ -1,3 +1,6 @@
+import 'package:emprestapro/common/models/user_model.dart';
+import 'package:emprestapro/data/data_result.dart';
+import 'package:emprestapro/data/exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -5,40 +8,46 @@ class AuthService {
 
   final FirebaseAuth _auth;
 
-  Future<User> signUp(String email, String password) async {
+  Future<DataResult<User>> signUp(String email, String password) async {
     try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? user = userCredential.user;
 
-      if (user != null) {
-        return user;
+      if (result.user != null) {
+        return DataResult.success(result.user!);
       }
 
-      throw Exception('Error to sign up');
-    } catch (e) {
-      throw Exception('AuthService - signUp - Error: $e');
+      return DataResult.failure(const GeneralException());
+    } on FirebaseAuthException catch (e) {
+      return DataResult.failure(AuthException(code: e.code));
     }
   }
 
-  Future<User> signIn(String email, String password) async {
+  Future<DataResult<UserModel>> signIn(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? user = userCredential.user;
 
-      if (user != null) {
-        return user;
+      if (userCredential.user != null) {
+        return DataResult.success(
+            _createUserModelFromAuthUser(userCredential.user!));
       }
 
-      throw Exception('Erro ao logar');
-    } catch (e) {
-      throw Exception('AuthService - signIn - Error: $e');
+      return DataResult.failure(const GeneralException());
+    } on FirebaseAuthException catch (e) {
+      return DataResult.failure(AuthException(code: e.code));
     }
+  }
+
+  UserModel _createUserModelFromAuthUser(User user) {
+    return UserModel(
+      displayName: user.displayName,
+      email: user.email,
+      uid: user.uid,
+    );
   }
 }
