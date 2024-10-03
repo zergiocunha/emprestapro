@@ -30,9 +30,18 @@ class HomeAppBar extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: CachedNetworkImageProvider(
-                    photoUrl,
-                  ),
+                  backgroundImage: photoUrl != ''
+                      ? CachedNetworkImageProvider(
+                          photoUrl,
+                        )
+                      : null,
+                  child: photoUrl == ''
+                      ? const Icon(
+                          Icons.person,
+                          color: AppColors.primaryText,
+                          size: 40,
+                        )
+                      : null,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -93,11 +102,11 @@ class HomeAppBar extends StatelessWidget {
                 ),
               ],
             ),
-            const Row(
+            Row(
               children: [
                 Text(
-                  'R\$25202.23',
-                  style: TextStyle(
+                  'R\$' '${amount.toStringAsFixed(2)}',
+                  style: const TextStyle(
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.normal,
                     fontSize: 32,

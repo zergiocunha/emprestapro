@@ -52,7 +52,7 @@ class HomeInfoContainer extends StatelessWidget {
                     height: 40,
                     width: 130,
                     child: AutoSizeText(
-                      'R\$$dueAmount',
+                      'R\$${dueAmount.toStringAsFixed(2)}',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

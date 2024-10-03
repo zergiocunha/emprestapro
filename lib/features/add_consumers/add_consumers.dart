@@ -40,7 +40,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
   void _addConsumer(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       final newConsumer = ConsumerModel(
-        uid: Uuid().v4(),
+        uid: const Uuid().v4(),
         name: _nameController.text,
         pix: _pixController.text,
         phone: _phoneController.text,

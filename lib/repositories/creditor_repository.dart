@@ -10,27 +10,7 @@ class CreditorRepository {
   });
   final FirestoreService firestoreService;
 
-  Future<DataResult<CreditorModel>> get({required String uid}) async {
-    try {
-      final result = await firestoreService.get(
-        collection: Collections.creditors,
-        uid: uid,
-      );
-
-      if (result.isEmpty) {
-        throw const CreditorDataException(code: 'not-found');
-      }
-      final creditorModel = CreditorModel.fromMap(
-        map: result,
-      );
-
-      return DataResult.success(creditorModel);
-    } on Failure catch (e) {
-      return DataResult.failure(e);
-    }
-  }
-
-  Future<DataResult<CreditorModel>> getByField({
+  Future<DataResult<CreditorModel>> get({
     required String fieldName,
     required String value,
   }) async {

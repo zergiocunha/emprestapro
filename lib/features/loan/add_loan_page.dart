@@ -2,16 +2,20 @@ import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/address_model.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
+import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/widgets/custom_dropdown.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/features/loan/loan_controller.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 // Mockando os clientes
 final List<ConsumerModel> mockConsumers = [
   ConsumerModel(
-    uid: '1',
+    uid: const Uuid().v1(),
     name: 'João da Silva',
     pix: 'joao.silva@pix.com',
     phone: '+5511999999999',
@@ -29,7 +33,7 @@ final List<ConsumerModel> mockConsumers = [
     ),
   ),
   ConsumerModel(
-    uid: '2',
+    uid: const Uuid().v1(),
     name: 'Maria Oliveira',
     pix: 'maria.oliveira@pix.com',
     phone: '+5511988888888',
@@ -47,7 +51,7 @@ final List<ConsumerModel> mockConsumers = [
     ),
   ),
   ConsumerModel(
-    uid: '3',
+    uid: const Uuid().v1(),
     name: 'Carlos Souza',
     pix: 'carlos.souza@pix.com',
     phone: '+5511977777777',
@@ -78,10 +82,16 @@ class _AddLoanPageState extends State<AddLoanPage> {
   final _amountController = TextEditingController();
   final _interestRateController = TextEditingController();
   final _dueDateController = TextEditingController();
-  // final _addLoanController = locator.get<AddLoanController>();
+  final _addLoanController = locator.get<AddLoanController>();
 
   ConsumerModel? _selectedConsumer;
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   void dispose() {
@@ -89,6 +99,11 @@ class _AddLoanPageState extends State<AddLoanPage> {
     _interestRateController.dispose();
     _dueDateController.dispose();
     super.dispose();
+  }
+
+  void getData() async {
+    await _addLoanController.getUserData();
+    await _addLoanController.getCreditorData();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -115,6 +130,20 @@ class _AddLoanPageState extends State<AddLoanPage> {
     //     builder: (context) => AddConsumerPage(), // Página fictícia para adicionar cliente
     //   ),
     // );
+  }
+
+  Future<void> _addLoan() async {
+    final loan = LoanModel(
+      uid: const Uuid().v1(),
+      consumerId: _selectedConsumer?.uid,
+      amount: double.parse(_amountController.text),
+      creditorId: _addLoanController.creditorModel.uid,
+      fees: double.parse(_interestRateController.text),
+      dueDate: _selectedDate,
+      creationTime: DateTime.now(),
+      concluded: false,
+    );
+    await _addLoanController.addLoan(newLoan: loan);
   }
 
   @override
@@ -229,9 +258,10 @@ class _AddLoanPageState extends State<AddLoanPage> {
                   ),
                   CustomElevatedButton(
                     label: 'Adicionar',
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        // Lógica de adicionar o empréstimo com o cliente selecionado
+                        await _addLoan();
+                        Navigator.pop(context);
                       }
                     },
                   ),

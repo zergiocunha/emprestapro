@@ -1,50 +1,50 @@
 class LoanModel {
-  final String uid;
-  final String consumerId;
-  final List<String> transactionIds;
-  final double amount;
-  final double fees;
-  final DateTime dueDate;
-  final DateTime creationTime;
-  final DateTime updateTime;
-  final bool concluded;
+  final String? uid;
+  final String? consumerId;
+  final String? creditorId;
+  final double? amount;
+  final double? fees;
+  final DateTime? dueDate;
+  final DateTime? creationTime;
+  final DateTime? updateTime;
+  final bool? concluded;
 
   LoanModel({
-    required this.uid,
-    required this.consumerId,
-    required this.transactionIds,
-    required this.amount,
-    required this.fees,
-    required this.dueDate,
-    required this.creationTime,
-    required this.updateTime,
-    required this.concluded,
+    this.uid,
+    this.consumerId,
+    this.creditorId,
+    this.amount,
+    this.fees,
+    this.dueDate,
+    this.creationTime,
+    this.updateTime,
+    this.concluded,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'consumerId': consumerId,
+      'creditorId': creditorId,
       'amount': amount,
       'fees': fees,
-      'transactionIds': transactionIds,
-      'dueDate': dueDate.toIso8601String(),
-      'creationTime': creationTime.toIso8601String(),
-      'updateTime': updateTime.toIso8601String(),
+      'dueDate': dueDate?.toIso8601String(),
+      'creationTime': creationTime?.toIso8601String(),
+      'updateTime': updateTime?.toIso8601String(),
       'concluded': concluded,
     };
   }
 
-  factory LoanModel.fromMap(Map<String, dynamic> map) {
+  factory LoanModel.fromMap({required Map<String, dynamic> map}) {
     return LoanModel(
       uid: map['uid'],
       consumerId: map['consumerId'],
-      transactionIds: map['transactionIds'],
+      creditorId: map['creditorId'],
       amount: map['amount'],
       fees: map['fees'],
-      dueDate: DateTime.parse(map['dueDate']),
-      creationTime: DateTime.parse(map['creationTime']),
-      updateTime: DateTime.parse(map['updateTime']),
+      dueDate: map['dueDate'] != null ? DateTime.parse(map['dueDate']) : null,
+      creationTime: map['creationTime'] != null ? DateTime.parse(map['creationTime']) : null,
+      updateTime: map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,
       concluded: map['concluded'],
     );
   }

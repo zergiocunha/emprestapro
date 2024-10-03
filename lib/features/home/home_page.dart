@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
+import 'package:emprestapro/common/utils.dart/calculation.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/widgets/alert_container.dart';
 import 'package:emprestapro/features/home/widgets/home_app_bar.dart';
@@ -7,6 +8,7 @@ import 'package:emprestapro/features/home/widgets/home_info_container.dart';
 import 'package:emprestapro/features/home/widgets/quick_service_container.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,7 +21,9 @@ class _HomePageState extends State<HomePage> {
   final homeController = locator.get<HomeController>();
 
   Future<void> getDatas() async {
+    await homeController.getUser();
     await homeController.getCreditor();
+    await homeController.getLoansByCreditor();
     if (mounted) setState(() {});
   }
 
@@ -32,16 +36,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     const String lastReceiptDate = 'Aug 31, 2021';
-    const String nextReceiptDate = 'Sep 20, 2024';
-    const double loanReceived = 12450.00;
-    const double loanReceivable = 3345.00;
-    const int daysLeft = 4;
-    const String photoUrl =
-        'https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=';
-    const int alertCount = 1;
+    final nextToDueDate = homeController.loans.isNotEmpty
+        ? Calculation.nextToDueDate(homeController.loans)
+        : null;
+    int alertCount = homeController.loans.isNotEmpty
+        ? homeController.loans
+            .where((x) => x.dueDate!.isAfter(DateTime.now()))
+            .length
+        : 0;
+
     const String alertDescription =
         'We noticed a small charge that is out of character of this account, please review';
-    const double amount = 25202.23;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -50,41 +55,45 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
             child: HomeAppBar(
-              photoUrl: photoUrl,
+              photoUrl: homeController.userModel.photoUrl ?? '',
               displayName: homeController.creditorModel.name ?? '',
-              amount: amount,
+              amount: Calculation.totalBorrowed(homeController.loans),
             ),
           ),
           if (alertCount > 0)
-            const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
               child: AlertContiner(
                 alertCount: alertCount,
                 alertDescription: alertDescription,
               ),
             ),
           const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Row(
               children: [
-                HomeInfoContainer(
+                const HomeInfoContainer(
                   dueDateTitle: 'Total Juros Recebido',
-                  dueAmount: loanReceived,
+                  dueAmount: 3232, //TODO: depende das transações
                   debitTitle: 'Data do Último',
                   dueDate: lastReceiptDate,
                   daysLeft: 0,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 16,
                 ),
                 HomeInfoContainer(
-                  dueDateTitle: 'Total Juros a Receber',
-                  dueAmount: loanReceivable,
+                  dueDateTitle: 'Juros Mínimo a Receber',
+                  dueAmount:
+                      Calculation.minimumFeesToReceive(homeController.loans),
                   debitTitle: 'Data do Próximo',
-                  dueDate: nextReceiptDate,
-                  daysLeft: daysLeft,
-                  containerColor: AppColors.secundaryGreen,
+                  dueDate: nextToDueDate != null
+                      ? DateFormat('dd/MM/yyyy').format(nextToDueDate)
+                      : '',
+                  daysLeft: nextToDueDate != null
+                      ? nextToDueDate.difference(DateTime.now()).inDays
+                      : 0,
                 ),
               ],
             ),
@@ -127,8 +136,10 @@ class _HomePageState extends State<HomePage> {
                         QuickServiceContainer(
                           quickContainerIcon: Icons.add_circle_outline,
                           quickContainerTitle1: 'Novo',
-                          onTap: () {
-                            Navigator.pushNamed(context, NamedRoute.addLoan);
+                          onTap: () async {
+                            await Navigator.pushNamed(
+                                context, NamedRoute.addLoan);
+                            getDatas();
                           },
                         ),
                         const SizedBox(width: 16),
