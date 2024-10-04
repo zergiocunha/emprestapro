@@ -1,6 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
-import 'package:emprestapro/common/models/address_model.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/widgets/custom_dropdown.dart';
@@ -11,64 +12,6 @@ import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-// Mockando os clientes
-final List<ConsumerModel> mockConsumers = [
-  ConsumerModel(
-    uid: const Uuid().v1(),
-    name: 'João da Silva',
-    pix: 'joao.silva@pix.com',
-    phone: '+5511999999999',
-    imageUrl: '',
-    email: 'joao.silva@example.com',
-    creationTime: DateTime.now(),
-    updateTime: DateTime.now(),
-    loanIds: [],
-    active: true,
-    address: AddressModel(
-      street: 'Rua A',
-      city: 'São Paulo',
-      state: 'SP',
-      zipCode: '00000-000',
-    ),
-  ),
-  ConsumerModel(
-    uid: const Uuid().v1(),
-    name: 'Maria Oliveira',
-    pix: 'maria.oliveira@pix.com',
-    phone: '+5511988888888',
-    imageUrl: '',
-    email: 'maria.oliveira@example.com',
-    creationTime: DateTime.now(),
-    updateTime: DateTime.now(),
-    loanIds: [],
-    active: true,
-    address: AddressModel(
-      street: 'Rua B',
-      city: 'Rio de Janeiro',
-      state: 'RJ',
-      zipCode: '11111-111',
-    ),
-  ),
-  ConsumerModel(
-    uid: const Uuid().v1(),
-    name: 'Carlos Souza',
-    pix: 'carlos.souza@pix.com',
-    phone: '+5511977777777',
-    imageUrl: '',
-    email: 'carlos.souza@example.com',
-    creationTime: DateTime.now(),
-    updateTime: DateTime.now(),
-    loanIds: [],
-    active: true,
-    address: AddressModel(
-      street: 'Rua C',
-      city: 'Belo Horizonte',
-      state: 'MG',
-      zipCode: '22222-222',
-    ),
-  ),
-];
 
 class AddLoanPage extends StatefulWidget {
   const AddLoanPage({super.key});
@@ -82,7 +25,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
   final _amountController = TextEditingController();
   final _interestRateController = TextEditingController();
   final _dueDateController = TextEditingController();
-  final _addLoanController = locator.get<AddLoanController>();
+  final _loanController = locator.get<LoanController>();
 
   ConsumerModel? _selectedConsumer;
   DateTime? _selectedDate;
@@ -102,8 +45,10 @@ class _AddLoanPageState extends State<AddLoanPage> {
   }
 
   void getData() async {
-    await _addLoanController.getUserData();
-    await _addLoanController.getCreditorData();
+    await _loanController.getUserData();
+    await _loanController.getCreditorData();
+    await _loanController.getConsumerList();
+    if (mounted) setState(() {});
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -121,15 +66,9 @@ class _AddLoanPageState extends State<AddLoanPage> {
     }
   }
 
-  void _navigateToAddConsumer() {
-    Navigator.pushNamed(context, NamedRoute.add_consumer);
-    // Navegar para a página de adicionar cliente
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => AddConsumerPage(), // Página fictícia para adicionar cliente
-    //   ),
-    // );
+  Future<void> _navigateToAddConsumer() async {
+    await Navigator.pushNamed(context, NamedRoute.addConsumer);
+    getData();
   }
 
   Future<void> _addLoan() async {
@@ -137,21 +76,21 @@ class _AddLoanPageState extends State<AddLoanPage> {
       uid: const Uuid().v1(),
       consumerId: _selectedConsumer?.uid,
       amount: double.parse(_amountController.text),
-      creditorId: _addLoanController.creditorModel.uid,
+      creditorId: _loanController.creditorModel.uid,
       fees: double.parse(_interestRateController.text),
       dueDate: _selectedDate,
       creationTime: DateTime.now(),
       concluded: false,
     );
-    await _addLoanController.addLoan(newLoan: loan);
+    await _loanController.addLoan(newLoan: loan);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryGreen,
+      backgroundColor: AppColors.secoundaryBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryGreen,
+        backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         title: const Text(
           'Adicionar Empréstimo',
@@ -165,7 +104,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          color: AppColors.background,
+          gradient: AppColors.background3D,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
@@ -179,10 +118,10 @@ class _AddLoanPageState extends State<AddLoanPage> {
               CustomDropdownButtonFormField<ConsumerModel>(
                 labelText: 'Selecione o Cliente',
                 value: _selectedConsumer,
-                items: mockConsumers.map((consumer) {
+                items: _loanController.consumersList.map((consumer) {
                   return DropdownMenuItem<ConsumerModel>(
                     value: consumer,
-                    child: Text(consumer.name),
+                    child: Text(consumer.name!),
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -198,7 +137,9 @@ class _AddLoanPageState extends State<AddLoanPage> {
                 },
               ),
               TextButton(
-                onPressed: _navigateToAddConsumer,
+                onPressed: () async {
+                 await _navigateToAddConsumer();
+                },
                 child: const Text(
                   'Adicionar Novo Cliente',
                   style: TextStyle(color: AppColors.primaryGreen),

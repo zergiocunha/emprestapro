@@ -1,12 +1,12 @@
-abstract class AddLoansState {}
+abstract class LoanState {}
 
-class AddLoansInitialState extends AddLoansState {}
+class LoanInitialState extends LoanState {}
 
-class AddLoansLoadingState extends AddLoansState {}
+class AddLoansLoadingState extends LoanState {}
 
-class AddLoansSuccessState extends AddLoansState {}
+class AddLoansSuccessState extends LoanState {}
 
-class AddLoansErrorState extends AddLoansState {
+class AddLoansErrorState extends LoanState {
   AddLoansErrorState({
     required this.message,
   });

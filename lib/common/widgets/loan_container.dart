@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class LoanContainer extends StatefulWidget {
-  final String debtorName;
+  final String consumerName;
   final double amount;
   final Color? amountColor;
   final String secondaryName;
@@ -15,7 +15,7 @@ class LoanContainer extends StatefulWidget {
 
   const LoanContainer({
     super.key,
-    required this.debtorName,
+    required this.consumerName,
     required this.amount,
     this.amountColor,
     required this.secondaryName,
@@ -57,7 +57,7 @@ class _LoanContainerState extends State<LoanContainer> {
                   height: 25,
                   width: 120,
                   child: AutoSizeText(
-                    widget.debtorName,
+                    widget.consumerName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

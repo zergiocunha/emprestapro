@@ -41,7 +41,11 @@ class _HomePageState extends State<HomePage> {
         : null;
     int alertCount = homeController.loans.isNotEmpty
         ? homeController.loans
-            .where((x) => x.dueDate!.isAfter(DateTime.now()))
+            .where((x) =>
+                (x.dueDate!.isBefore(DateTime.now()) ||
+                    x.dueDate! == DateTime.now()) &&
+                !x.concluded!)
+            .toList()
             .length
         : 0;
 
@@ -128,9 +132,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         QuickServiceContainer(
-                          quickContainerIcon: Icons.account_balance_wallet,
-                          quickContainerTitle1: 'Emrpréstimos',
-                          onTap: () {},
+                          quickContainerIcon: Icons.reorder,
+                          quickContainerTitle1: 'Empréstimos',
+                          onTap: () {
+                            homeController.jumpToLoansPage();
+                          },
                         ),
                         const SizedBox(width: 16),
                         QuickServiceContainer(
@@ -184,12 +190,6 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         QuickServiceContainer(
-                          quickContainerIcon: Icons.add_shopping_cart,
-                          quickContainerTitle1: 'Nova',
-                          onTap: () {},
-                        ),
-                        const SizedBox(width: 16),
-                        QuickServiceContainer(
                           quickContainerIcon: Icons.receipt_long,
                           quickContainerTitle1: 'Histórico',
                           onTap: () {},
@@ -201,6 +201,56 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.secoundaryBackground,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              height: 150,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    const Row(
+                      children: [
+                        Text(
+                          'Serviços de Cliente',
+                          style: TextStyle(
+                            color: AppColors.primaryText,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        QuickServiceContainer(
+                          quickContainerIcon: Icons.people,
+                          quickContainerTitle1: 'Clientes',
+                          onTap: () {},
+                        ),
+                        const SizedBox(width: 16),
+                        QuickServiceContainer(
+                          quickContainerIcon: Icons.person_add,
+                          quickContainerTitle1: 'Novo',
+                          onTap: () async {
+                            await Navigator.pushNamed(
+                                context, NamedRoute.addConsumer);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

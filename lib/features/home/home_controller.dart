@@ -45,6 +45,11 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void jumpToLoansPage() {
+    _pageController.jumpToPage(1);
+  }
+
+
   Future<void> getUser() async {
     final data = await _secureStorageService.readOne(key: 'CURRENT_USER');
     _userModel = UserModel.fromJson(data ?? '');

@@ -17,44 +17,49 @@ class AlertContiner extends StatelessWidget {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: AppColors.secoundaryRed,
+        // color: AppColors.secoundaryRed,
+        gradient: AppColors.secondaryRed3D,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.notifications,
-                          color: AppColors.primaryText,
-                          size: 32,
-                        ),
-                        Text(
-                          alertCount > 1 ? '$alertCount Alertas de Vencimento' : '$alertCount Alerta de Vencimento',
-                          style: const TextStyle(
-                            color: AppColors.secoundaryText,
-                            fontSize: 18,
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.notifications,
+                            color: AppColors.primaryText,
+                            size: 32,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const Text(
-                  'Ver Agora',
-                  style: TextStyle(
-                    color: AppColors.background,
-                    fontSize: 18,
+                          Text(
+                            alertCount > 1 ? '$alertCount Alertas de Vencimento' : '$alertCount Alerta de Vencimento',
+                            style: const TextStyle(
+                              color: AppColors.primaryText,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  const Text(
+                    'Ver',
+                    style: TextStyle(
+                      color: AppColors.primaryText,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 5),
             Row(
@@ -66,7 +71,7 @@ class AlertContiner extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      color: AppColors.thirdText,
+                      color: AppColors.primaryText,
                       fontSize: 12,
                     ),
                   ),

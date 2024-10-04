@@ -1,7 +1,11 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/models/loan_model.dart';
+import 'package:emprestapro/common/utils.dart/calculation.dart';
 import 'package:emprestapro/common/widgets/evolution_container.dart';
 import 'package:emprestapro/common/widgets/loan_container.dart';
 import 'package:emprestapro/common/widgets/loans_information_container.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +18,9 @@ class LoansPage extends StatefulWidget {
 
 class _LoansPageState extends State<LoansPage>
     with SingleTickerProviderStateMixin {
+
+  final _addLoanController = locator.get<HomeController>();
+  
   @override
   void initState() {
     super.initState();
@@ -25,12 +32,10 @@ class _LoansPageState extends State<LoansPage>
 
   @override
   Widget build(BuildContext context) {
-    const double amountCredit = 12583;
-    const double amountDividend = 1000;
-    final DateTime lastLoanDate = DateTime.now();
-    final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    final List<LoanModel> loans = _addLoanController.loans;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.secoundaryBackground,
@@ -51,15 +56,15 @@ class _LoansPageState extends State<LoansPage>
           Positioned.fill(
             child: ListView.separated(
               padding: const EdgeInsets.only(top: 160, bottom: 10),
-              itemCount: entries.length,
+              itemCount: loans.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: LoanContainer(
-                    debtorName: 'José do Egito',
-                    amount: amountCredit,
+                    consumerName: loans[index].consumerId ?? '',
+                    amount: loans[index].amount ?? 0,
                     secondaryName: 'secondaryName',
-                    dueDate: lastLoanDate,
+                    dueDate: loans[index].dueDate!,
                     imageUrl:
                         'https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=',
                   ),
@@ -77,12 +82,12 @@ class _LoansPageState extends State<LoansPage>
               children: [
                 const SizedBox(height: 16),
                 LoansInformationContainers(
-                  amountCredit: amountCredit,
-                  lastLoanDate: lastLoanDate,
-                  amountDividend: amountDividend,
+                  amountCredit: Calculation.totalBorrowed(loans),
+                  lastLoanDate: Calculation.nextToDueDate(loans)!,
+                  amountDividend: Calculation.minimumFeesToReceive(loans),
                   evolution: evolutionCalc(
-                    amountCredit,
-                    amountDividend,
+                    Calculation.totalBorrowed(loans),
+                    Calculation.minimumFeesToReceive(loans),
                   ),
                 ),
               ],

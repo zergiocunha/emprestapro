@@ -37,4 +37,15 @@ class AppColors {
     end: Alignment.bottomRight, // Fim do degradê
     stops: [0.0, 0.7, 1.0], // Posições intermediárias do degradê
   );
+
+  static const LinearGradient secondaryRed3D = LinearGradient(
+    colors: [
+      Color(0xFFF2A384), // Cor principal (secondaryRed)
+      Color.fromARGB(255, 213, 142, 114), // Tom mais suave (ligeiramente mais escuro)
+      Color.fromARGB(255, 181, 122, 99), // Tom mais escuro para profundidade
+    ],
+    begin: Alignment.topLeft, // Início do degradê
+    end: Alignment.bottomRight, // Fim do degradê
+    stops: [0.0, 0.7, 1.0], // Posições intermediárias do degradê
+  );
 }

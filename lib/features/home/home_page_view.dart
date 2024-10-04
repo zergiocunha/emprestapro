@@ -2,8 +2,8 @@ import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/widgets/custom_bottom_app_bar.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/home_page.dart';
+import 'package:emprestapro/features/loan/loans_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
-import 'package:emprestapro/features/sign_up/sign_up_page.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +39,7 @@ class _HomePageViewState extends State<HomePageView> {
         controller: homeController.pageController,
         children: const [
           HomePage(),
-          SignUpPage(),
+          LoansPage(),
           SignInPage(),
         ],
       ),
@@ -58,11 +58,11 @@ class _HomePageViewState extends State<HomePageView> {
             ),
           ),
           CustomBottomAppBarItem(
-            label: 'profile',
-            primaryIcon: Icons.person,
-            secondaryIcon: Icons.person_outline,
+            label: 'loans',
+            primaryIcon: Icons.reorder,
+            secondaryIcon: Icons.reorder,
             onPressed: () => homeController.pageController.jumpToPage(
-              3,
+              1,
             ),
           ),
         ],

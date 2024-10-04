@@ -65,7 +65,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                     currentItem ? item.primaryIcon : item.secondaryIcon,
                     color: currentItem
                         ? widget.selectedItemColor
-                        : AppColors.background,
+                        : AppColors.secoundaryText,
                   ),
                 ),
               ),

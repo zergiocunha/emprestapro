@@ -1,4 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:emprestapro/common/models/address_model.dart';
+import 'package:emprestapro/features/consumer/consumer_controller.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
@@ -7,7 +12,7 @@ import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
 import 'package:uuid/uuid.dart';
 
 class AddConsumerPage extends StatefulWidget {
-  const AddConsumerPage({Key? key}) : super(key: key);
+  const AddConsumerPage({super.key});
 
   @override
   _AddConsumerPageState createState() => _AddConsumerPageState();
@@ -23,6 +28,8 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
   final _cityController = TextEditingController();
   final _stateController = TextEditingController();
   final _zipCodeController = TextEditingController();
+  final _consumerController = locator.get<ConsumerController>();
+  final _homeController = locator.get<HomeController>();
 
   @override
   void dispose() {
@@ -37,10 +44,11 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
     super.dispose();
   }
 
-  void _addConsumer(BuildContext context) {
+  Future<void> _addConsumer(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
       final newConsumer = ConsumerModel(
         uid: const Uuid().v4(),
+        creditorId: _homeController.creditorModel.uid,
         name: _nameController.text,
         pix: _pixController.text,
         phone: _phoneController.text,
@@ -48,7 +56,6 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
         email: _emailController.text,
         creationTime: DateTime.now(),
         updateTime: DateTime.now(),
-        loanIds: [],
         active: true,
         address: AddressModel(
           street: _streetController.text,
@@ -57,17 +64,17 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
           zipCode: _zipCodeController.text,
         ),
       );
-
-      Navigator.pop(context); // Volta para a tela anterior após adicionar o consumidor
+      await _consumerController.addConsumer(newConsumer: newConsumer);
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryGreen,
+      backgroundColor: AppColors.secoundaryBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryGreen,
+        backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         title: const Text(
           'Adicionar Cliente',
@@ -81,7 +88,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          color: AppColors.background,
+          gradient: AppColors.background3D,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
@@ -201,7 +208,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                     ),
                     CustomElevatedButton(
                       label: 'Adicionar',
-                      onPressed: () => _addConsumer(context),
+                      onPressed: () async => await _addConsumer(context),
                     ),
                   ],
                 ),

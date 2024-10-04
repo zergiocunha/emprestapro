@@ -1,25 +1,32 @@
+import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/loan/loan_state.dart';
+import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 
-class AddLoanController extends ChangeNotifier {
+class LoanController extends ChangeNotifier {
   final LoanRepository loanRepository;
   final CreditorRepository creditorRepository;
+  final ConsumerRepository consumerRepository;
   final SecureStorageService secureStorageService;
+  final HomeController homeController;
 
-  AddLoanController({
+  LoanController({
     required this.loanRepository,
+    required this.consumerRepository,
     required this.secureStorageService,
+    required this.homeController,
     required this.creditorRepository,
   });
 
-  AddLoansState _state = AddLoansInitialState();
-  AddLoansState get state => _state;
+  LoanState _state = LoanInitialState();
+  LoanState get state => _state;
 
   UserModel _userModel = UserModel();
   UserModel get userModel => _userModel;
@@ -27,7 +34,10 @@ class AddLoanController extends ChangeNotifier {
   CreditorModel _creditorModel = CreditorModel();
   CreditorModel get creditorModel => _creditorModel;
 
-  void _changeState(AddLoansState newState) {
+  List<ConsumerModel> _consumersList = [];
+  List<ConsumerModel> get consumersList => _consumersList;
+
+  void _changeState(LoanState newState) {
     _state = newState;
     notifyListeners();
   }
@@ -64,6 +74,22 @@ class AddLoanController extends ChangeNotifier {
         (error) => _changeState(AddLoansErrorState(message: error.message)),
         (creditorModel) {
       _creditorModel = creditorModel;
+      _changeState(AddLoansSuccessState());
+    });
+  }
+
+  Future<void> getConsumerList() async {
+    _changeState(AddLoansLoadingState());
+
+    final result = await consumerRepository.get(
+      fieldName: 'creditorId',
+      value: homeController.creditorModel.uid!,
+    );
+
+    result.fold(
+        (error) => _changeState(AddLoansErrorState(message: error.message)),
+        (data) {
+      _consumersList = data;
       _changeState(AddLoansSuccessState());
     });
   }

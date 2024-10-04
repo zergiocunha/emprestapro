@@ -27,7 +27,8 @@ class HomeInfoContainer extends StatelessWidget {
         height: 160,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: containerColor ?? AppColors.primaryGreen,
+          // color: containerColor ?? AppColors.primaryGreen,
+          gradient: AppColors.primaryGreen3D,
         ),
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -40,7 +41,7 @@ class HomeInfoContainer extends StatelessWidget {
                   Text(
                     dueDateTitle,
                     style: const TextStyle(
-                      color: AppColors.secoundaryText,
+                      color: AppColors.primaryText,
                       fontSize: 14,
                     ),
                   ),
@@ -68,7 +69,7 @@ class HomeInfoContainer extends StatelessWidget {
                   Text(
                     debitTitle,
                     style: const TextStyle(
-                      color: AppColors.secoundaryText,
+                      color: AppColors.primaryText,
                       fontSize: 14,
                     ),
                   ),

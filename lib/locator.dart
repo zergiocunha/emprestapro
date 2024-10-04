@@ -1,8 +1,10 @@
+import 'package:emprestapro/features/consumer/consumer_controller.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/loan/loan_controller.dart';
 import 'package:emprestapro/features/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/features/sign_up/sign_up_controller.dart';
 import 'package:emprestapro/features/splash/splash_controller.dart';
+import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
@@ -35,6 +37,14 @@ void setupDependencies() {
   locator.registerFactory<UserRepository>(
     () {
       return UserRepository(
+        firestoreService: locator.get<FirestoreService>(),
+      );
+    },
+  );
+
+  locator.registerFactory<ConsumerRepository>(
+    () {
+      return ConsumerRepository(
         firestoreService: locator.get<FirestoreService>(),
       );
     },
@@ -81,11 +91,19 @@ void setupDependencies() {
     ),
   );
 
-  locator.registerLazySingleton<AddLoanController>(
-    () => AddLoanController(
+  locator.registerLazySingleton<LoanController>(
+    () => LoanController(
       loanRepository: locator.get<LoanRepository>(),
       creditorRepository: locator.get<CreditorRepository>(),
+      consumerRepository: locator.get<ConsumerRepository>(),
       secureStorageService: locator.get<SecureStorageService>(),
+      homeController: locator.get<HomeController>(),
+    ),
+  );
+
+  locator.registerFactory<ConsumerController>(
+    () => ConsumerController(
+      consumerRepository: locator.get<ConsumerRepository>(),
     ),
   );
 }

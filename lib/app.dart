@@ -1,10 +1,12 @@
 import 'package:emprestapro/common/constants/routes.dart';
-import 'package:emprestapro/features/add_consumers/add_consumers.dart';
+import 'package:emprestapro/features/consumer/add_consumer_page.dart';
 import 'package:emprestapro/features/home/home_page_view.dart';
 import 'package:emprestapro/features/loan/add_loan_page.dart';
+import 'package:emprestapro/features/loan/loans_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/features/sign_up/sign_up_page.dart';
 import 'package:emprestapro/features/splash/splash_page.dart';
+import 'package:emprestapro/features/transaction/add_transaction_page.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -19,7 +21,9 @@ class App extends StatelessWidget {
         NamedRoute.signIn: (context) => const SignInPage(),
         NamedRoute.home: (context) => const HomePageView(),
         NamedRoute.addLoan: (context) => const AddLoanPage(),
-        NamedRoute.add_consumer: (context) => const AddConsumerPage(),
+        NamedRoute.addConsumer: (context) => const AddConsumerPage(),
+        NamedRoute.loans: (context) => const LoansPage(),
+        NamedRoute.addTransaction: (context) => const AddTransactionPage(),
       },
     );
   }

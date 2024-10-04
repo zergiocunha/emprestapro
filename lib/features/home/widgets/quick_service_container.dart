@@ -22,7 +22,7 @@ class QuickServiceContainer extends StatelessWidget {
         child: Container(
           height: 90,
           decoration: const BoxDecoration(
-            color: AppColors.background,
+            gradient: AppColors.background3D,
             borderRadius: BorderRadius.all(
               Radius.circular(16),
             ),
