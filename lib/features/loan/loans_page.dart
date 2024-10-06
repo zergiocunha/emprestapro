@@ -1,6 +1,6 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
-import 'package:emprestapro/common/utils.dart/calculation.dart';
+import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/widgets/evolution_container.dart';
 import 'package:emprestapro/common/widgets/loan_container.dart';
 import 'package:emprestapro/common/widgets/loans_information_container.dart';
@@ -18,9 +18,8 @@ class LoansPage extends StatefulWidget {
 
 class _LoansPageState extends State<LoansPage>
     with SingleTickerProviderStateMixin {
-
   final _addLoanController = locator.get<HomeController>();
-  
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +62,7 @@ class _LoansPageState extends State<LoansPage>
                   child: LoanContainer(
                     consumerName: loans[index].consumerId ?? '',
                     amount: loans[index].amount ?? 0,
+                    fees: Calculation.feesAmount(loans[index]),
                     secondaryName: 'secondaryName',
                     dueDate: loans[index].dueDate!,
                     imageUrl:

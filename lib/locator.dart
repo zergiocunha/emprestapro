@@ -1,6 +1,7 @@
 import 'package:emprestapro/features/consumer/consumer_controller.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/loan/loan_controller.dart';
+import 'package:emprestapro/features/profile/profile_controller.dart';
 import 'package:emprestapro/features/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/features/sign_up/sign_up_controller.dart';
 import 'package:emprestapro/features/splash/splash_controller.dart';
@@ -26,6 +27,13 @@ void setupDependencies() {
 
   locator.registerFactory<SplashController>(
     () => SplashController(
+      secureStorage: locator.get<SecureStorageService>(),
+    ),
+  );
+
+  locator.registerFactory<ProfileController>(
+    () => ProfileController(
+      authService: locator.get<AuthService>(),
       secureStorage: locator.get<SecureStorageService>(),
     ),
   );

@@ -3,6 +3,7 @@ import 'package:emprestapro/common/widgets/custom_bottom_app_bar.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/home_page.dart';
 import 'package:emprestapro/features/loan/loans_page.dart';
+import 'package:emprestapro/features/profile/profile_page.dart';
 import 'package:emprestapro/features/sign_in/sign_in_page.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _HomePageViewState extends State<HomePageView> {
         children: const [
           HomePage(),
           LoansPage(),
-          SignInPage(),
+          ProfilePage(),
         ],
       ),
       // floatingActionButton: const CustomFloatingActionButton(),
@@ -63,6 +64,14 @@ class _HomePageViewState extends State<HomePageView> {
             secondaryIcon: Icons.reorder,
             onPressed: () => homeController.pageController.jumpToPage(
               1,
+            ),
+          ),
+          CustomBottomAppBarItem(
+            label: 'loans',
+            primaryIcon: Icons.person,
+            secondaryIcon: Icons.person_outline,
+            onPressed: () => homeController.pageController.jumpToPage(
+              2,
             ),
           ),
         ],

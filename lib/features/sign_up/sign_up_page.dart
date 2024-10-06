@@ -2,7 +2,7 @@
 
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
-import 'package:emprestapro/common/utils.dart/validator.dart';
+import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
 import 'package:emprestapro/features/sign_up/sign_up_controller.dart';

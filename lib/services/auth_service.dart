@@ -43,6 +43,15 @@ class AuthService {
     }
   }
 
+  Future<DataResult<void>> signOut() async {
+    try {
+      await _auth.signOut();
+      return DataResult.failure(const GeneralException());
+    } on FirebaseAuthException catch (e) {
+      return DataResult.failure(AuthException(code: e.code));
+    }
+  }
+
   UserModel _createUserModelFromAuthUser(User user) {
     return UserModel(
       displayName: user.displayName,

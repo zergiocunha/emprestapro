@@ -1,6 +1,6 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
-import 'package:emprestapro/common/utils.dart/calculation.dart';
+import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/widgets/alert_container.dart';
 import 'package:emprestapro/features/home/widgets/home_app_bar.dart';

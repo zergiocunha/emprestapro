@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 class LoanContainer extends StatefulWidget {
   final String consumerName;
   final double amount;
+  final double fees;
   final Color? amountColor;
   final String secondaryName;
   final Widget? secondaryWidget;
@@ -17,6 +18,7 @@ class LoanContainer extends StatefulWidget {
     super.key,
     required this.consumerName,
     required this.amount,
+    required this.fees,
     this.amountColor,
     required this.secondaryName,
     this.secondaryWidget,
@@ -85,7 +87,7 @@ class _LoanContainerState extends State<LoanContainer> {
                 ),
                 DescriptionValueRow(
                   descrtiption: 'Juros',
-                  value: 'R\$${widget.amount.toStringAsFixed(2)}',
+                  value: 'R\$${widget.fees.toStringAsFixed(2)}',
                 ),
               ],
             ),

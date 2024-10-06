@@ -13,7 +13,7 @@ class CustomBottomAppBar extends StatefulWidget {
     this.selectedItemColor,
     required this.children,
     required this.controller,
-  })  : assert(children.length == 2, 'children.length must be 2'),
+  })  : assert(children.length >= 2, 'children.length must be 2'),
         super(key: key);
 
   @override

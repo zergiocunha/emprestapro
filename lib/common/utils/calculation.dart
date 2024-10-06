@@ -12,6 +12,10 @@ class Calculation {
     return total;
   }
 
+  static double feesAmount(LoanModel loan) {
+    return loan.amount! * (loan.fees! / 100);
+  }
+
   static double minimumFeesToReceive(List<LoanModel> loans) {
     double total = 0;
     loans = loans.where((loan) => loan.concluded == false).toList();
@@ -23,6 +27,8 @@ class Calculation {
   }
 
   static DateTime? nextToDueDate(List<LoanModel> loans) {
-    return loans.reduce((a, b) => a.dueDate!.isBefore(b.dueDate!) ? a : b).dueDate;
+    return loans
+        .reduce((a, b) => a.dueDate!.isBefore(b.dueDate!) ? a : b)
+        .dueDate;
   }
 }
