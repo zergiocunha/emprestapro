@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
     await homeController.getUser();
     await homeController.getCreditor();
     await homeController.getLoansByCreditor();
+    await homeController.getConsumersByCreditor();
     if (mounted) setState(() {});
   }
 
@@ -232,7 +233,10 @@ class _HomePageState extends State<HomePage> {
                         QuickServiceContainer(
                           quickContainerIcon: Icons.people,
                           quickContainerTitle1: 'Clientes',
-                          onTap: () {},
+                          onTap: () async {
+                            await Navigator.pushNamed(
+                                context, NamedRoute.consumers);
+                          },
                         ),
                         const SizedBox(width: 16),
                         QuickServiceContainer(

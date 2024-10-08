@@ -96,6 +96,7 @@ void setupDependencies() {
       secureStorageService: locator.get<SecureStorageService>(),
       creditorRepository: locator.get<CreditorRepository>(),
       loanRepository: locator.get<LoanRepository>(),
+      consumerRepository: locator.get<ConsumerRepository>(),
     ),
   );
 

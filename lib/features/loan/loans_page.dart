@@ -1,9 +1,9 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
-import 'package:emprestapro/common/widgets/evolution_container.dart';
-import 'package:emprestapro/common/widgets/loan_container.dart';
-import 'package:emprestapro/common/widgets/loans_information_container.dart';
+import 'package:emprestapro/features/loan/widgets/evolution_container.dart';
+import 'package:emprestapro/features/loan/widgets/loan_container.dart';
+import 'package:emprestapro/features/loan/widgets/loans_information_container.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';

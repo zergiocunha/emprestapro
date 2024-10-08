@@ -1,7 +1,9 @@
+import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
 import 'package:emprestapro/features/home/home_state.dart';
+import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
 import 'package:emprestapro/services/secure_storage.dart';
@@ -12,13 +14,16 @@ class HomeController extends ChangeNotifier {
     required SecureStorageService secureStorageService,
     required CreditorRepository creditorRepository,
     required LoanRepository loanRepository,
+    required ConsumerRepository consumerRepository,
   })  : _creditorRepository = creditorRepository,
         _secureStorageService = secureStorageService,
+        _consumerRepository = consumerRepository,
         _loanRepository = loanRepository;
 
   final CreditorRepository _creditorRepository;
   final LoanRepository _loanRepository;
   final SecureStorageService _secureStorageService;
+  final ConsumerRepository _consumerRepository;
 
   HomeState _state = HomeInitialState();
   final ValueNotifier<bool> showFloatingButton = ValueNotifier<bool>(true);
@@ -32,6 +37,8 @@ class HomeController extends ChangeNotifier {
   UserModel get userModel => _userModel;
 
   List<LoanModel> loans = List.empty(growable: true);
+  
+  List<ConsumerModel> consumers = List.empty(growable: true);
 
   late PageController _pageController;
   PageController get pageController => _pageController;
@@ -49,7 +56,6 @@ class HomeController extends ChangeNotifier {
     _pageController.jumpToPage(1);
   }
 
-
   Future<void> getUser() async {
     final data = await _secureStorageService.readOne(key: 'CURRENT_USER');
     _userModel = UserModel.fromJson(data ?? '');
@@ -58,8 +64,8 @@ class HomeController extends ChangeNotifier {
   Future<void> getCreditor() async {
     _changeState(HomeLoadingState());
 
-    final result =
-        await _creditorRepository.get(fieldName: 'userId', value: _userModel.uid!);
+    final result = await _creditorRepository.get(
+        fieldName: 'userId', value: _userModel.uid!);
 
     result.fold((error) => _changeState(HomeErrorState(message: error.message)),
         (creditorModel) {
@@ -78,5 +84,22 @@ class HomeController extends ChangeNotifier {
       loans = data;
       _changeState(HomeSuccessState());
     });
+  }
+
+  Future<void> getConsumersByCreditor() async {
+    _changeState(HomeLoadingState());
+
+    final result = await _consumerRepository.get(
+      fieldName: 'creditorId',
+      value: _creditorModel.uid!,
+    );
+
+    result.fold(
+      (error) => _changeState(HomeErrorState(message: error.message)),
+      (data) {
+        consumers = data;
+        _changeState(HomeSuccessState());
+      },
+    );
   }
 }

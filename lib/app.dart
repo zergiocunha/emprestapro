@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/features/consumer/add_consumer_page.dart';
+import 'package:emprestapro/features/consumer/consumers_page.dart';
 import 'package:emprestapro/features/home/home_page_view.dart';
 import 'package:emprestapro/features/loan/add_loan_page.dart';
 import 'package:emprestapro/features/loan/loans_page.dart';
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
         NamedRoute.addConsumer: (context) => const AddConsumerPage(),
         NamedRoute.loans: (context) => const LoansPage(),
         NamedRoute.addTransaction: (context) => const AddTransactionPage(),
+        NamedRoute.consumers: (context) => const ConsumersPage(),
       },
     );
   }
