@@ -18,6 +18,21 @@ class FirestoreService {
     }
   }
 
+  Future<void> update({
+    required String collection,
+    required String uid,
+    required Map<String, dynamic> params,
+  }) async {
+    try {
+      await _db
+          .collection(collection)
+          .doc(uid)
+          .update(params);
+    } catch (e) {
+      log('FirestoreService - update - Error: $e'); // Mensagem de erro correta
+    }
+  }
+
   Future<Map<String, dynamic>> get({
     required String collection,
     required String uid,

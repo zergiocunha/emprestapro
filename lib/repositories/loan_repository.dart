@@ -49,4 +49,20 @@ class LoanRepository {
       return DataResult.failure(e);
     }
   }
+
+  Future<DataResult<bool>> update({
+    required LoanModel loanModel,
+  }) async {
+    try {
+      await firestoreService.update(
+        collection: Collections.loans,
+        uid: loanModel.uid!,
+        params: loanModel.toMap(),
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
 }

@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:flutter/material.dart';
 
@@ -6,18 +5,14 @@ class AlertContiner extends StatelessWidget {
   const AlertContiner({
     super.key,
     required this.alertCount,
-    required this.alertDescription,
   });
 
   final int alertCount;
-  final String alertDescription;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
       decoration: BoxDecoration(
-        // color: AppColors.secoundaryRed,
         gradient: AppColors.secondaryRed3D,
         borderRadius: BorderRadius.circular(16),
       ),
@@ -61,23 +56,6 @@ class AlertContiner extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 5),
-            Row(
-              children: [
-                SizedBox(
-                  width: 340,
-                  child: AutoSizeText(
-                    alertDescription,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),

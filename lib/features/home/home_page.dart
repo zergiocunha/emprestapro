@@ -50,15 +50,12 @@ class _HomePageState extends State<HomePage> {
             .length
         : 0;
 
-    const String alertDescription =
-        'We noticed a small charge that is out of character of this account, please review';
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
             child: HomeAppBar(
               photoUrl: homeController.userModel.photoUrl ?? '',
               displayName: homeController.creditorModel.name ?? '',
@@ -67,10 +64,9 @@ class _HomePageState extends State<HomePage> {
           ),
           if (alertCount > 0)
             Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
               child: AlertContiner(
                 alertCount: alertCount,
-                alertDescription: alertDescription,
               ),
             ),
           const SizedBox(height: 16),
@@ -137,16 +133,6 @@ class _HomePageState extends State<HomePage> {
                           quickContainerTitle1: 'Empréstimos',
                           onTap: () {
                             homeController.jumpToLoansPage();
-                          },
-                        ),
-                        const SizedBox(width: 16),
-                        QuickServiceContainer(
-                          quickContainerIcon: Icons.add_circle_outline,
-                          quickContainerTitle1: 'Novo',
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                                context, NamedRoute.addLoan);
-                            getDatas();
                           },
                         ),
                         const SizedBox(width: 16),
@@ -233,18 +219,8 @@ class _HomePageState extends State<HomePage> {
                         QuickServiceContainer(
                           quickContainerIcon: Icons.people,
                           quickContainerTitle1: 'Clientes',
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                                context, NamedRoute.consumers);
-                          },
-                        ),
-                        const SizedBox(width: 16),
-                        QuickServiceContainer(
-                          quickContainerIcon: Icons.person_add,
-                          quickContainerTitle1: 'Novo',
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                                context, NamedRoute.addConsumer);
+                          onTap: () {
+                            homeController.jumpToConsumersPage();
                           },
                         ),
                       ],

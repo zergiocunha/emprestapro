@@ -1,6 +1,5 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
-import 'package:emprestapro/features/consumer/consumer_controller.dart';
 import 'package:emprestapro/features/consumer/widgets/consumer_container.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/locator.dart';

@@ -1,13 +1,13 @@
 class LoanModel {
-  final String? uid;
-  final String? consumerId;
-  final String? creditorId;
-  final double? amount;
-  final double? fees;
-  final DateTime? dueDate;
-  final DateTime? creationTime;
-  final DateTime? updateTime;
-  final bool? concluded;
+  String? uid;
+  String? consumerId;
+  String? creditorId;
+  double? amount;
+  double? fees;
+  DateTime? dueDate;
+  DateTime? creationTime;
+  DateTime? updateTime;
+  bool? concluded;
 
   LoanModel({
     this.uid,

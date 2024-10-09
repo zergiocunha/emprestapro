@@ -11,7 +11,6 @@ class CustomTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final TextInputType? keyboardType;
 
-
   const CustomTextFormField({
     super.key,
     this.labelText,
@@ -51,7 +50,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             border: const OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.all(
-                Radius.circular(30),
+                Radius.circular(16),
               ),
             ),
           ),

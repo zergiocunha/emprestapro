@@ -50,7 +50,7 @@ class _CustomDropdownButtonFormFieldState<T> extends State<CustomDropdownButtonF
             border: const OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.all(
-                Radius.circular(30),
+                Radius.circular(16),
               ),
             ),
           ),

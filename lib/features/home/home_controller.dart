@@ -37,7 +37,7 @@ class HomeController extends ChangeNotifier {
   UserModel get userModel => _userModel;
 
   List<LoanModel> loans = List.empty(growable: true);
-  
+
   List<ConsumerModel> consumers = List.empty(growable: true);
 
   late PageController _pageController;
@@ -54,6 +54,14 @@ class HomeController extends ChangeNotifier {
 
   void jumpToLoansPage() {
     _pageController.jumpToPage(1);
+  }
+
+  void jumpToHomePage() {
+    _pageController.jumpToPage(0);
+  }
+
+  void jumpToConsumersPage() {
+    _pageController.jumpToPage(2);
   }
 
   Future<void> getUser() async {

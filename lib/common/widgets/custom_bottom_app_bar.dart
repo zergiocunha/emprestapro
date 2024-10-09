@@ -38,7 +38,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      shadowColor: AppColors.background,
+      shadowColor: AppColors.secoundaryBackground,
       color: AppColors.secoundaryBackground,
       shape: const CircularNotchedRectangle(),
       child: Row(

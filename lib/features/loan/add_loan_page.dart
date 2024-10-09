@@ -7,6 +7,7 @@ import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/widgets/custom_dropdown.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/loan/loan_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
   final _interestRateController = TextEditingController();
   final _dueDateController = TextEditingController();
   final _loanController = locator.get<LoanController>();
+  final _homeController = locator.get<HomeController>();
 
   ConsumerModel? _selectedConsumer;
   DateTime? _selectedDate;
@@ -203,6 +205,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
                       if (_formKey.currentState?.validate() ?? false) {
                         await _addLoan();
                         Navigator.pop(context);
+                        _homeController.jumpToHomePage();
                       }
                     },
                   ),

@@ -34,6 +34,7 @@ class _HomePageViewState extends State<HomePageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
@@ -45,7 +46,6 @@ class _HomePageViewState extends State<HomePageView> {
           ProfilePage(),
         ],
       ),
-      // Remove o floatingActionButton, pois você indicou que não quer usá-lo
       floatingActionButton: const CustomFloatingActionButton(),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       resizeToAvoidBottomInset: true,

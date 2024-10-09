@@ -5,9 +5,11 @@ import 'package:emprestapro/features/profile/profile_controller.dart';
 import 'package:emprestapro/features/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/features/sign_up/sign_up_controller.dart';
 import 'package:emprestapro/features/splash/splash_controller.dart';
+import 'package:emprestapro/features/transaction/transaction_controller.dart';
 import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
+import 'package:emprestapro/repositories/transaction_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
@@ -74,6 +76,14 @@ void setupDependencies() {
     },
   );
 
+    locator.registerFactory<TransactionRepository>(
+    () {
+      return TransactionRepository(
+        firestoreService: locator.get<FirestoreService>(),
+      );
+    },
+  );
+
   locator.registerFactory<SignUpController>(
     () => SignUpController(
       locator.get<UserRepository>(),
@@ -115,4 +125,12 @@ void setupDependencies() {
       consumerRepository: locator.get<ConsumerRepository>(),
     ),
   );
+
+  locator.registerFactory<TransactionController>(
+    () => TransactionController(
+      transactionRepository: locator.get<TransactionRepository>(),
+      loanRepository: locator.get<LoanRepository>(),
+    ),
+  );
+  //TransactionController
 }

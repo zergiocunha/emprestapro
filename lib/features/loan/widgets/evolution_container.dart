@@ -33,13 +33,13 @@ class EvolutionContainer extends StatelessWidget {
               '${value.toStringAsFixed(2)}%',
               style: TextStyle(
                 color:
-                    value >= 0 ? AppColors.primaryGreen : AppColors.primaryRed,
+                    value >= 0 ? AppColors.primaryText : AppColors.primaryRed,
               ),
             ),
             const SizedBox(width: 5),
             Icon(
               value >= 0 ? Icons.trending_up : Icons.trending_down,
-              color: value >= 0 ? AppColors.primaryGreen : AppColors.primaryRed,
+              color: value >= 0 ? AppColors.primaryText : AppColors.primaryRed,
             ),
           ],
         ),

@@ -45,9 +45,14 @@ class TransactionModel {
       creditorId: map['creditorId'],
       loanId: map['loanId'],
       amount: map['amount'],
-      transactionTime: DateTime.parse(map['transactionTime']),
-      creationTime: DateTime.parse(map['creationTime']),
-      updateTime: DateTime.parse(map['updateTime']),
+      transactionTime: map['transactionTime'] != null
+          ? DateTime.parse(map['transactionTime'])
+          : null,
+      creationTime: map['creationTime'] != null
+          ? DateTime.parse(map['creationTime'])
+          : null,
+      updateTime:
+          map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,
       status: TransactionStatus.values.byName(map['status']),
     );
   }
