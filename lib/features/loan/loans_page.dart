@@ -28,7 +28,9 @@ class _LoansPageState extends State<LoansPage>
   }
 
   double evolutionCalc(double amountCredit, double amountDividend) {
-    return (amountDividend / amountCredit) * 100;
+    return (amountCredit == 0 && amountDividend == 0)
+        ? 0
+        : (amountDividend / amountCredit) * 100;
   }
 
   @override
@@ -107,7 +109,9 @@ class _LoansPageState extends State<LoansPage>
                       const SizedBox(height: 16),
                       LoansInformationContainers(
                         amountCredit: Calculation.totalBorrowed(loans),
-                        lastLoanDate: Calculation.nextToDueDate(loans)!,
+                        lastLoanDate: loans.isNotEmpty
+                            ? Calculation.nextToDueDate(loans)!
+                            : null,
                         amountDividend: Calculation.minimumFeesToReceive(loans),
                         evolution: evolutionCalc(
                           Calculation.totalBorrowed(loans),
@@ -128,14 +132,14 @@ class LoansInformationContainers extends StatelessWidget {
   const LoansInformationContainers({
     super.key,
     required this.amountCredit,
-    required this.lastLoanDate,
+    this.lastLoanDate,
     required this.amountDividend,
     required this.evolution,
   });
 
   final double amountCredit;
   final double amountDividend;
-  final DateTime lastLoanDate;
+  final DateTime? lastLoanDate;
   final double evolution;
 
   @override
@@ -147,7 +151,9 @@ class LoansInformationContainers extends StatelessWidget {
           containerName: 'Crédito',
           amount: amountCredit,
           secondaryName: 'Último',
-          secondaryInformation: DateFormat('dd/MM/yyyy').format(lastLoanDate),
+          secondaryInformation: lastLoanDate != null
+              ? DateFormat('dd/MM/yyyy').format(lastLoanDate!)
+              : '',
         ),
         LoansInformationContainer(
           containerName: 'Dividendo',
