@@ -1,5 +1,3 @@
-import 'package:emprestapro/common/constants/enums/transaction_status.dart';
-
 class TransactionModel {
   final String? uid;
   final String? consumerId;
@@ -9,7 +7,6 @@ class TransactionModel {
   final DateTime? transactionTime;
   final DateTime? creationTime;
   final DateTime? updateTime;
-  final TransactionStatus? status;
 
   TransactionModel({
     this.uid,
@@ -20,7 +17,6 @@ class TransactionModel {
     this.transactionTime,
     this.creationTime,
     this.updateTime,
-    this.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,7 +29,6 @@ class TransactionModel {
       'transactionTime': transactionTime?.toIso8601String(),
       'creationTime': creationTime?.toIso8601String(),
       'updateTime': updateTime?.toIso8601String(),
-      'status': status?.name,
     };
   }
 
@@ -53,7 +48,6 @@ class TransactionModel {
           : null,
       updateTime:
           map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,
-      status: TransactionStatus.values.byName(map['status']),
     );
   }
 }

@@ -1,5 +1,9 @@
+// ignore_for_file: constant_pattern_never_matches_value_type
+
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/constants/enums/loan_filter.dart';
 import 'package:emprestapro/common/constants/routes.dart';
+import 'package:emprestapro/common/extensions/loan_filter_ext.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
@@ -21,6 +25,7 @@ class LoansPage extends StatefulWidget {
 class _LoansPageState extends State<LoansPage>
     with SingleTickerProviderStateMixin {
   final _homeController = locator.get<HomeController>();
+  LoanFilter? selectedFilter = LoanFilter.values[1];
 
   @override
   void initState() {
@@ -38,10 +43,28 @@ class _LoansPageState extends State<LoansPage>
     final List<LoanModel> loans = _homeController.loans;
     final List<ConsumerModel> consumers = _homeController.consumers;
 
+    List<LoanModel> filteredLoans = loans.where((loan) {
+      switch (selectedFilter) {
+        case LoanFilter.all:
+          return true;
+        case LoanFilter.concluded:
+          return loan.concluded == true;
+        case LoanFilter.notConcluded:
+          return loan.concluded == false;
+        case LoanFilter.overdue:
+          return loan.dueDate != null &&
+              loan.dueDate!.isBefore(DateTime.now()) &&
+              !loan.concluded!;
+        default:
+          return true;
+      }
+    }).toList();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         shadowColor: AppColors.secoundaryBackground,
@@ -53,6 +76,33 @@ class _LoansPageState extends State<LoansPage>
             fontSize: 20,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: DropdownButton<LoanFilter>(
+              icon: const Icon(Icons.filter_list, color: AppColors.primaryText),
+              value: selectedFilter,
+              dropdownColor: AppColors.secoundaryBackground,
+              items: LoanFilter.values
+                  .map<DropdownMenuItem<LoanFilter>>((LoanFilter value) {
+                return DropdownMenuItem<LoanFilter>(
+                  value: value,
+                  child: Text(
+                    value.description,
+                    style: const TextStyle(
+                      color: AppColors.primaryText,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (LoanFilter? newValue) {
+                setState(() {
+                  selectedFilter = newValue;
+                });
+              },
+            ),
+          )
+        ],
         centerTitle: false,
       ),
       body: StreamBuilder<HomeController>(
@@ -63,17 +113,13 @@ class _LoansPageState extends State<LoansPage>
                 Positioned.fill(
                   child: ListView.separated(
                     padding: const EdgeInsets.only(top: 160, bottom: 10),
-                    itemCount: loans.length,
+                    itemCount: filteredLoans.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String consumerId = loans[index].consumerId ?? '';
-                      String consumerName = consumers
-                              .firstWhere(
-                                (consumer) => consumer.uid == consumerId,
-                                orElse: () =>
-                                    ConsumerModel(name: 'Desconhecido'),
-                              )
-                              .name ??
-                          '';
+                      String consumerId = filteredLoans[index].consumerId ?? '';
+                      ConsumerModel consumerName = consumers.firstWhere(
+                        (consumer) => consumer.uid == consumerId,
+                        orElse: () => ConsumerModel(name: 'Desconhecido'),
+                      );
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: GestureDetector(
@@ -81,17 +127,17 @@ class _LoansPageState extends State<LoansPage>
                             await Navigator.pushNamed(
                               context,
                               NamedRoute.loanDetail,
-                              arguments: loans[index],
+                              arguments: filteredLoans[index],
                             );
                           },
                           child: LoanContainer(
-                            consumerName: consumerName,
-                            amount: loans[index].amount ?? 0,
-                            fees: Calculation.feesAmount(loans[index]),
+                            consumerName: consumerName.name ?? '',
+                            amount: filteredLoans[index].amount ?? 0,
+                            fees: Calculation.feesAmount(filteredLoans[index]),
                             secondaryName: 'secondaryName',
-                            dueDate: loans[index].dueDate!,
-                            imageUrl:
-                                'https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?s=612x612&w=0&k=20&c=8ssXDNTp1XAPan8Bg6mJRwG7EXHshFO5o0v9SIj96nY=',
+                            dueDate: filteredLoans[index].dueDate!,
+                            imageUrl: consumerName.imageUrl ?? '',
+                            concluded: filteredLoans[index].concluded!,
                           ),
                         ),
                       );
@@ -107,16 +153,23 @@ class _LoansPageState extends State<LoansPage>
                   child: Column(
                     children: [
                       const SizedBox(height: 16),
-                      LoansInformationContainers(
-                        amountCredit: Calculation.totalBorrowed(loans),
-                        lastLoanDate: loans.isNotEmpty
-                            ? Calculation.nextToDueDate(loans)!
-                            : null,
-                        amountDividend: Calculation.minimumFeesToReceive(loans),
-                        evolution: evolutionCalc(
-                          Calculation.totalBorrowed(loans),
-                          Calculation.minimumFeesToReceive(loans),
-                        ),
+                      Column(
+                        children: [
+                          LoansInformationContainers(
+                            amountCredit:
+                                Calculation.totalBorrowed(filteredLoans),
+                            lastLoanDate: filteredLoans.isNotEmpty
+                                ? Calculation.nextToDueDate(filteredLoans)!
+                                : null,
+                            amountDividend:
+                                Calculation.minimumFeesToReceive(filteredLoans),
+                            evolution: evolutionCalc(
+                              Calculation.totalBorrowed(filteredLoans),
+                              Calculation.minimumFeesToReceive(filteredLoans),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                       ),
                     ],
                   ),
@@ -125,6 +178,13 @@ class _LoansPageState extends State<LoansPage>
             );
           }),
     );
+  }
+}
+
+extension StringCasingExtension on String {
+  String capitalize() {
+    if (this == null || this.isEmpty) return '';
+    return '${this[0].toUpperCase()}${this.substring(1).toLowerCase()}';
   }
 }
 

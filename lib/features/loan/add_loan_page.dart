@@ -30,7 +30,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
   final _homeController = locator.get<HomeController>();
 
   ConsumerModel? _selectedConsumer;
-  DateTime? _selectedDate;
+  DateTime? _selectedDate = DateTime(DateTime.now().year, DateTime.now().month + 1, DateTime.now().day);
 
   @override
   void initState() {
@@ -47,6 +47,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
   }
 
   void getData() async {
+    _dueDateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate!);
     await _loanController.getUserData();
     await _loanController.getCreditorData();
     await _loanController.getConsumerList();
@@ -63,7 +64,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dueDateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _dueDateController.text = DateFormat('dd/MM/yyyy').format(picked);
       });
     }
   }
@@ -92,6 +93,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
     return Scaffold(
       backgroundColor: AppColors.secoundaryBackground,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         title: const Text(
@@ -149,6 +151,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
               ),
               const SizedBox(height: 16),
               CustomTextFormField(
+                keyboardType: TextInputType.number,
                 labelText: 'Valor do Empréstimo',
                 hintText: 'Insira o valor...',
                 controller: _amountController,
@@ -161,6 +164,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
               ),
               const SizedBox(height: 16),
               CustomTextFormField(
+                keyboardType: TextInputType.number,
                 labelText: 'Taxa de Juros (%)',
                 hintText: 'Insira a taxa de juros...',
                 controller: _interestRateController,

@@ -183,13 +183,6 @@ class TransactionContainer extends StatelessWidget {
                 ),
               ],
             ),
-            Text(
-              transaction.status.toString(),
-              style: const TextStyle(
-                color: AppColors.primaryText,
-                fontSize: 16,
-              ),
-            ),
           ],
         ),
       ),

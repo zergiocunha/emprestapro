@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously, curly_braces_in_flow_control_structures
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/enums/transaction_status.dart';
+import 'package:emprestapro/common/constants/transaction_result.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/models/transaction_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_popup.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
 import 'package:emprestapro/features/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
@@ -25,14 +30,21 @@ class AddTransactionPage extends StatefulWidget {
 
 class _AddTransactionPageState extends State<AddTransactionPage> {
   final _formKey = GlobalKey<FormState>();
-  final _amountController = TextEditingController();
+  final _textEditingController = TextEditingController();
   final _transactionController = locator.get<TransactionController>();
   final _transactionTimeController = TextEditingController();
-  DateTime? _selectedTransactionTime;
+  DateTime? _selectedTransactionTime = DateTime.now();
+
+  @override
+  void initState() {
+    _transactionTimeController.text =
+        DateFormat('dd/MM/yyyy').format(_selectedTransactionTime!);
+    super.initState();
+  }
 
   @override
   void dispose() {
-    _amountController.dispose();
+    _textEditingController.dispose();
     _transactionTimeController.dispose();
     super.dispose();
   }
@@ -48,27 +60,46 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     if (picked != null && picked != _selectedTransactionTime) {
       setState(() {
         _selectedTransactionTime = picked;
-        _transactionTimeController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _transactionTimeController.text =
+            DateFormat('yyyy-MM-dd').format(picked);
       });
     }
   }
 
-  Future<bool> _addTransaction() async {
+  Future<Map<String, dynamic>> _addTransaction() async {
     final transaction = TransactionModel(
       uid: const Uuid().v1(),
       consumerId: widget.loan.consumerId,
       creditorId: widget.loan.creditorId,
       loanId: widget.loan.uid,
-      amount: double.parse(_amountController.text),
-      transactionTime: _selectedTransactionTime ?? DateTime.now(), // Usa a data selecionada ou agora
+      amount: double.parse(_textEditingController.text),
+      transactionTime: _selectedTransactionTime ?? DateTime.now(),
       creationTime: DateTime.now(),
-      status: TransactionStatus.pending,
     );
 
-    await _transactionController.addTransaction(newTransaction: transaction);
-    final processedLoan = Calculation.processTransaction(transaction.amount!, widget.loan);
-    await _transactionController.updateLoan(loan: processedLoan);
+    if (_transactionIsNotValid(transaction, widget.loan)) {
+      return {
+        'status': TransactionStatus.invalid,
+        'message': TransactionResult.invalid
+      };
+    }
 
+    await _transactionController.addTransaction(newTransaction: transaction);
+    final processResult =
+        Calculation.processTransaction(transaction, widget.loan);
+    await _transactionController.updateLoan(
+        loan: processResult['loan'] as LoanModel);
+
+    return processResult;
+  }
+
+  _transactionIsNotValid(
+    TransactionModel transaction,
+    LoanModel loan,
+  ) {
+    if (transaction.amount! <= (loan.amount! + Calculation.feesAmount(loan))) {
+      return false;
+    }
     return true;
   }
 
@@ -102,46 +133,30 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           key: _formKey,
           child: Column(
             children: [
-              CustomTextFormField(
-                labelText: 'ID do Consumidor',
-                hintText: 'Insira o ID do consumidor...',
-                controller: TextEditingController()..text = widget.loan.consumerId ?? '',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Insira um ID válido';
-                  }
-                  return null;
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 40,
+                    width: 340,
+                    child: AutoSizeText(
+                      'Empréstimo: R\$${widget.loan.amount!.toStringAsFixed(2)}  |  Juros: R\$${Calculation.feesAmount(widget.loan).toStringAsFixed(2)}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
               CustomTextFormField(
-                labelText: 'ID do Credor',
-                hintText: 'Insira o ID do credor...',
-                controller: TextEditingController()..text = widget.loan.creditorId ?? '',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Insira um ID válido';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              CustomTextFormField(
-                labelText: 'ID do Empréstimo',
-                hintText: 'Insira o ID do empréstimo...',
-                controller: TextEditingController()..text = widget.loan.uid ?? '',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Insira um ID válido';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              CustomTextFormField(
+                keyboardType: TextInputType.number,
                 labelText: 'Valor da Transação',
                 hintText: 'Insira o valor...',
-                controller: _amountController,
+                controller: _textEditingController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Insira um valor válido';
@@ -154,6 +169,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                 onTap: () => _selectTransactionTime(context),
                 child: AbsorbPointer(
                   child: CustomTextFormField(
+                    keyboardType: TextInputType.datetime,
                     labelText: 'Data da Transação',
                     hintText: 'Escolha a data da transação...',
                     controller: _transactionTimeController,
@@ -181,8 +197,19 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     label: 'Adicionar',
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        final success = await _addTransaction();
-                        Navigator.pop(context, success);
+                        final transactionResult = await _addTransaction();
+                        await popup(
+                          context: context,
+                          title: 'Resultado da Transação',
+                          message: transactionResult['message'],
+                          backgroundColor: transactionResult['status'] ==
+                                  TransactionStatus.invalid
+                              ? AppColors.secondaryRed
+                              : null,
+                        );
+                        if (transactionResult['status'] !=
+                            TransactionStatus.invalid)
+                          Navigator.pop(context, true);
                       }
                     },
                   ),

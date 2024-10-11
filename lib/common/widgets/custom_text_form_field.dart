@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final String? labelText;
@@ -19,7 +20,8 @@ class CustomTextFormField extends StatefulWidget {
     this.inputTextColor,
     this.controller,
     this.obscureText,
-    this.validator, this.keyboardType,
+    this.validator,
+    this.keyboardType,
   });
 
   @override
@@ -34,11 +36,20 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          inputFormatters: widget.keyboardType == TextInputType.number
+              ? [
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'[0-9.]'),
+                  ),
+                  CommaToDotInputFormatter(),
+                ]
+              : null,
           keyboardType: widget.keyboardType,
-        controller: widget.controller,
-        obscureText: widget.obscureText ?? false,
-        validator: widget.validator,
-        style: TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
+          controller: widget.controller,
+          obscureText: widget.obscureText ?? false,
+          validator: widget.validator,
+          style:
+              TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
           decoration: InputDecoration(
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: AppColors.secoundaryText),
@@ -53,9 +64,40 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 Radius.circular(16),
               ),
             ),
+            // Adiciona o ícone de calendário quando o tipo for datetime
+            suffixIcon: widget.keyboardType == TextInputType.datetime
+                ? IconButton(
+                    icon: const Icon(Icons.calendar_today, color: AppColors.primaryText),
+                    onPressed: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                        setState(() {
+                          widget.controller?.text = formattedDate;
+                        });
+                      }
+                    },
+                  )
+                : null,
           ),
         ),
       ],
     );
+  }
+}
+
+class CommaToDotInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String newText = newValue.text.replaceAll(',', '.');
+    return newValue.copyWith(text: newText);
   }
 }

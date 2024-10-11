@@ -1,4 +1,5 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/features/consumer/widgets/consumer_container.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
@@ -23,6 +24,7 @@ class _ConsumersPageState extends State<ConsumersPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         shadowColor: AppColors.secoundaryBackground,
@@ -45,11 +47,20 @@ class _ConsumersPageState extends State<ConsumersPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ConsumerContainer(
-                    consumerName: consumers[index].name ?? 'Cliente',
-                    phoneNumber: consumers[index].phone ?? 'Telefone não disponível',
-                    email: consumers[index].email ?? 'Email não disponível',
-                    imageUrl: consumers[index].imageUrl!,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await Navigator.pushNamed(
+                        context,
+                        NamedRoute.consumerDetail,
+                        arguments: consumers[index],
+                      );
+                    },
+                    child: ConsumerContainer(
+                      consumerName: consumers[index].name ?? 'Cliente',
+                      phoneNumber: consumers[index].phone ?? 'Telefone não disponível',
+                      email: consumers[index].email ?? 'Email não disponível',
+                      imageUrl: consumers[index].imageUrl!,
+                    ),
                   ),
                 );
               },

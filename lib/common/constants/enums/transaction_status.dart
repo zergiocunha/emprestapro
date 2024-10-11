@@ -1,5 +1,7 @@
 enum TransactionStatus {
-  pending,
-  completed,
-  failed,
+  insufficientInterest,
+  interestPaid,
+  partiallyPaid,
+  loanConcluded,
+  invalid,
 }

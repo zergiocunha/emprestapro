@@ -12,4 +12,5 @@ class NamedRoute {
   static const String addTransaction = "/add_transaction";
   static const String consumers = "/consumers";
   static const String loanDetail = "/loan_detail";
+  static const String consumerDetail = "/consumer_detail";
 }

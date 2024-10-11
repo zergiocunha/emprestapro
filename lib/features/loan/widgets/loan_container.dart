@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +14,7 @@ class LoanContainer extends StatefulWidget {
   final Widget? secondaryWidget;
   final DateTime dueDate;
   final String imageUrl;
+  final bool? concluded;
 
   const LoanContainer({
     super.key,
@@ -24,6 +26,7 @@ class LoanContainer extends StatefulWidget {
     this.secondaryWidget,
     required this.dueDate,
     required this.imageUrl,
+    this.concluded,
   });
 
   @override
@@ -36,11 +39,20 @@ class _LoanContainerState extends State<LoanContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.primaryGreen3D,
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        gradient: widget.concluded!
+            ? AppColors.background3D
+            : AppColors.primaryGreen3D,
+        borderRadius: const BorderRadius.all(
           Radius.circular(16),
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.secoundaryBackground,
+            offset: Offset(0, 4),
+            blurRadius: 4,
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -48,7 +60,10 @@ class _LoanContainerState extends State<LoanContainer> {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: CachedNetworkImageProvider(widget.imageUrl),
+              backgroundImage: widget.imageUrl == ''
+                  ? null
+                  : CachedNetworkImageProvider(widget.imageUrl),
+              child: widget.imageUrl == '' ? const Icon(Icons.person, size: 40,) : null,
             ),
             const SizedBox(width: 10),
             Column(
@@ -94,57 +109,6 @@ class _LoanContainerState extends State<LoanContainer> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class DescriptionValueRow extends StatelessWidget {
-  const DescriptionValueRow({
-    super.key,
-    required this.descrtiption,
-    required this.value,
-  });
-
-  final String descrtiption;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 20,
-              width: 120,
-              child: AutoSizeText(
-                descrtiption,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              width: 120,
-              child: AutoSizeText(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

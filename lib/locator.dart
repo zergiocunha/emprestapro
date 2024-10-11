@@ -123,6 +123,7 @@ void setupDependencies() {
   locator.registerFactory<ConsumerController>(
     () => ConsumerController(
       consumerRepository: locator.get<ConsumerRepository>(),
+      loanRepository: locator.get<LoanRepository>(),
     ),
   );
 
@@ -132,5 +133,4 @@ void setupDependencies() {
       loanRepository: locator.get<LoanRepository>(),
     ),
   );
-  //TransactionController
 }

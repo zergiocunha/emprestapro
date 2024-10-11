@@ -14,7 +14,7 @@ class AppColors {
   static const Color primaryRed = Color.fromARGB(255, 255, 0, 51);
   static const Color secoundaryRed = Color(0xFFF2A384);
   static const Color secundaryGreen = Color(0xFF00968A);
-  static const Color secondaryRed = Color.fromARGB(77, 210, 57, 57);
+  static const Color secondaryRed = Color(0x4DD23939);
 
   static const LinearGradient background3D = LinearGradient(
     colors: [
@@ -41,7 +41,8 @@ class AppColors {
   static const LinearGradient secondaryRed3D = LinearGradient(
     colors: [
       Color(0xFFF2A384), // Cor principal (secondaryRed)
-      Color.fromARGB(255, 213, 142, 114), // Tom mais suave (ligeiramente mais escuro)
+      Color.fromARGB(
+          255, 213, 142, 114), // Tom mais suave (ligeiramente mais escuro)
       Color.fromARGB(255, 181, 122, 99), // Tom mais escuro para profundidade
     ],
     begin: Alignment.topLeft, // Início do degradê

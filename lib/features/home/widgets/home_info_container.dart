@@ -27,7 +27,6 @@ class HomeInfoContainer extends StatelessWidget {
         height: 160,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          // color: containerColor ?? AppColors.primaryGreen,
           gradient: AppColors.primaryGreen3D,
         ),
         child: Padding(

@@ -74,6 +74,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
     return Scaffold(
       backgroundColor: AppColors.secoundaryBackground,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         title: const Text(
@@ -101,6 +102,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
             child: Column(
               children: [
                 CustomTextFormField(
+                  keyboardType: TextInputType.name,
                   labelText: 'Nome',
                   hintText: 'Insira o nome do cliente...',
                   controller: _nameController,
@@ -125,6 +127,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
+                  keyboardType: TextInputType.phone,
                   labelText: 'Telefone',
                   hintText: 'Insira o telefone...',
                   controller: _phoneController,
@@ -137,6 +140,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   labelText: 'Email',
                   hintText: 'Insira o email...',
                   controller: _emailController,
@@ -149,6 +153,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
+                  keyboardType: TextInputType.streetAddress,
                   labelText: 'Rua',
                   hintText: 'Insira o nome da rua...',
                   controller: _streetController,
@@ -161,6 +166,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
+                  keyboardType: TextInputType.streetAddress,
                   labelText: 'Cidade',
                   hintText: 'Insira a cidade...',
                   controller: _cityController,
@@ -173,6 +179,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
+                  keyboardType: TextInputType.streetAddress,
                   labelText: 'Estado',
                   hintText: 'Insira o estado...',
                   controller: _stateController,
@@ -185,6 +192,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
+                  keyboardType: TextInputType.number,
                   labelText: 'CEP',
                   hintText: 'Insira o CEP...',
                   controller: _zipCodeController,

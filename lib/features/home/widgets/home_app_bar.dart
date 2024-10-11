@@ -19,9 +19,15 @@ class HomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        // color: AppColors.secoundaryBackground,
         gradient: AppColors.background3D,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.secoundaryBackground,
+            offset: Offset(0, 4),
+            blurRadius: 4,
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, top: 40),
