@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/models/address_model.dart';
+import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:flutter/material.dart';
 
 class ConsumerInfoContainer extends StatefulWidget {
@@ -8,6 +10,7 @@ class ConsumerInfoContainer extends StatefulWidget {
   final String? email;
   final String? pix;
   final String? status;
+  final String? imageUrl;
   final AddressModel? address;
 
   const ConsumerInfoContainer({
@@ -17,6 +20,7 @@ class ConsumerInfoContainer extends StatefulWidget {
     this.email,
     this.pix,
     this.status,
+    this.imageUrl,
     this.address,
   });
 
@@ -27,7 +31,8 @@ class ConsumerInfoContainer extends StatefulWidget {
 class _ConsumerInfoContainerState extends State<ConsumerInfoContainer> {
   @override
   Widget build(BuildContext context) {
-    final fullAddress = '${widget.address?.street ?? 'Não informado'}, ${widget.address?.city ?? 'Não informado'}, ${widget.address?.state ?? 'Não informado'}, ${widget.address?.country ?? 'Não informado'}';
+    final fullAddress =
+        '${widget.address?.street ?? 'Não informado'}, ${widget.address?.city ?? 'Não informado'}, ${widget.address?.state ?? 'Não informado'}, ${widget.address?.country ?? 'Não informado'}';
 
     return Container(
       decoration: BoxDecoration(
@@ -47,138 +52,63 @@ class _ConsumerInfoContainerState extends State<ConsumerInfoContainer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Nome:',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.name,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                Column(
+                  children: [
+                    DescriptionValueWidget(
+                      descrtiption: 'Nome',
+                      value: widget.name,
                     ),
+                    DescriptionValueWidget(
+                      descrtiption: 'Telefone',
+                      value: widget.phone ?? 'Não informado',
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 25),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 60,
+                        foregroundImage:
+                            CachedNetworkImageProvider(widget.imageUrl!),
+                        child: widget.imageUrl == ''
+                            ? const Icon(
+                                Icons.person,
+                                size: 80,
+                              )
+                            : null,
+                      ),
+                    ],
                   ),
+                )
+              ],
+            ),
+            DescriptionValueWidget(
+              descrtiption: 'Email',
+              value: widget.email ?? 'Não informado',
+              descriptionSize: 200,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DescriptionValueWidget(
+                  descrtiption: 'Pix',
+                  value: widget.pix ?? 'Não informado',
+                  descriptionSize: 200,
+                ),
+                DescriptionValueWidget(
+                  descrtiption: 'Ativo',
+                  value: widget.status ?? 'Indefinido',
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text(
-                  'Telefone:',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.phone ?? 'Não informado',
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text(
-                  'Email:',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.email ?? 'Não informado',
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text(
-                  'Pix:',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.pix ?? 'Não informado',
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text(
-                  'Ativo:',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.status ?? 'Indefinido',
-                    style: TextStyle(
-                      color: widget.status == 'Sim'
-                          ? AppColors.primaryGreen
-                          : AppColors.primaryRed,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text(
-                  'Endereço:',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    fullAddress,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
+            DescriptionValueWidget(
+              descrtiption: 'Endereço',
+              value: fullAddress,
+              descriptionSize: 300,
             ),
           ],
         ),

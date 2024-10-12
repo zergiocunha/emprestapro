@@ -64,6 +64,13 @@ class HomeController extends ChangeNotifier {
     _pageController.jumpToPage(2);
   }
 
+  void clearData() {
+    consumers = [];
+    loans = [];
+    _userModel = UserModel();
+    _creditorModel = CreditorModel();
+  }
+
   Future<void> getUser() async {
     final data = await _secureStorageService.readOne(key: 'CURRENT_USER');
     _userModel = UserModel.fromJson(data ?? '');

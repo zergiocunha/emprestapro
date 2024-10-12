@@ -63,7 +63,12 @@ class _LoanContainerState extends State<LoanContainer> {
               backgroundImage: widget.imageUrl == ''
                   ? null
                   : CachedNetworkImageProvider(widget.imageUrl),
-              child: widget.imageUrl == '' ? const Icon(Icons.person, size: 40,) : null,
+              child: widget.imageUrl == ''
+                  ? const Icon(
+                      Icons.person,
+                      size: 40,
+                    )
+                  : null,
             ),
             const SizedBox(width: 10),
             Column(
@@ -85,7 +90,7 @@ class _LoanContainerState extends State<LoanContainer> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                DescriptionValueRow(
+                DescriptionValueWidget(
                   descrtiption: 'Valor Total',
                   value: 'R\$${widget.amount.toStringAsFixed(2)}',
                 ),
@@ -96,11 +101,11 @@ class _LoanContainerState extends State<LoanContainer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                DescriptionValueRow(
+                DescriptionValueWidget(
                   descrtiption: 'Vancimento',
                   value: DateFormat('dd/MM/yyyy').format(widget.dueDate),
                 ),
-                DescriptionValueRow(
+                DescriptionValueWidget(
                   descrtiption: 'Juros',
                   value: 'R\$${widget.fees.toStringAsFixed(2)}',
                 ),

@@ -1,15 +1,24 @@
+import 'dart:io';
 import 'package:emprestapro/features/profile/profile_state.dart';
 import 'package:emprestapro/services/auth_service.dart';
+import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
+import 'package:emprestapro/services/storage_service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends ChangeNotifier {
   final AuthService authService;
   final SecureStorageService secureStorage;
+  final StorageService storageService;
+  final FirestoreService firestoreService;
 
   ProfileController({
     required this.authService,
     required this.secureStorage,
+    required this.storageService,
+    required this.firestoreService,
   });
   // Variáveis de estado
   String userName = "Nome do Usuário"; // Nome do usuário atual
@@ -23,12 +32,48 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Função para alterar a foto do perfil
-  void changeProfilePicture() async {
-    _changeState(ProfileLoadingState());
-    // Lógica para alterar a foto de perfil
-    // ...
-    _changeState(ProfileSuccessState());
+  Future<XFile?> getImage() async {
+    final ImagePicker picker = ImagePicker();
+    XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    return image;
+  }
+
+  Future<UploadTask> upload(String path) async {
+    File file = File(path);
+    try {
+      String ref = 'images/img-${DateTime.now().toString()}.jpeg';
+      final storageRef = FirebaseStorage.instance.ref();
+      return storageRef.child(ref).putFile(
+            file,
+            SettableMetadata(
+              cacheControl: "public, max-age=300",
+              contentType: "image/jpeg",
+              customMetadata: {
+                "user": "123",
+              },
+            ),
+          );
+    } on FirebaseException catch (e) {
+      throw Exception('Erro no upload: ${e.code}');
+    }
+  }
+
+  pickAndUploadImage(String uid) async {
+    XFile? file = await getImage();
+    if (file != null) {
+      final imageUrl = await storageService.upload(file.path);
+      firestoreService.update(
+        collection: 'creditors',
+        uid: uid,
+        params: {'imageUrl': imageUrl},
+      );
+
+      firestoreService.update(
+        collection: 'users',
+        uid: uid,
+        params: {'photoUrl': imageUrl},
+      );
+    }
   }
 
   // Função para alterar o nome do usuário
@@ -61,10 +106,10 @@ class ProfileController extends ChangeNotifier {
   }
 
   // Função para sair do aplicativo
-  void logOut() async {
+  Future<void> logOut() async {
     _changeState(ProfileLoadingState());
-    await authService.signOut();
     await secureStorage.deleteAll();
+    await authService.signOut();
     _changeState(ProfileLoggedOutState());
   }
 }

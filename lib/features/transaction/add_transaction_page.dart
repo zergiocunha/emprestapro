@@ -10,10 +10,11 @@ import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_popup.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:emprestapro/features/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Importando para formatação de data
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class AddTransactionPage extends StatefulWidget {
@@ -108,6 +109,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     return Scaffold(
       backgroundColor: AppColors.secoundaryBackground,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         title: const Text(
@@ -134,24 +136,20 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  SizedBox(
-                    height: 40,
-                    width: 340,
-                    child: AutoSizeText(
-                      'Empréstimo: R\$${widget.loan.amount!.toStringAsFixed(2)}  |  Juros: R\$${Calculation.feesAmount(widget.loan).toStringAsFixed(2)}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.primaryText,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  DescriptionValueWidget(
+                    descrtiption: 'Empréstimo',
+                    value: 'R\$${widget.loan.amount!.toStringAsFixed(2)}',
+                  ),
+                  DescriptionValueWidget(
+                    descrtiption: 'Juros',
+                    value:
+                        'R\$${Calculation.feesAmount(widget.loan).toStringAsFixed(2)}',
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
               CustomTextFormField(
                 keyboardType: TextInputType.number,
                 labelText: 'Valor da Transação',

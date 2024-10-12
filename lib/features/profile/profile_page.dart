@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/profile/profile_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = locator.get<ProfileController>();
+    final profileController = locator.get<ProfileController>();
+    final homeController = locator.get<HomeController>();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -24,18 +26,18 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Foto de perfil
               GestureDetector(
                 onTap: () {
-                  controller.changeProfilePicture();
+                  profileController
+                      .pickAndUploadImage(homeController.creditorModel.uid!);
                 },
                 child: CircleAvatar(
                   radius: 60,
-                  backgroundImage: controller.profilePicture != null
-                      ? NetworkImage(controller.profilePicture!)
+                  backgroundImage: homeController.creditorModel.imageUrl != null
+                      ? NetworkImage(homeController.creditorModel.imageUrl!)
                       : null,
                   backgroundColor: AppColors.secoundaryBackground,
-                  child: controller.profilePicture == null
+                  child: homeController.creditorModel.imageUrl == null
                       ? const Icon(
                           Icons.person,
                           color: AppColors.primaryText,
@@ -47,7 +49,7 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 20),
               // Nome do usuário
               Text(
-                controller.userName,
+                homeController.creditorModel.name ?? 'Não informado',
                 style: const TextStyle(
                   color: AppColors.primaryText,
                   fontSize: 22,
@@ -60,7 +62,7 @@ class ProfilePage extends StatelessWidget {
               ProfileButton(
                 icon: Icons.edit,
                 text: "Alterar Nome",
-                onTap: () => controller.changeName(),
+                onTap: () => profileController.changeName(),
               ),
               const SizedBox(height: 15),
 
@@ -68,7 +70,7 @@ class ProfilePage extends StatelessWidget {
               ProfileButton(
                 icon: Icons.lock,
                 text: "Alterar Senha",
-                onTap: () => controller.changePassword(),
+                onTap: () => profileController.changePassword(),
               ),
               const SizedBox(height: 15),
 
@@ -76,7 +78,7 @@ class ProfilePage extends StatelessWidget {
               ProfileButton(
                 icon: Icons.description,
                 text: "Acordos",
-                onTap: () => controller.showAgreements(),
+                onTap: () => profileController.showAgreements(),
               ),
               const SizedBox(height: 15),
 
@@ -84,7 +86,7 @@ class ProfilePage extends StatelessWidget {
               ProfileButton(
                 icon: Icons.delete,
                 text: "Deletar Conta",
-                onTap: () => controller.deleteAccount(),
+                onTap: () => profileController.deleteAccount(),
                 backgroundColor: AppColors.primaryRed,
                 textColor: AppColors.primaryText,
               ),
@@ -94,9 +96,11 @@ class ProfilePage extends StatelessWidget {
               ProfileButton(
                 icon: Icons.logout,
                 text: "Sair",
-                onTap: () => {
-                  controller.logOut(),
-                  Navigator.pushNamed(context, NamedRoute.signIn),
+                onTap: () async {
+                  await profileController.logOut();
+                  profileController.dispose();
+                  homeController.clearData();
+                  Navigator.pushNamed(context, NamedRoute.signIn);
                 },
                 backgroundColor: AppColors.primaryRed,
                 textColor: AppColors.primaryText,

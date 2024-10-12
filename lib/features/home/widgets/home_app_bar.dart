@@ -30,13 +30,13 @@ class HomeAppBar extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 40),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: Column(
           children: [
             Row(
               children: [
                 CircleAvatar(
-                  radius: 30,
+                  radius: 50,
                   backgroundImage: photoUrl != ''
                       ? CachedNetworkImageProvider(
                           photoUrl,
@@ -79,7 +79,7 @@ class HomeAppBar extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(
-                        width: 230,
+                        width: 200,
                         child: AutoSizeText(
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,

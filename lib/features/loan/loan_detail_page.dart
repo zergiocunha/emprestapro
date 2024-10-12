@@ -8,6 +8,7 @@ import 'package:emprestapro/features/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
 
 class LoanDetailPage extends StatefulWidget {
   final LoanModel loan;
@@ -21,11 +22,18 @@ class LoanDetailPage extends StatefulWidget {
 class _LoanDetailPageState extends State<LoanDetailPage> {
   List<TransactionModel> transactions = []; // Simulando as transações
   final _transactionController = locator.get<TransactionController>();
+  final _homeController = locator.get<HomeController>();
 
   @override
   void initState() {
     super.initState();
     getData();
+  }
+
+  @override
+  void dispose() {
+    _transactionController.dispose();
+    super.dispose();
   }
 
   void getData() async {
@@ -95,6 +103,7 @@ class _LoanDetailPageState extends State<LoanDetailPage> {
               ).then((success) {
                 if (success == true) {
                   Navigator.pop(context);
+                  _homeController.jumpToHomePage();
                 }
               });
             },
@@ -103,10 +112,10 @@ class _LoanDetailPageState extends State<LoanDetailPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryGreen,
               foregroundColor: AppColors.primaryText,
-              minimumSize: const Size(double.infinity, 50), // Largura total
+              minimumSize: const Size(double.infinity, 50),
             ),
           ),
-          const SizedBox(height: 16), // Espaço adicional abaixo do botão
+          const SizedBox(height: 16),
         ],
       ),
     );

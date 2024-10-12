@@ -24,10 +24,7 @@ class FirestoreService {
     required Map<String, dynamic> params,
   }) async {
     try {
-      await _db
-          .collection(collection)
-          .doc(uid)
-          .update(params);
+      await _db.collection(collection).doc(uid).update(params);
     } catch (e) {
       log('FirestoreService - update - Error: $e'); // Mensagem de erro correta
     }

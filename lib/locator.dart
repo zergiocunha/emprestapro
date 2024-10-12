@@ -14,6 +14,7 @@ import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
+import 'package:emprestapro/services/storage_service.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
@@ -33,15 +34,21 @@ void setupDependencies() {
     ),
   );
 
-  locator.registerFactory<ProfileController>(
-    () => ProfileController(
-      authService: locator.get<AuthService>(),
-      secureStorage: locator.get<SecureStorageService>(),
-    ),
+  locator.registerFactory<StorageService>(
+    () => StorageService(),
   );
 
   locator.registerFactory<FirestoreService>(
     () => FirestoreService(),
+  );
+
+  locator.registerFactory<ProfileController>(
+    () => ProfileController(
+      authService: locator.get<AuthService>(),
+      secureStorage: locator.get<SecureStorageService>(),
+      firestoreService: locator.get<FirestoreService>(),
+      storageService: locator.get<StorageService>(),
+    ),
   );
 
   locator.registerFactory<UserRepository>(
@@ -76,7 +83,7 @@ void setupDependencies() {
     },
   );
 
-    locator.registerFactory<TransactionRepository>(
+  locator.registerFactory<TransactionRepository>(
     () {
       return TransactionRepository(
         firestoreService: locator.get<FirestoreService>(),

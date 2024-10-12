@@ -69,7 +69,7 @@ class _ConsumerDetailPageState extends State<ConsumerDetailPage> {
         children: [
           Positioned.fill(
             child: ListView.separated(
-              padding: const EdgeInsets.only(top: 280, bottom: 10),
+              padding: const EdgeInsets.only(top: 330, bottom: 10),
               itemCount: consumerController.loans.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
@@ -106,6 +106,8 @@ class _ConsumerDetailPageState extends State<ConsumerDetailPage> {
                   pix: widget.consumer.pix,
                   status: widget.consumer.active == true ? 'Sim' : 'Não',
                   address: widget.consumer.address,
+                  imageUrl:
+                      'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg',
                 ),
               ],
             ),
@@ -145,11 +147,11 @@ class LoanContainer extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        DescriptionValueRow(
+                        DescriptionValueWidget(
                           descrtiption: 'Valor total',
                           value: 'R\$${loan.amount!.toStringAsFixed(2)}',
                         ),
-                        DescriptionValueRow(
+                        DescriptionValueWidget(
                           descrtiption: 'Juros',
                           value:
                               'R\$${Calculation.feesAmount(loan).toStringAsFixed(2)}',
@@ -166,14 +168,13 @@ class LoanContainer extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        DescriptionValueRow(
+                        DescriptionValueWidget(
                           descrtiption: 'Vencimento',
                           value: DateFormat('dd/MM/yyyy').format(loan.dueDate!),
                         ),
-                        DescriptionValueRow(
+                        DescriptionValueWidget(
                           descrtiption: 'Status',
-                          value:
-                              loan.concluded! ? 'Pago' : 'Pendente',
+                          value: loan.concluded! ? 'Pago' : 'Pendente',
                         ),
                       ],
                     ),

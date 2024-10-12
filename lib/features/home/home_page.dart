@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
             child: HomeAppBar(
-              photoUrl: homeController.userModel.photoUrl ?? '',
+              photoUrl: homeController.creditorModel.imageUrl ?? '',
               displayName: homeController.creditorModel.name ?? '',
               amount: Calculation.totalBorrowed(homeController.loans),
             ),
