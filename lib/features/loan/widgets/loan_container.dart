@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/utils/string_manipulation.dart';
+import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/loan/loan_controller.dart';
 import 'package:emprestapro/locator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,6 +20,7 @@ class LoanContainer extends StatefulWidget {
   final DateTime dueDate;
   final String imageUrl;
   final bool? concluded;
+  final String phoneNumber;
 
   const LoanContainer({
     super.key,
@@ -30,6 +32,7 @@ class LoanContainer extends StatefulWidget {
     this.secondaryWidget,
     required this.dueDate,
     required this.imageUrl,
+    required this.phoneNumber,
     this.concluded,
   });
 
@@ -44,16 +47,12 @@ class _LoanContainerState extends State<LoanContainer> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDueToday = DateTime(widget.dueDate.year, widget.dueDate.month,
-                widget.dueDate.day) ==
-            DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day) &&
-        !widget.concluded!;
+    bool isDueToday = Validator.isDueTodayOrPast(widget.dueDate, widget.concluded!);
 
     return Container(
       decoration: BoxDecoration(
-        gradient: widget.concluded!
-            ? AppColors.background3D
+        gradient: isDueToday
+            ? AppColors.secondaryRed3D
             : AppColors.primaryGreen3D,
         borderRadius: const BorderRadius.all(
           Radius.circular(16),
@@ -134,7 +133,12 @@ class _LoanContainerState extends State<LoanContainer> {
                     ),
                     onTap: () async {
                       final result = await _loanController.sendMessage(
-                          phoneNumber: '5511964549801', message: 'FOI');
+                        phoneNumber: widget.phoneNumber,
+                        message: StringManipulation.chargeMessage(
+                          consumerName: widget.consumerName,
+                          message: _homeController.creditorModel.message!,
+                        ),
+                      );
                     },
                   ),
                 ],

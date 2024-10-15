@@ -30,6 +30,9 @@ class HomeController extends ChangeNotifier {
 
   HomeState get state => _state;
 
+  bool _filterOnlyOverdue = false;
+  bool get filterOnlyOverdue => _filterOnlyOverdue;
+
   CreditorModel _creditorModel = CreditorModel();
   CreditorModel get creditorModel => _creditorModel;
 
@@ -46,6 +49,11 @@ class HomeController extends ChangeNotifier {
   set setPageController(PageController newPageController) {
     _pageController = newPageController;
   }
+
+  void setFilterOnlyOverdue(bool value) {
+    _filterOnlyOverdue = value;
+  }
+
 
   void _changeState(HomeState newState) {
     _state = newState;

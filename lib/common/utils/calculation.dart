@@ -36,7 +36,8 @@ class Calculation {
 
   static Map<String, dynamic> processTransaction(
       TransactionModel transaction, LoanModel loan) {
-    double feesAmount = Calculation.feesAmount(loan);
+    double feesAmount =
+        double.parse(Calculation.feesAmount(loan).toStringAsFixed(2));
     TransactionStatus status;
     String message;
     final nextDueDate = DateTime(
@@ -44,18 +45,23 @@ class Calculation {
       loan.dueDate!.month + 1,
       loan.dueDate!.day,
     );
+
     if (transaction.amount! < feesAmount) {
-      double remainingInterest = feesAmount - transaction.amount!;
-      loan.amount = (loan.amount ?? 0.0) + remainingInterest;
+      double remainingInterest =
+          double.parse((feesAmount - transaction.amount!).toStringAsFixed(2));
+      loan.amount = double.parse(
+          ((loan.amount ?? 0.0) + remainingInterest).toStringAsFixed(2));
       status = TransactionStatus.insufficientInterest;
       message = TransactionResult.insufficientInterest(
           remainingInterest.toStringAsFixed(2));
       loan.dueDate = nextDueDate;
     } else {
-      double leftoverAmount = transaction.amount! - feesAmount;
+      double leftoverAmount =
+          double.parse((transaction.amount! - feesAmount).toStringAsFixed(2));
 
       if (leftoverAmount > 0) {
-        loan.amount = (loan.amount ?? 0.0) - leftoverAmount;
+        loan.amount = double.parse(
+            ((loan.amount ?? 0.0) - leftoverAmount).toStringAsFixed(2));
 
         if ((loan.amount ?? 0.0) <= 0) {
           loan.concluded = true;
@@ -75,6 +81,7 @@ class Calculation {
         loan.dueDate = nextDueDate;
       }
     }
+
     return {'loan': loan, 'status': status, 'message': message};
   }
 }

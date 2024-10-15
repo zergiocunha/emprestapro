@@ -42,4 +42,13 @@ class Validator {
     }
     return null;
   }
+
+  static bool isDueTodayOrPast(DateTime dueDate, bool concluded) {
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime formattedDueDate =
+        DateTime(dueDate.year, dueDate.month, dueDate.day);
+    return (formattedDueDate.isBefore(today) || formattedDueDate == today) &&
+        !concluded;
+  }
 }

@@ -3,6 +3,7 @@ import 'package:emprestapro/features/consumer/add_consumer_page.dart';
 import 'package:emprestapro/features/consumer/consumer_detail_page.dart';
 import 'package:emprestapro/features/consumer/consumers_page.dart';
 import 'package:emprestapro/features/loan/add_loan_page.dart';
+import 'package:emprestapro/features/profile/edit_message_page.dart';
 import 'package:emprestapro/features/transaction/add_transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:emprestapro/common/constants/routes.dart';
@@ -40,6 +41,8 @@ class App extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const AddConsumerPage());
           case NamedRoute.consumers:
             return MaterialPageRoute(builder: (_) => const ConsumersPage());
+          case NamedRoute.editMessage:
+            return MaterialPageRoute(builder: (_) => const EditMessagePage());
           case NamedRoute.loanDetail:
             final loan = settings.arguments as LoanModel;
             return MaterialPageRoute(

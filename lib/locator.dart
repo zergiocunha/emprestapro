@@ -47,14 +47,7 @@ void setupDependencies() {
     () => FirestoreService(),
   );
 
-  locator.registerFactory<ProfileController>(
-    () => ProfileController(
-      authService: locator.get<AuthService>(),
-      secureStorage: locator.get<SecureStorageService>(),
-      firestoreService: locator.get<FirestoreService>(),
-      storageService: locator.get<StorageService>(),
-    ),
-  );
+
 
   locator.registerFactory<UserRepository>(
     () {
@@ -94,6 +87,16 @@ void setupDependencies() {
         firestoreService: locator.get<FirestoreService>(),
       );
     },
+  );
+
+  locator.registerFactory<ProfileController>(
+    () => ProfileController(
+      authService: locator.get<AuthService>(),
+      secureStorage: locator.get<SecureStorageService>(),
+      firestoreService: locator.get<FirestoreService>(),
+      storageService: locator.get<StorageService>(),
+      creditorRepository: locator.get<CreditorRepository>(),
+    ),
   );
 
   locator.registerFactory<SignUpController>(

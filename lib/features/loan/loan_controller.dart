@@ -103,13 +103,9 @@ class LoanController extends ChangeNotifier {
   }) async {
     _changeState(AddLoansLoadingState());
 
-    await whatsAppService.sendWhatsAppMessage(
-      toPhoneNumber: '5511964549801',
-      contentSid: 'HXb5b62575e6e4ff6129ad7c8efe1f983e',
-      contentVariables: {
-        '1': '12/1',
-        '2': '3pm',
-      },
+    await whatsAppService.send(
+      phoneNumber: phoneNumber,
+      message: message,
     );
 
     // if (result == 'success') {

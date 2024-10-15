@@ -11,6 +11,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool? obscureText;
   final FormFieldValidator<String>? validator;
   final TextInputType? keyboardType;
+  final bool? isRichText; // Nova propriedade para determinar se é RichText
 
   const CustomTextFormField({
     super.key,
@@ -22,6 +23,7 @@ class CustomTextFormField extends StatefulWidget {
     this.obscureText,
     this.validator,
     this.keyboardType,
+    this.isRichText = false, // O padrão é false para campos normais
   });
 
   @override
@@ -44,12 +46,15 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                   CommaToDotInputFormatter(),
                 ]
               : null,
-          keyboardType: widget.keyboardType,
+          keyboardType: widget.isRichText == true
+              ? TextInputType.multiline
+              : widget.keyboardType, // Permitir múltiplas linhas
           controller: widget.controller,
           obscureText: widget.obscureText ?? false,
           validator: widget.validator,
-          style:
-              TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
+          style: TextStyle(
+              color: widget.inputTextColor ?? AppColors.primaryText),
+          maxLines: widget.isRichText == true ? null : 1, // Expande o campo quando isRichText for true
           decoration: InputDecoration(
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: AppColors.secoundaryText),
@@ -67,7 +72,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             // Adiciona o ícone de calendário quando o tipo for datetime
             suffixIcon: widget.keyboardType == TextInputType.datetime
                 ? IconButton(
-                    icon: const Icon(Icons.calendar_today, color: AppColors.primaryText),
+                    icon: const Icon(Icons.calendar_today,
+                        color: AppColors.primaryText),
                     onPressed: () async {
                       DateTime? pickedDate = await showDatePicker(
                         context: context,

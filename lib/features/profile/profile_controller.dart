@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/features/profile/profile_state.dart';
+import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
@@ -13,12 +15,14 @@ class ProfileController extends ChangeNotifier {
   final SecureStorageService secureStorage;
   final StorageService storageService;
   final FirestoreService firestoreService;
+  final CreditorRepository creditorRepository;
 
   ProfileController({
     required this.authService,
     required this.secureStorage,
     required this.storageService,
     required this.firestoreService,
+    required this.creditorRepository,
   });
   // Variáveis de estado
   String userName = "Nome do Usuário"; // Nome do usuário atual
@@ -74,6 +78,12 @@ class ProfileController extends ChangeNotifier {
         params: {'photoUrl': imageUrl},
       );
     }
+  }
+
+  Future<void> changeMessageTemplate(
+      {required CreditorModel creditorModel, required String template}) async {
+    creditorModel.message = template;
+    await creditorRepository.update(creditorModel: creditorModel);
   }
 
   // Função para alterar o nome do usuário
