@@ -15,6 +15,7 @@ import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:emprestapro/services/storage_service.dart';
+import 'package:emprestapro/services/whatsapp_service.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
@@ -26,6 +27,10 @@ void setupDependencies() {
 
   locator.registerFactory<SecureStorageService>(
     () => const SecureStorageService(),
+  );
+
+  locator.registerFactory<WhatsAppService>(
+    () => WhatsAppService(),
   );
 
   locator.registerFactory<SplashController>(
@@ -123,6 +128,7 @@ void setupDependencies() {
       creditorRepository: locator.get<CreditorRepository>(),
       consumerRepository: locator.get<ConsumerRepository>(),
       secureStorageService: locator.get<SecureStorageService>(),
+      whatsAppService: locator.get<WhatsAppService>(),
       homeController: locator.get<HomeController>(),
     ),
   );

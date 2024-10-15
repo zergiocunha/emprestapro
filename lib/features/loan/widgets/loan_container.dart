@@ -2,6 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
+import 'package:emprestapro/features/loan/loan_controller.dart';
+import 'package:emprestapro/locator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -35,9 +39,17 @@ class LoanContainer extends StatefulWidget {
 
 class _LoanContainerState extends State<LoanContainer> {
   final String value = '16/09/2024';
+  final _homeController = locator.get<HomeController>();
+  final _loanController = locator.get<LoanController>();
 
   @override
   Widget build(BuildContext context) {
+    bool isDueToday = DateTime(widget.dueDate.year, widget.dueDate.month,
+                widget.dueDate.day) ==
+            DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day) &&
+        !widget.concluded!;
+
     return Container(
       decoration: BoxDecoration(
         gradient: widget.concluded!
@@ -96,13 +108,13 @@ class _LoanContainerState extends State<LoanContainer> {
                 ),
               ],
             ),
-            const SizedBox(width: 10),
+            // const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 DescriptionValueWidget(
-                  descrtiption: 'Vancimento',
+                  descrtiption: 'Vencimento',
                   value: DateFormat('dd/MM/yyyy').format(widget.dueDate),
                 ),
                 DescriptionValueWidget(
@@ -111,6 +123,22 @@ class _LoanContainerState extends State<LoanContainer> {
                 ),
               ],
             ),
+            if (isDueToday)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    child: const Icon(
+                      Icons.attach_money,
+                    ),
+                    onTap: () async {
+                      final result = await _loanController.sendMessage(
+                          phoneNumber: '5511964549801', message: 'FOI');
+                    },
+                  ),
+                ],
+              ),
           ],
         ),
       ),
