@@ -43,6 +43,18 @@ class FirestoreService {
     }
   }
 
+  Future<void> delete({
+    required String collection,
+    required String uid,
+  }) async {
+    try {
+      await _db.collection(collection).doc(uid).delete();
+      log('FirestoreService - get - result: deleted');
+    } catch (e) {
+      throw ('FirestoreService - insert - Error: $e');
+    }
+  }
+
   Future<List<Map<String, dynamic>>> getByField({
     required String collection,
     required String fieldName,
@@ -61,6 +73,31 @@ class FirestoreService {
     } catch (e) {
       log('FirestoreService - getByField - Error: $e');
       throw ('FirestoreService - getByField - Error: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> deleteByField({
+    required String collection,
+    required String fieldName,
+    required String value,
+  }) async {
+    try {
+      final querySnapshot = await _db
+          .collection(collection)
+          .where(fieldName, isEqualTo: value)
+          .get();
+
+      final documents = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      log('FirestoreService - deleteByField - documents: $documents');
+      return documents;
+    } catch (e) {
+      log('FirestoreService - deleteByField - Error: $e');
+      throw ('FirestoreService - deleteByField - Error: $e');
     }
   }
 }

@@ -47,8 +47,6 @@ void setupDependencies() {
     () => FirestoreService(),
   );
 
-
-
   locator.registerFactory<UserRepository>(
     () {
       return UserRepository(
@@ -127,6 +125,7 @@ void setupDependencies() {
 
   locator.registerLazySingleton<LoanController>(
     () => LoanController(
+      transactionRepository: locator.get<TransactionRepository>(),
       loanRepository: locator.get<LoanRepository>(),
       creditorRepository: locator.get<CreditorRepository>(),
       consumerRepository: locator.get<ConsumerRepository>(),

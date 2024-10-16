@@ -7,11 +7,13 @@ import 'package:emprestapro/features/loan/loan_state.dart';
 import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
+import 'package:emprestapro/repositories/transaction_repository.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:emprestapro/services/whatsapp_service.dart';
 import 'package:flutter/material.dart';
 
 class LoanController extends ChangeNotifier {
+  final TransactionRepository transactionRepository;
   final LoanRepository loanRepository;
   final CreditorRepository creditorRepository;
   final ConsumerRepository consumerRepository;
@@ -20,6 +22,7 @@ class LoanController extends ChangeNotifier {
   final HomeController homeController;
 
   LoanController({
+    required this.transactionRepository,
     required this.loanRepository,
     required this.consumerRepository,
     required this.secureStorageService,
@@ -55,6 +58,24 @@ class LoanController extends ChangeNotifier {
     result.fold(
       (error) => _changeState(AddLoansErrorState(message: error.message)),
       (data) {
+        _changeState(AddLoansSuccessState());
+      },
+    );
+  }
+
+  Future<void> deleteLoanAndTransactions({
+    required LoanModel loan,
+  }) async {
+    _changeState(AddLoansLoadingState());
+
+    await transactionRepository.delete(uid: loan.uid!);
+
+    final result = await loanRepository.delete(loanModel: loan);
+
+    result.fold(
+      (error) => _changeState(AddLoansErrorState(message: error.message)),
+      (data) {
+        homeController.loans.remove(loan);
         _changeState(AddLoansSuccessState());
       },
     );
@@ -103,15 +124,15 @@ class LoanController extends ChangeNotifier {
   }) async {
     _changeState(AddLoansLoadingState());
 
-    await whatsAppService.send(
+    final result = await whatsAppService.send(
       phoneNumber: phoneNumber,
       message: message,
     );
 
-    // if (result == 'success') {
-    //   _changeState(AddLoansSuccessState());
-    // } else {
-    //   _changeState(AddLoansErrorState(message: result));
-    // }
+    if (result == 'success') {
+      _changeState(AddLoansSuccessState());
+    } else {
+      _changeState(AddLoansErrorState(message: result));
+    }
   }
 }

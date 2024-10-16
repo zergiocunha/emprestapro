@@ -50,6 +50,21 @@ class LoanRepository {
     }
   }
 
+  Future<DataResult<bool>> delete({
+    required LoanModel loanModel,
+  }) async {
+    try {
+      await firestoreService.delete(
+        collection: Collections.loans,
+        uid: loanModel.uid!,
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
+
   Future<DataResult<bool>> update({
     required LoanModel loanModel,
   }) async {

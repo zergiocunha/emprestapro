@@ -21,6 +21,7 @@ class LoanContainer extends StatefulWidget {
   final String imageUrl;
   final bool? concluded;
   final String phoneNumber;
+  final VoidCallback? onPressed;
 
   const LoanContainer({
     super.key,
@@ -34,6 +35,7 @@ class LoanContainer extends StatefulWidget {
     required this.imageUrl,
     required this.phoneNumber,
     this.concluded,
+    this.onPressed,
   });
 
   @override
@@ -47,103 +49,106 @@ class _LoanContainerState extends State<LoanContainer> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDueToday = Validator.isDueTodayOrPast(widget.dueDate, widget.concluded!);
+    bool isDueToday =
+        Validator.isDueTodayOrPast(widget.dueDate, widget.concluded!);
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: isDueToday
-            ? AppColors.secondaryRed3D
-            : AppColors.primaryGreen3D,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(16),
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.secoundaryBackground,
-            offset: Offset(0, 4),
-            blurRadius: 4,
+    return GestureDetector(
+      onTap: widget.onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient:
+              isDueToday ? AppColors.secondaryRed3D : AppColors.primaryGreen3D,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16),
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: widget.imageUrl == ''
-                  ? null
-                  : CachedNetworkImageProvider(widget.imageUrl),
-              child: widget.imageUrl == ''
-                  ? const Icon(
-                      Icons.person,
-                      size: 40,
-                    )
-                  : null,
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.secoundaryBackground,
+              offset: Offset(0, 4),
+              blurRadius: 4,
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 25,
-                  width: 120,
-                  child: AutoSizeText(
-                    widget.consumerName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                DescriptionValueWidget(
-                  descrtiption: 'Valor Total',
-                  value: 'R\$${widget.amount.toStringAsFixed(2)}',
-                ),
-              ],
-            ),
-            // const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DescriptionValueWidget(
-                  descrtiption: 'Vencimento',
-                  value: DateFormat('dd/MM/yyyy').format(widget.dueDate),
-                ),
-                DescriptionValueWidget(
-                  descrtiption: 'Juros',
-                  value: 'R\$${widget.fees.toStringAsFixed(2)}',
-                ),
-              ],
-            ),
-            if (isDueToday)
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: widget.imageUrl == ''
+                    ? null
+                    : CachedNetworkImageProvider(widget.imageUrl),
+                child: widget.imageUrl == ''
+                    ? const Icon(
+                        Icons.person,
+                        size: 40,
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    child: const Icon(
-                      Icons.attach_money,
+                  SizedBox(
+                    height: 25,
+                    width: 120,
+                    child: AutoSizeText(
+                      widget.consumerName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    onTap: () async {
-                      final result = await _loanController.sendMessage(
-                        phoneNumber: widget.phoneNumber,
-                        message: StringManipulation.chargeMessage(
-                          consumerName: widget.consumerName,
-                          message: _homeController.creditorModel.message!,
-                        ),
-                      );
-                    },
+                  ),
+                  const SizedBox(height: 15),
+                  DescriptionValueWidget(
+                    descrtiption: 'Valor Total',
+                    value: 'R\$${widget.amount.toStringAsFixed(2)}',
                   ),
                 ],
               ),
-          ],
+              // const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DescriptionValueWidget(
+                    descrtiption: 'Vencimento',
+                    value: DateFormat('dd/MM/yyyy').format(widget.dueDate),
+                  ),
+                  DescriptionValueWidget(
+                    descrtiption: 'Juros',
+                    value: 'R\$${widget.fees.toStringAsFixed(2)}',
+                  ),
+                ],
+              ),
+              if (isDueToday)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      child: const Icon(
+                        Icons.attach_money,
+                      ),
+                      onTap: () async {
+                        final result = await _loanController.sendMessage(
+                          phoneNumber: widget.phoneNumber,
+                          message: StringManipulation.chargeMessage(
+                            consumerName: widget.consumerName,
+                            message: _homeController.creditorModel.message!,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );

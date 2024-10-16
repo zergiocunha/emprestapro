@@ -27,7 +27,7 @@ mixin CustomModalSheetMixin<T extends StatefulWidget> on State<T> {
           canPop: isDismissible,
           child: Container(
             decoration: const BoxDecoration(
-              color: AppColors.background,
+              color: AppColors.primaryText,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(38.0),
                 topRight: Radius.circular(38.0),
@@ -46,8 +46,13 @@ mixin CustomModalSheetMixin<T extends StatefulWidget> on State<T> {
                     ),
                     child: Text(
                       content,
-                      style: const TextStyle()
-                          .copyWith(color: AppColors.primaryGreen),
+                      style: const TextStyle(
+                        color: AppColors.primaryGreen,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                      // style: AppTextStyles.mediumText20
+                      //     .copyWith(color: AppColors.greenOne),
                     ),
                   ),
                   Padding(
@@ -62,7 +67,6 @@ mixin CustomModalSheetMixin<T extends StatefulWidget> on State<T> {
                           )
                         : CustomElevatedButton(
                             label: buttonText!,
-                            backgroundColor: AppColors.secondaryRed,
                             onPressed:
                                 onPressed ?? () => Navigator.pop(context),
                           ),

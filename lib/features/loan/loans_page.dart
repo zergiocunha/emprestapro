@@ -7,6 +7,9 @@ import 'package:emprestapro/common/extensions/loan_filter_ext.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
+import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
+import 'package:emprestapro/features/loan/loan_controller.dart';
 import 'package:emprestapro/features/loan/widgets/evolution_container.dart';
 import 'package:emprestapro/features/loan/widgets/loan_container.dart';
 import 'package:emprestapro/features/loan/widgets/loans_information_container.dart';
@@ -23,12 +26,14 @@ class LoansPage extends StatefulWidget {
 }
 
 class _LoansPageState extends State<LoansPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, CustomModalSheetMixin {
   final _homeController = locator.get<HomeController>();
-      LoanFilter? selectedFilter = locator.get<HomeController>().filterOnlyOverdue
-        ? LoanFilter.values[2]
-        : LoanFilter.values[1];
+  final _loanController = locator.get<LoanController>();
+  LoanFilter? selectedFilter = locator.get<HomeController>().filterOnlyOverdue
+      ? LoanFilter.values[2]
+      : LoanFilter.values[1];
 
+  bool? confirmDelete = false;
 
   @override
   void initState() {
@@ -43,7 +48,6 @@ class _LoansPageState extends State<LoansPage>
 
   @override
   Widget build(BuildContext context) {
-
     final List<LoanModel> loans = _homeController.loans;
     final List<ConsumerModel> consumers = _homeController.consumers;
 
@@ -131,24 +135,65 @@ class _LoansPageState extends State<LoansPage>
                       );
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: GestureDetector(
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              NamedRoute.loanDetail,
-                              arguments: filteredLoans[index],
-                            );
+                        child: Dismissible(
+                          dismissThresholds: const {
+                            DismissDirection.endToStart: 0.5
                           },
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            if (confirmDelete!) {
+                              _loanController.deleteLoanAndTransactions(
+                                loan: filteredLoans[index],
+                              );
+                              setState(() {});
+                            }
+                          },
+                          confirmDismiss: (direction) async {
+                            confirmDelete = await showCustomModalBottomSheet(
+                              context: context,
+                              content:
+                                  'Deseja realmente excluir este empréstimo?',
+                              actions: [
+                                Flexible(
+                                  child: CustomElevatedButton(
+                                    label: 'Cancelar',
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                                Flexible(
+                                  child: CustomElevatedButton(
+                                    label: 'Confirmar',
+                                    onPressed: () {
+                                      if (mounted) {
+                                        Navigator.pop(context, true);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+
+                            return confirmDelete;
+                          },
+                          key: UniqueKey(),
                           child: LoanContainer(
-                            consumerName: consumerName.name ?? '',
-                            amount: filteredLoans[index].amount ?? 0,
-                            fees: Calculation.feesAmount(filteredLoans[index]),
-                            secondaryName: 'secondaryName',
-                            dueDate: filteredLoans[index].dueDate!,
-                            imageUrl: consumerName.imageUrl ?? '',
-                            concluded: filteredLoans[index].concluded!,
-                            phoneNumber: consumerName.phone!,
-                          ),
+                              consumerName: consumerName.name ?? '',
+                              amount: filteredLoans[index].amount ?? 0,
+                              fees:
+                                  Calculation.feesAmount(filteredLoans[index]),
+                              secondaryName: 'secondaryName',
+                              dueDate: filteredLoans[index].dueDate!,
+                              imageUrl: consumerName.imageUrl ?? '',
+                              concluded: filteredLoans[index].concluded!,
+                              phoneNumber: consumerName.phone!,
+                              onPressed: () async {
+                                await Navigator.pushNamed(
+                                  context,
+                                  NamedRoute.loanDetail,
+                                  arguments: filteredLoans[index],
+                                );
+                              }),
                         ),
                       );
                     },

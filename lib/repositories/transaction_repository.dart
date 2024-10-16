@@ -49,4 +49,20 @@ class TransactionRepository {
       return DataResult.failure(e);
     }
   }
+
+  Future<DataResult<bool>> delete({
+    required String uid,
+  }) async {
+    try {
+      await firestoreService.deleteByField(
+        fieldName: 'loanId',
+        collection: Collections.transactions,
+        value: uid,
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
 }
