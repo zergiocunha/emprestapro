@@ -3,9 +3,12 @@ import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
+import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:emprestapro/features/consumer/consumer_controller.dart';
 import 'package:emprestapro/features/consumer/widgets/consumer_info_container.dart';
+import 'package:emprestapro/features/loan/loan_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,8 +25,11 @@ class ConsumerDetailPage extends StatefulWidget {
   State<ConsumerDetailPage> createState() => _ConsumerDetailPageState();
 }
 
-class _ConsumerDetailPageState extends State<ConsumerDetailPage> {
+class _ConsumerDetailPageState extends State<ConsumerDetailPage>
+    with CustomModalSheetMixin {
   final consumerController = locator.get<ConsumerController>();
+  final loanController = locator.get<LoanController>();
+  bool? confirmDelete = false;
 
   @override
   void initState() {
@@ -74,16 +80,55 @@ class _ConsumerDetailPageState extends State<ConsumerDetailPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: GestureDetector(
-                    onTap: () async {
-                      await Navigator.pushNamed(
-                        context,
-                        NamedRoute.loanDetail,
-                        arguments: consumerController.loans[index],
+                  child: Dismissible(
+                    key: UniqueKey(),
+                    dismissThresholds: const {DismissDirection.endToStart: 0.5},
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      if (confirmDelete!) {
+                        loanController.deleteLoanAndTransactions(
+                            loan: consumerController.loans[index]);
+                        setState(() {
+                          consumerController.loans.removeAt(index);
+                        });
+                      }
+                    },
+                    confirmDismiss: (direction) async {
+                      confirmDelete = await showCustomModalBottomSheet(
+                        context: context,
+                        content: 'Confirmar exclusão do empréstimo?',
+                        actions: [
+                          Flexible(
+                            child: CustomElevatedButton(
+                              label: 'Cancelar',
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Flexible(
+                            child: CustomElevatedButton(
+                              label: 'Confirmar',
+                              onPressed: () {
+                                if (mounted) {
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       );
+
+                      return confirmDelete;
                     },
                     child: LoanContainer(
                       loan: consumerController.loans[index],
+                      onTap: () async {
+                        await Navigator.pushNamed(
+                          context,
+                          NamedRoute.loanDetail,
+                          arguments: consumerController.loans[index],
+                        );
+                      },
                     ),
                   ),
                 );
@@ -120,69 +165,75 @@ class _ConsumerDetailPageState extends State<ConsumerDetailPage> {
 
 class LoanContainer extends StatelessWidget {
   final LoanModel loan;
+  final VoidCallback? onTap;
 
   const LoanContainer({
     super.key,
     required this.loan,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.primaryGreen3D,
-        borderRadius: BorderRadius.all(
-          Radius.circular(16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.primaryGreen3D,
+          borderRadius: BorderRadius.all(
+            Radius.circular(16),
+          ),
         ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        DescriptionValueWidget(
-                          descrtiption: 'Valor total',
-                          value: 'R\$${loan.amount!.toStringAsFixed(2)}',
-                        ),
-                        DescriptionValueWidget(
-                          descrtiption: 'Juros',
-                          value:
-                              'R\$${Calculation.feesAmount(loan).toStringAsFixed(2)}',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        DescriptionValueWidget(
-                          descrtiption: 'Vencimento',
-                          value: DateFormat('dd/MM/yyyy').format(loan.dueDate!),
-                        ),
-                        DescriptionValueWidget(
-                          descrtiption: 'Status',
-                          value: loan.concluded! ? 'Pago' : 'Pendente',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          DescriptionValueWidget(
+                            descrtiption: 'Valor total',
+                            value: 'R\$${loan.amount!.toStringAsFixed(2)}',
+                          ),
+                          DescriptionValueWidget(
+                            descrtiption: 'Juros',
+                            value:
+                                'R\$${Calculation.feesAmount(loan).toStringAsFixed(2)}',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          DescriptionValueWidget(
+                            descrtiption: 'Vencimento',
+                            value:
+                                DateFormat('dd/MM/yyyy').format(loan.dueDate!),
+                          ),
+                          DescriptionValueWidget(
+                            descrtiption: 'Status',
+                            value: loan.concluded! ? 'Pago' : 'Pendente',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

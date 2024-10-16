@@ -49,4 +49,19 @@ class ConsumerRepository {
       return DataResult.failure(e);
     }
   }
+
+  Future<DataResult<bool>> delete({
+    required ConsumerModel consumerModel,
+  }) async {
+    try {
+      await firestoreService.delete(
+        collection: Collections.consumers,
+        uid: consumerModel.uid!,
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
 }

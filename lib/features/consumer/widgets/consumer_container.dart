@@ -7,6 +7,7 @@ class ConsumerContainer extends StatelessWidget {
   final String phoneNumber;
   final String email;
   final String imageUrl;
+  final VoidCallback? onTap;
 
   const ConsumerContainer({
     super.key,
@@ -14,75 +15,79 @@ class ConsumerContainer extends StatelessWidget {
     required this.phoneNumber,
     required this.email,
     required this.imageUrl,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: AppColors.primaryGreen3D,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.secoundaryBackground,
-            offset: Offset(0, 4),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: imageUrl != "" ? NetworkImage(imageUrl) : null,
-              backgroundColor: AppColors.primaryText,
-              child: const Icon(
-                Icons.person,
-                color: AppColors.secoundaryBackground,
-                size: 40,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AutoSizeText(
-                    consumerName,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 5),
-                  AutoSizeText(
-                    phoneNumber,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 14,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 5),
-                  AutoSizeText(
-                    email,
-                    style: const TextStyle(
-                      color: AppColors.primaryText,
-                      fontSize: 14,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ],
-              ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.primaryGreen3D,
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.secoundaryBackground,
+              offset: Offset(0, 4),
+              blurRadius: 4,
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: imageUrl != "" ? NetworkImage(imageUrl) : null,
+                backgroundColor: AppColors.primaryText,
+                child: const Icon(
+                  Icons.person,
+                  color: AppColors.secoundaryBackground,
+                  size: 40,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AutoSizeText(
+                      consumerName,
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: 5),
+                    AutoSizeText(
+                      phoneNumber,
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: 5),
+                    AutoSizeText(
+                      email,
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

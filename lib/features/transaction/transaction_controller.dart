@@ -41,6 +41,25 @@ class TransactionController extends ChangeNotifier {
     );
   }
 
+  Future<void> deleteTransaction({
+    required TransactionModel transactionModel,
+  }) async {
+    _changeState(TransactionLoadingState());
+
+    final result = await transactionRepository.deleteByField(
+      fieldName: 'uid',
+      value: transactionModel.uid!,
+    );
+
+    result.fold(
+      (error) => _changeState(TransactionErrorState(message: error.message)),
+      (transaction) {
+        transactionsList.remove(transactionModel);
+        _changeState(TransactionSuccessState());
+      },
+    );
+  }
+
   Future<void> updateLoan({
     required LoanModel loan,
   }) async {

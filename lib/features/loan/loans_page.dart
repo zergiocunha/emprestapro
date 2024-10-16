@@ -177,23 +177,25 @@ class _LoansPageState extends State<LoansPage>
                             return confirmDelete;
                           },
                           key: UniqueKey(),
-                          child: LoanContainer(
-                              consumerName: consumerName.name ?? '',
-                              amount: filteredLoans[index].amount ?? 0,
-                              fees:
-                                  Calculation.feesAmount(filteredLoans[index]),
-                              secondaryName: 'secondaryName',
-                              dueDate: filteredLoans[index].dueDate!,
-                              imageUrl: consumerName.imageUrl ?? '',
-                              concluded: filteredLoans[index].concluded!,
-                              phoneNumber: consumerName.phone!,
-                              onPressed: () async {
-                                await Navigator.pushNamed(
-                                  context,
-                                  NamedRoute.loanDetail,
-                                  arguments: filteredLoans[index],
-                                );
-                              }),
+                          child: consumerName.phone == null
+                              ? Container()
+                              : LoanContainer(
+                                  consumerName: consumerName.name ?? '',
+                                  amount: filteredLoans[index].amount ?? 0,
+                                  fees: Calculation.feesAmount(
+                                      filteredLoans[index]),
+                                  secondaryName: 'secondaryName',
+                                  dueDate: filteredLoans[index].dueDate!,
+                                  imageUrl: consumerName.imageUrl ?? '',
+                                  concluded: filteredLoans[index].concluded!,
+                                  phoneNumber: consumerName.phone!,
+                                  onPressed: () async {
+                                    await Navigator.pushNamed(
+                                      context,
+                                      NamedRoute.loanDetail,
+                                      arguments: filteredLoans[index],
+                                    );
+                                  }),
                         ),
                       );
                     },

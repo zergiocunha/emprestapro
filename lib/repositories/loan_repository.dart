@@ -50,6 +50,23 @@ class LoanRepository {
     }
   }
 
+  Future<DataResult<bool>> deleteByField({
+    required String value,
+    required String fieldName,
+  }) async {
+    try {
+      await firestoreService.deleteByField(
+        fieldName: fieldName,
+        collection: Collections.loans,
+        value: value,
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
+
   Future<DataResult<bool>> delete({
     required LoanModel loanModel,
   }) async {

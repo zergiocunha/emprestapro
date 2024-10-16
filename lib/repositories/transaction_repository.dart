@@ -50,14 +50,15 @@ class TransactionRepository {
     }
   }
 
-  Future<DataResult<bool>> delete({
-    required String uid,
+  Future<DataResult<bool>> deleteByField({
+    required String value,
+    required String fieldName,
   }) async {
     try {
       await firestoreService.deleteByField(
-        fieldName: 'loanId',
+        fieldName: fieldName,
         collection: Collections.transactions,
-        value: uid,
+        value: value,
       );
 
       return DataResult.success(true);

@@ -68,7 +68,8 @@ class LoanController extends ChangeNotifier {
   }) async {
     _changeState(AddLoansLoadingState());
 
-    await transactionRepository.delete(uid: loan.uid!);
+    await transactionRepository.deleteByField(
+        value: loan.uid!, fieldName: 'loanId');
 
     final result = await loanRepository.delete(loanModel: loan);
 

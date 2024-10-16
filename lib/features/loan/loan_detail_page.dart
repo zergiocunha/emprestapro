@@ -3,6 +3,8 @@ import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/models/transaction_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
+import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/features/loan/widgets/loans_information_container.dart';
 import 'package:emprestapro/features/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
@@ -19,10 +21,12 @@ class LoanDetailPage extends StatefulWidget {
   State<LoanDetailPage> createState() => _LoanDetailPageState();
 }
 
-class _LoanDetailPageState extends State<LoanDetailPage> {
+class _LoanDetailPageState extends State<LoanDetailPage>
+    with CustomModalSheetMixin {
   List<TransactionModel> transactions = []; // Simulando as transações
   final _transactionController = locator.get<TransactionController>();
   final _homeController = locator.get<HomeController>();
+  bool? confirmDelete = false;
 
   @override
   void initState() {
@@ -83,8 +87,47 @@ class _LoanDetailPageState extends State<LoanDetailPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: TransactionContainer(
-                    transaction: transactions[index],
+                  child: Dismissible(
+                    key: UniqueKey(),
+                    dismissThresholds: const {DismissDirection.endToStart: 0.5},
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      if (confirmDelete!) {
+                        _transactionController.deleteTransaction(
+                          transactionModel: transactions[index],
+                        );
+                        setState(() {});
+                      }
+                    },
+                    confirmDismiss: (direction) async {
+                      confirmDelete = await showCustomModalBottomSheet(
+                        context: context,
+                        content: 'Confirm delete transaction',
+                        actions: [
+                          Flexible(
+                            child: CustomElevatedButton(
+                              label: 'Cancel',
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Flexible(
+                            child: CustomElevatedButton(
+                              label: 'Confirm',
+                              onPressed: () {
+                                if (mounted) {
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                      return confirmDelete;
+                    },
+                    child: TransactionContainer(
+                      transaction: transactions[index],
+                    ),
                   ),
                 );
               },

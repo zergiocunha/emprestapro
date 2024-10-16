@@ -139,6 +139,7 @@ void setupDependencies() {
     () => ConsumerController(
       consumerRepository: locator.get<ConsumerRepository>(),
       loanRepository: locator.get<LoanRepository>(),
+      transactionRepository: locator.get<TransactionRepository>(),
     ),
   );
 
