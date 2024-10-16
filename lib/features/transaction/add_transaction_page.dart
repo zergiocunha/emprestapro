@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, curly_braces_in_flow_control_structures
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/enums/transaction_status.dart';
 import 'package:emprestapro/common/constants/transaction_result.dart';

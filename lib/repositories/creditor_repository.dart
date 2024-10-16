@@ -49,4 +49,20 @@ class CreditorRepository {
       return DataResult.failure(e);
     }
   }
+
+  Future<DataResult<bool>> update({
+    required CreditorModel creditorModel,
+  }) async {
+    try {
+      await firestoreService.update(
+        collection: Collections.creditors,
+        uid: creditorModel.uid!,
+        params: creditorModel.toMap(),
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
 }

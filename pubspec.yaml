@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   auto_size_text: ^3.0.0
-  cached_network_image: ^3.4.1
+  cached_network_image: ^3.3.0
   cloud_firestore: ^5.4.2
   firebase_auth: ^5.3.0
   firebase_core: ^3.5.0
@@ -20,8 +20,13 @@ dependencies:
   image_picker: ^1.1.2
   intl: ^0.19.0
   path_provider: ^2.1.4
+  twilio: ^0.0.2
+  url_launcher: ^6.3.1
   uuid: ^4.5.1
 
+dependency_overrides:
+  intl: ^0.19.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

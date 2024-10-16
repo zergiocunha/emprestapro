@@ -1,7 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/utils/string_manipulation.dart';
+import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
+import 'package:emprestapro/features/loan/loan_controller.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +20,7 @@ class LoanContainer extends StatefulWidget {
   final DateTime dueDate;
   final String imageUrl;
   final bool? concluded;
+  final String phoneNumber;
 
   const LoanContainer({
     super.key,
@@ -26,6 +32,7 @@ class LoanContainer extends StatefulWidget {
     this.secondaryWidget,
     required this.dueDate,
     required this.imageUrl,
+    required this.phoneNumber,
     this.concluded,
   });
 
@@ -35,13 +42,17 @@ class LoanContainer extends StatefulWidget {
 
 class _LoanContainerState extends State<LoanContainer> {
   final String value = '16/09/2024';
+  final _homeController = locator.get<HomeController>();
+  final _loanController = locator.get<LoanController>();
 
   @override
   Widget build(BuildContext context) {
+    bool isDueToday = Validator.isDueTodayOrPast(widget.dueDate, widget.concluded!);
+
     return Container(
       decoration: BoxDecoration(
-        gradient: widget.concluded!
-            ? AppColors.background3D
+        gradient: isDueToday
+            ? AppColors.secondaryRed3D
             : AppColors.primaryGreen3D,
         borderRadius: const BorderRadius.all(
           Radius.circular(16),
@@ -96,13 +107,13 @@ class _LoanContainerState extends State<LoanContainer> {
                 ),
               ],
             ),
-            const SizedBox(width: 10),
+            // const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 DescriptionValueWidget(
-                  descrtiption: 'Vancimento',
+                  descrtiption: 'Vencimento',
                   value: DateFormat('dd/MM/yyyy').format(widget.dueDate),
                 ),
                 DescriptionValueWidget(
@@ -111,6 +122,27 @@ class _LoanContainerState extends State<LoanContainer> {
                 ),
               ],
             ),
+            if (isDueToday)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    child: const Icon(
+                      Icons.attach_money,
+                    ),
+                    onTap: () async {
+                      final result = await _loanController.sendMessage(
+                        phoneNumber: widget.phoneNumber,
+                        message: StringManipulation.chargeMessage(
+                          consumerName: widget.consumerName,
+                          message: _homeController.creditorModel.message!,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
           ],
         ),
       ),

@@ -25,7 +25,10 @@ class LoansPage extends StatefulWidget {
 class _LoansPageState extends State<LoansPage>
     with SingleTickerProviderStateMixin {
   final _homeController = locator.get<HomeController>();
-  LoanFilter? selectedFilter = LoanFilter.values[1];
+      LoanFilter? selectedFilter = locator.get<HomeController>().filterOnlyOverdue
+        ? LoanFilter.values[2]
+        : LoanFilter.values[1];
+
 
   @override
   void initState() {
@@ -40,22 +43,28 @@ class _LoansPageState extends State<LoansPage>
 
   @override
   Widget build(BuildContext context) {
+
     final List<LoanModel> loans = _homeController.loans;
     final List<ConsumerModel> consumers = _homeController.consumers;
 
     List<LoanModel> filteredLoans = loans.where((loan) {
       switch (selectedFilter) {
         case LoanFilter.all:
+          _homeController.setFilterOnlyOverdue(false);
           return true;
         case LoanFilter.concluded:
+          _homeController.setFilterOnlyOverdue(false);
           return loan.concluded == true;
         case LoanFilter.notConcluded:
+          _homeController.setFilterOnlyOverdue(false);
           return loan.concluded == false;
         case LoanFilter.overdue:
+          _homeController.setFilterOnlyOverdue(false);
           return loan.dueDate != null &&
               loan.dueDate!.isBefore(DateTime.now()) &&
               !loan.concluded!;
         default:
+          _homeController.setFilterOnlyOverdue(false);
           return true;
       }
     }).toList();
@@ -138,6 +147,7 @@ class _LoansPageState extends State<LoansPage>
                             dueDate: filteredLoans[index].dueDate!,
                             imageUrl: consumerName.imageUrl ?? '',
                             concluded: filteredLoans[index].concluded!,
+                            phoneNumber: consumerName.phone!,
                           ),
                         ),
                       );

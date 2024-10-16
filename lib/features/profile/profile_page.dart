@@ -47,7 +47,6 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              // Nome do usuário
               Text(
                 homeController.creditorModel.name ?? 'Não informado',
                 style: const TextStyle(
@@ -57,32 +56,32 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Botão Alterar Nome
               ProfileButton(
                 icon: Icons.edit,
                 text: "Alterar Nome",
                 onTap: () => profileController.changeName(),
               ),
               const SizedBox(height: 15),
-
-              // Botão Alterar Senha
               ProfileButton(
                 icon: Icons.lock,
                 text: "Alterar Senha",
                 onTap: () => profileController.changePassword(),
               ),
               const SizedBox(height: 15),
-
-              // Botão Acordos
+              ProfileButton(
+                icon: Icons.message,
+                text: "Alterar Mensagem Padrão",
+                onTap: () async {
+                  await Navigator.pushNamed(context, NamedRoute.editMessage);
+                },
+              ),
+              const SizedBox(height: 15),
               ProfileButton(
                 icon: Icons.description,
                 text: "Acordos",
                 onTap: () => profileController.showAgreements(),
               ),
               const SizedBox(height: 15),
-
-              // Botão Deletar Conta
               ProfileButton(
                 icon: Icons.delete,
                 text: "Deletar Conta",
@@ -91,8 +90,6 @@ class ProfilePage extends StatelessWidget {
                 textColor: AppColors.primaryText,
               ),
               const SizedBox(height: 15),
-
-              // Botão Sair
               ProfileButton(
                 icon: Icons.logout,
                 text: "Sair",

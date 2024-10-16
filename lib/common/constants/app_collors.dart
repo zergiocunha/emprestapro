@@ -18,35 +18,35 @@ class AppColors {
 
   static const LinearGradient background3D = LinearGradient(
     colors: [
-      Color(0xFF1A1F24), // Cor de fundo principal
-      Color(0xFF232A31), // Tom mais claro para criar profundidade
-      Color(0xFF14191D), // Tom mais escuro para criar sombra
+      Color(0xFF1A1F24),
+      Color(0xFF232A31),
+      Color(0xFF14191D),
     ],
-    begin: Alignment.topLeft, // Início do degradê
-    end: Alignment.bottomRight, // Fim do degradê
-    stops: [0.0, 0.5, 1.0], // Posições intermediárias do degradê
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.5, 1.0],
   );
 
   static const LinearGradient primaryGreen3D = LinearGradient(
     colors: [
-      Color(0xFF39D2C0), // Cor principal (primaryGreen)
-      Color(0xFF33C1B1), // Um tom mais suave (ligeiramente mais escuro)
-      Color(0xFF2EAA9C), // Tom mais escuro para profundidade
+      Color(0xFF39D2C0),
+      Color(0xFF33C1B1),
+      Color(0xFF2EAA9C),
     ],
-    begin: Alignment.topLeft, // Início do degradê
-    end: Alignment.bottomRight, // Fim do degradê
-    stops: [0.0, 0.7, 1.0], // Posições intermediárias do degradê
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.7, 1.0],
   );
 
   static const LinearGradient secondaryRed3D = LinearGradient(
     colors: [
-      Color(0xFFF2A384), // Cor principal (secondaryRed)
+      Color(0xFFF2A384),
       Color.fromARGB(
-          255, 213, 142, 114), // Tom mais suave (ligeiramente mais escuro)
-      Color.fromARGB(255, 181, 122, 99), // Tom mais escuro para profundidade
+          255, 213, 142, 114),
+      Color.fromARGB(255, 181, 122, 99),
     ],
-    begin: Alignment.topLeft, // Início do degradê
-    end: Alignment.bottomRight, // Fim do degradê
-    stops: [0.0, 0.7, 1.0], // Posições intermediárias do degradê
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.7, 1.0],
   );
 }

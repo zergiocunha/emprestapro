@@ -28,6 +28,7 @@ class _HomePageViewState extends State<HomePageView> {
   @override
   void dispose() {
     locator.resetLazySingleton<HomeController>();
+    homeController.showFloatingButton.dispose();
     super.dispose();
   }
 
@@ -46,7 +47,9 @@ class _HomePageViewState extends State<HomePageView> {
           ProfilePage(),
         ],
       ),
-      floatingActionButton: const CustomFloatingActionButton(),
+      floatingActionButton: homeController.showFloatingButton.value
+          ? const CustomFloatingActionButton()
+          : null,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: CustomBottomAppBar(
@@ -57,26 +60,46 @@ class _HomePageViewState extends State<HomePageView> {
             label: 'home',
             primaryIcon: Icons.home,
             secondaryIcon: Icons.home_outlined,
-            onPressed: () => homeController.pageController.jumpToPage(0),
+            onPressed: () {
+              homeController.pageController.jumpToPage(0);
+              setState(() {
+                homeController.showFloatingButton.value = true;
+              });
+            },
           ),
           CustomBottomAppBarItem(
             label: 'loans',
             primaryIcon: Icons.request_page,
             secondaryIcon: Icons.request_page_outlined,
-            onPressed: () => homeController.pageController.jumpToPage(1),
+            onPressed: () {
+              homeController.pageController.jumpToPage(1);
+              setState(() {
+                homeController.showFloatingButton.value = true;
+              });
+            },
           ),
-          CustomBottomAppBarItem.empty(),
+          if (homeController.showFloatingButton.value) CustomBottomAppBarItem.empty(),
           CustomBottomAppBarItem(
             label: 'consumers',
             primaryIcon: Icons.people,
             secondaryIcon: Icons.people_outline,
-            onPressed: () => homeController.pageController.jumpToPage(2),
+            onPressed: () {
+              homeController.pageController.jumpToPage(2);
+              setState(() {
+                homeController.showFloatingButton.value = true;
+              });
+            },
           ),
           CustomBottomAppBarItem(
             label: 'profile',
             primaryIcon: Icons.person,
             secondaryIcon: Icons.person_2_outlined,
-            onPressed: () => homeController.pageController.jumpToPage(3),
+            onPressed: () {
+              homeController.pageController.jumpToPage(3);
+              setState(() {
+                homeController.showFloatingButton.value = false;
+              });
+            },
           ),
         ],
       ),

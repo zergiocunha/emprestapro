@@ -1,15 +1,16 @@
 class CreditorModel {
-  final String? uid;
-  final String? userId;
-  final String? name;
-  final String? pix;
-  final String? phone;
-  final String? imageUrl;
-  final String? email;
-  final DateTime? creationTime;
-  final DateTime? updateTime;
-  final List<String>? loanIds;
-  final bool? active;
+  String? uid;
+  String? userId;
+  String? name;
+  String? pix;
+  String? phone;
+  String? imageUrl;
+  String? email;
+  String? message;
+  DateTime? creationTime;
+  DateTime? updateTime;
+  List<String>? loanIds;
+  bool? active;
 
   CreditorModel({
     this.uid,
@@ -19,6 +20,7 @@ class CreditorModel {
     this.phone,
     this.imageUrl,
     this.email,
+    this.message,
     this.creationTime,
     this.updateTime,
     this.loanIds,
@@ -34,6 +36,7 @@ class CreditorModel {
       'phone': phone,
       'imageUrl': imageUrl,
       'email': email,
+      'message': message,
       'creationTime': creationTime!.toIso8601String(),
       'updateTime': updateTime?.toIso8601String(),
       'loanIds': loanIds,
@@ -52,6 +55,7 @@ class CreditorModel {
       phone: map['phone'],
       imageUrl: map['imageUrl'],
       email: map['email'],
+      message: map['message'],
       creationTime: DateTime.parse(map['creationTime']),
       updateTime: map['updateTime'] != null ?DateTime.parse(map['updateTime']) : null,
       loanIds: List<String>.from(map['loanIds']),
