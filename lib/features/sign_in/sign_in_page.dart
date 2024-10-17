@@ -1,10 +1,11 @@
-// ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: type_literal_in_constant_pattern, use_build_context_synchronously
 
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/common/widgets/square_tile.dart';
 import 'package:emprestapro/features/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/features/sign_in/sign_in_state.dart';
 import 'package:emprestapro/locator.dart';
@@ -66,7 +67,6 @@ class _SignInPageState extends State<SignInPage> {
       );
 
       Navigator.popAndPushNamed(
-        // ignore: use_build_context_synchronously
         context,
         NamedRoute.home,
       );
@@ -84,7 +84,7 @@ class _SignInPageState extends State<SignInPage> {
         alignment: AlignmentDirectional.topCenter,
         children: [
           Positioned(
-            top: 20,
+            top: 10,
             left: 0,
             right: 0,
             child: Padding(
@@ -116,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
           Positioned(
-            top: 340,
+            // top: 300,
             bottom: 0,
             left: 0,
             right: 0,
@@ -212,6 +212,22 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 32),
+                      const Text(
+                        'Ou continue com',
+                        style: TextStyle(
+                            color: AppColors.secoundaryText, fontSize: 14),
+                      ),
+                      const SizedBox(height: 32),
+                      SquareTile(
+                          imagePath: 'assets/images/google_logo.png',
+                          onTap: () async {
+                            await _signInController.signInWithGoogle();
+                            Navigator.popAndPushNamed(
+                              context,
+                              NamedRoute.home,
+                            );
+                          }),
                     ],
                   ),
                 ),

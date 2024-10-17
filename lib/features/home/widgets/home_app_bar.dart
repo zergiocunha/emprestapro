@@ -68,12 +68,17 @@ class HomeAppBar extends StatelessWidget {
                               fontSize: 20,
                             ),
                           ),
-                          Text(
-                            displayName,
-                            style: const TextStyle(
-                              color: AppColors.primaryGreen,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                          SizedBox(
+                            width: 100,
+                            child: AutoSizeText(
+                              displayName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: AppColors.primaryGreen,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ],

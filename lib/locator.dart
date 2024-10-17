@@ -56,7 +56,6 @@ void setupDependencies() {
     () {
       return UserRepository(
         firestoreService: locator.get<FirestoreService>(),
-        sqliteService: locator.get<SQLiteService>(),
       );
     },
   );
@@ -117,6 +116,7 @@ void setupDependencies() {
       locator.get<AuthService>(),
       locator.get<SecureStorageService>(),
       locator.get<UserRepository>(),
+      locator.get<CreditorRepository>(),
     ),
   );
 
@@ -126,6 +126,7 @@ void setupDependencies() {
       creditorRepository: locator.get<CreditorRepository>(),
       loanRepository: locator.get<LoanRepository>(),
       consumerRepository: locator.get<ConsumerRepository>(),
+      transactionRepository: locator.get<TransactionRepository>(),
     ),
   );
 
@@ -153,6 +154,7 @@ void setupDependencies() {
     () => TransactionController(
       transactionRepository: locator.get<TransactionRepository>(),
       loanRepository: locator.get<LoanRepository>(),
+      homeController: locator.get<HomeController>(),
     ),
   );
 }

@@ -6,7 +6,7 @@ class ConsumerModel {
   final String? name;
   final String? pix;
   final String? phone;
-  final String? imageUrl;
+  final String? photoURL;
   final String? email;
   final DateTime? creationTime;
   final DateTime? updateTime;
@@ -19,7 +19,7 @@ class ConsumerModel {
     this.name,
     this.pix,
     this.phone,
-    this.imageUrl,
+    this.photoURL,
     this.email,
     this.creationTime,
     this.updateTime,
@@ -34,7 +34,7 @@ class ConsumerModel {
       'name': name,
       'pix': pix,
       'phone': phone,
-      'imageUrl': imageUrl,
+      'photoURL': photoURL,
       'email': email,
       'creationTime': creationTime?.toIso8601String(),
       'updateTime': updateTime?.toIso8601String(),
@@ -50,7 +50,7 @@ class ConsumerModel {
       creditorId: map['creditorId'],
       pix: map['pix'],
       phone: map['phone'],
-      imageUrl: map['imageUrl'],
+      photoURL: map['photoURL'],
       email: map['email'],
       creationTime: map['creationTime'] != null ? DateTime.parse(map['creationTime']) : null,
       updateTime: map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,

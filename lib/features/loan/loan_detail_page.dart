@@ -23,10 +23,10 @@ class LoanDetailPage extends StatefulWidget {
 
 class _LoanDetailPageState extends State<LoanDetailPage>
     with CustomModalSheetMixin {
-  List<TransactionModel> transactions = []; // Simulando as transações
   final _transactionController = locator.get<TransactionController>();
   final _homeController = locator.get<HomeController>();
   bool? confirmDelete = false;
+  List<TransactionModel> transactions = [];
 
   @override
   void initState() {
@@ -41,9 +41,13 @@ class _LoanDetailPageState extends State<LoanDetailPage>
   }
 
   void getData() async {
-    await _transactionController.getTransactionsByLoan(widget.loan);
-    transactions = _transactionController.transactionsList;
-    if (mounted) setState(() {});
+    if (mounted) {
+      setState(() {
+        transactions = _homeController.transactons
+            .where((transaction) => transaction.loanId == widget.loan.uid)
+            .toList();
+      });
+    }
   }
 
   @override
@@ -66,8 +70,7 @@ class _LoanDetailPageState extends State<LoanDetailPage>
         centerTitle: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primaryText),
-          onPressed: () =>
-              Navigator.pop(context), // Navega de volta à página anterior
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(

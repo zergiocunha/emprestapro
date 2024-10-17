@@ -41,8 +41,7 @@ class AppColors {
   static const LinearGradient secondaryRed3D = LinearGradient(
     colors: [
       Color(0xFFF2A384),
-      Color.fromARGB(
-          255, 213, 142, 114),
+      Color.fromARGB(255, 213, 142, 114),
       Color.fromARGB(255, 181, 122, 99),
     ],
     begin: Alignment.topLeft,

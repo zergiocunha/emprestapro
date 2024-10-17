@@ -97,7 +97,7 @@ class SignUpController extends ChangeNotifier {
       active: true,
       creationTime: userModel.creationTime,
       email: userModel.email,
-      imageUrl: userModel.photoUrl,
+      photoURL: userModel.photoURL,
       loanIds: [],
       phone: userModel.phoneNumber,
       updateTime: userModel.updateTime,

@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/models/transaction_model.dart';
+import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/transaction/transaction_state.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
 import 'package:emprestapro/repositories/transaction_repository.dart';
@@ -8,16 +9,16 @@ import 'package:flutter/material.dart';
 class TransactionController extends ChangeNotifier {
   final TransactionRepository transactionRepository;
   final LoanRepository loanRepository;
+  final HomeController homeController;
 
   TransactionController({
     required this.transactionRepository,
     required this.loanRepository,
+    required this.homeController,
   });
 
   TransactionState _state = TransactionInitialState();
   TransactionState get state => _state;
-
-  List<TransactionModel> transactionsList = [];
 
   void _changeState(TransactionState newState) {
     _state = newState;
@@ -35,7 +36,7 @@ class TransactionController extends ChangeNotifier {
     result.fold(
       (error) => _changeState(TransactionErrorState(message: error.message)),
       (transaction) {
-        transactionsList.add(newTransaction);
+        homeController.transactons.add(newTransaction);
         _changeState(TransactionSuccessState());
       },
     );
@@ -54,7 +55,7 @@ class TransactionController extends ChangeNotifier {
     result.fold(
       (error) => _changeState(TransactionErrorState(message: error.message)),
       (transaction) {
-        transactionsList.remove(transactionModel);
+        homeController.transactons.remove(transactionModel);
         _changeState(TransactionSuccessState());
       },
     );
@@ -83,7 +84,7 @@ class TransactionController extends ChangeNotifier {
     result.fold(
         (error) => _changeState(TransactionErrorState(message: error.message)),
         (data) {
-      transactionsList = data;
+      homeController.transactons = data;
       _changeState(TransactionSuccessState());
     });
   }

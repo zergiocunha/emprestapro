@@ -1,11 +1,13 @@
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
+import 'package:emprestapro/common/models/transaction_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
 import 'package:emprestapro/features/home/home_state.dart';
 import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
+import 'package:emprestapro/repositories/transaction_repository.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -15,15 +17,18 @@ class HomeController extends ChangeNotifier {
     required CreditorRepository creditorRepository,
     required LoanRepository loanRepository,
     required ConsumerRepository consumerRepository,
+    required TransactionRepository transactionRepository,
   })  : _creditorRepository = creditorRepository,
         _secureStorageService = secureStorageService,
         _consumerRepository = consumerRepository,
+        _transactionRepository = transactionRepository,
         _loanRepository = loanRepository;
 
   final CreditorRepository _creditorRepository;
   final LoanRepository _loanRepository;
   final SecureStorageService _secureStorageService;
   final ConsumerRepository _consumerRepository;
+  final TransactionRepository _transactionRepository;
 
   HomeState _state = HomeInitialState();
   final ValueNotifier<bool> showFloatingButton = ValueNotifier<bool>(true);
@@ -43,6 +48,8 @@ class HomeController extends ChangeNotifier {
 
   List<ConsumerModel> consumers = List.empty(growable: true);
 
+  List<TransactionModel> transactons = List.empty(growable: true);
+
   late PageController _pageController;
   PageController get pageController => _pageController;
 
@@ -53,7 +60,6 @@ class HomeController extends ChangeNotifier {
   void setFilterOnlyOverdue(bool value) {
     _filterOnlyOverdue = value;
   }
-
 
   void _changeState(HomeState newState) {
     _state = newState;
@@ -121,6 +127,23 @@ class HomeController extends ChangeNotifier {
       (error) => _changeState(HomeErrorState(message: error.message)),
       (data) {
         consumers = data;
+        _changeState(HomeSuccessState());
+      },
+    );
+  }
+
+  Future<void> getTransactionsByCreditor() async {
+    _changeState(HomeLoadingState());
+
+    final result = await _transactionRepository.get(
+      fieldName: 'creditorId',
+      value: _creditorModel.uid!,
+    );
+
+    result.fold(
+      (error) => _changeState(HomeErrorState(message: error.message)),
+      (data) {
+        transactons = data;
         _changeState(HomeSuccessState());
       },
     );

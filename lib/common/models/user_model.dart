@@ -7,7 +7,7 @@ class UserModel {
   final String? displayName;
   final String? email;
   final String? phoneNumber;
-  final String? photoUrl;
+  final String? photoURL;
   final DateTime? creationTime;
   final DateTime? updateTime;
   final DateTime? lastSignInTime;
@@ -20,7 +20,7 @@ class UserModel {
     this.displayName,
     this.email,
     this.phoneNumber,
-    this.photoUrl,
+    this.photoURL,
     this.creationTime,
     this.updateTime,
     this.lastSignInTime,
@@ -35,7 +35,7 @@ class UserModel {
       'displayName': displayName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'photoUrl': photoUrl,
+      'photoURL': photoURL,
       'creationTime': creationTime?.toIso8601String(),
       'updateTime': updateTime?.toIso8601String(),
       'lastSignInTime': lastSignInTime?.toIso8601String(),
@@ -54,7 +54,7 @@ class UserModel {
       displayName: displayName ?? map['displayName'],
       email: map['email'],
       phoneNumber: map['phoneNumber'],
-      photoUrl: map['photoUrl'],
+      photoURL: map['photoURL'],
       creationTime: DateTime.parse(map['creationTime']),
       updateTime: null,
       lastSignInTime: DateTime.parse(map['lastSignInTime']),
@@ -77,13 +77,13 @@ class UserModel {
     String? name,
     String? email,
     String? password,
-    String? photoUrl,
+    String? photoURL,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
       displayName: name ?? displayName,
       email: email ?? this.email,
-      photoUrl: photoUrl ?? this.photoUrl,
+      photoURL: photoURL ?? this.photoURL,
     );
   }
 }

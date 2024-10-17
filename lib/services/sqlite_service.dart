@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:developer';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -11,7 +13,7 @@ class SQLiteService {
   }
 
   SQLiteService._internal();
-
+  //TODO: Implementar DB Local
   Future<SQLiteService> init() async {
     try {
       var databasesPath = await getDatabasesPath();

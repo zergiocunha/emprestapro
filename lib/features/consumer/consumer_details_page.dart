@@ -13,19 +13,19 @@ import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ConsumerDetailPage extends StatefulWidget {
+class ConsumerDetailsPage extends StatefulWidget {
   final ConsumerModel consumer;
 
-  const ConsumerDetailPage({
+  const ConsumerDetailsPage({
     super.key,
     required this.consumer,
   });
 
   @override
-  State<ConsumerDetailPage> createState() => _ConsumerDetailPageState();
+  State<ConsumerDetailsPage> createState() => _ConsumerDetailsPageState();
 }
 
-class _ConsumerDetailPageState extends State<ConsumerDetailPage>
+class _ConsumerDetailsPageState extends State<ConsumerDetailsPage>
     with CustomModalSheetMixin {
   final consumerController = locator.get<ConsumerController>();
   final loanController = locator.get<LoanController>();
@@ -151,8 +151,7 @@ class _ConsumerDetailPageState extends State<ConsumerDetailPage>
                   pix: widget.consumer.pix,
                   status: widget.consumer.active == true ? 'Sim' : 'Não',
                   address: widget.consumer.address,
-                  imageUrl:
-                      'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg',
+                  imageUrl: widget.consumer.photoURL ?? '',
                 ),
               ],
             ),

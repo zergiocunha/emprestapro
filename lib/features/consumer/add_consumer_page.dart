@@ -52,7 +52,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
         name: _nameController.text,
         pix: _pixController.text,
         phone: _phoneController.text,
-        imageUrl: '',
+        photoURL: '',
         email: _emailController.text,
         creationTime: DateTime.now(),
         updateTime: DateTime.now(),
