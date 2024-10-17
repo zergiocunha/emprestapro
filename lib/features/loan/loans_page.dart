@@ -186,7 +186,7 @@ class _LoansPageState extends State<LoansPage>
                                       filteredLoans[index]),
                                   secondaryName: 'secondaryName',
                                   dueDate: filteredLoans[index].dueDate!,
-                                  imageUrl: consumerName.imageUrl ?? '',
+                                  imageUrl: consumerName.photoURL ?? '',
                                   concluded: filteredLoans[index].concluded!,
                                   phoneNumber: consumerName.phone!,
                                   onPressed: () async {
@@ -240,8 +240,8 @@ class _LoansPageState extends State<LoansPage>
 
 extension StringCasingExtension on String {
   String capitalize() {
-    if (this == null || this.isEmpty) return '';
-    return '${this[0].toUpperCase()}${this.substring(1).toLowerCase()}';
+    if (isEmpty) return '';
+    return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
   }
 }
 

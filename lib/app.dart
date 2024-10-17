@@ -1,6 +1,6 @@
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/features/consumer/add_consumer_page.dart';
-import 'package:emprestapro/features/consumer/consumer_detail_page.dart';
+import 'package:emprestapro/features/consumer/consumer_details_page.dart';
 import 'package:emprestapro/features/consumer/consumers_page.dart';
 import 'package:emprestapro/features/loan/add_loan_page.dart';
 import 'package:emprestapro/features/profile/edit_message_page.dart';
@@ -56,7 +56,7 @@ class App extends StatelessWidget {
           case NamedRoute.consumerDetail:
             final consumer = settings.arguments as ConsumerModel;
             return MaterialPageRoute(
-              builder: (_) => ConsumerDetailPage(consumer: consumer),
+              builder: (_) => ConsumerDetailsPage(consumer: consumer),
             );
           default:
             return MaterialPageRoute(builder: (_) => const SplashPage());

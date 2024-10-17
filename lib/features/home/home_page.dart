@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
+import 'package:emprestapro/common/utils/data_manipulation.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
 import 'package:emprestapro/features/home/widgets/alert_container.dart';
 import 'package:emprestapro/features/home/widgets/home_app_bar.dart';
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
     await homeController.getCreditor();
     await homeController.getLoansByCreditor();
     await homeController.getConsumersByCreditor();
+    await homeController.getTransactionsByCreditor();
     if (mounted) setState(() {});
   }
 
@@ -35,7 +37,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    const String lastReceiptDate = 'Aug 31, 2021';
     final nextToDueDate = homeController.loans.isNotEmpty
         ? Calculation.nextToDueDate(homeController.loans)
         : null;
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
             child: HomeAppBar(
-              photoUrl: homeController.creditorModel.imageUrl ?? '',
+              photoUrl: homeController.creditorModel.photoURL ?? '',
               displayName: homeController.creditorModel.name ?? '',
               amount: Calculation.totalBorrowed(homeController.loans),
             ),
@@ -73,11 +74,18 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Row(
               children: [
-                const HomeInfoContainer(
+                HomeInfoContainer(
                   dueDateTitle: 'Total Juros Recebido',
-                  dueAmount: 3232, //TODO: depende das transações
+                  dueAmount: Calculation.sumTotalTransactionsAmount(
+                      homeController.transactons)!,
                   debitTitle: 'Data do Último',
-                  dueDate: lastReceiptDate,
+                  dueDate: homeController.transactons.isEmpty
+                      ? ''
+                      : DateFormat('dd/MM/yyyy').format(
+                          DataManipulation.sortByDueDateDescending(
+                            homeController.transactons,
+                          ).first.transactionTime,
+                        ),
                   daysLeft: 0,
                 ),
                 const SizedBox(

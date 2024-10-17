@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
-import 'package:emprestapro/common/utils/string_manipulation.dart';
+import 'package:emprestapro/common/utils/data_manipulation.dart';
 import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
@@ -136,12 +136,21 @@ class _LoanContainerState extends State<LoanContainer> {
                         Icons.attach_money,
                       ),
                       onTap: () async {
-                        final result = await _loanController.sendMessage(
+                        await _loanController.sendMessage(
                           phoneNumber: widget.phoneNumber,
-                          message: StringManipulation.chargeMessage(
-                            consumerName: widget.consumerName,
-                            message: _homeController.creditorModel.message!,
-                          ),
+                          message: _homeController.creditorModel.message != null
+                              ? DataManipulation.chargeMessage(
+                                  consumerName: widget.consumerName,
+                                  message:
+                                      _homeController.creditorModel.message!,
+                                )
+                              : DataManipulation.defaultMessage(
+                                  clientName: widget.consumerName,
+                                  loanAmount: widget.amount,
+                                  feeAmount: widget.fees,
+                                  dueDate: DateFormat('dd/MM/yyyy')
+                                      .format(widget.dueDate),
+                                ),
                         );
                       },
                     ),

@@ -1,6 +1,5 @@
 class TransactionResult {
-  TransactionResult._({this.message});
-  final String? message;
+  TransactionResult._();
 
   // Mensagens fixas
   static const String loanConcluded = "Empréstimo quitado completamente!";

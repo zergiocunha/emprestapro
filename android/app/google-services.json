@@ -12,7 +12,20 @@
           "package_name": "empresta.pro"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "340844839278-ese95q6apojbh59gncua3aous2naqmk0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "empresta.pro",
+            "certificate_hash": "2a0980c9711c9cac06896a1a57169c2439633b95"
+          }
+        },
+        {
+          "client_id": "340844839278-lqvcu8uf7aqetcadtq006k2vsibacr4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCNmKB7cT8a4X8gwpIj5nMNAostFGZzP80"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340844839278-lqvcu8uf7aqetcadtq006k2vsibacr4m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "340844839278-71dm6ee2e51scgar6dcl17u6itejoten.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.emprestapro"
+              }
+            }
+          ]
         }
       }
     }

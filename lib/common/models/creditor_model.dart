@@ -4,7 +4,7 @@ class CreditorModel {
   String? name;
   String? pix;
   String? phone;
-  String? imageUrl;
+  String? photoURL;
   String? email;
   String? message;
   DateTime? creationTime;
@@ -18,7 +18,7 @@ class CreditorModel {
     this.name,
     this.pix,
     this.phone,
-    this.imageUrl,
+    this.photoURL,
     this.email,
     this.message,
     this.creationTime,
@@ -34,7 +34,7 @@ class CreditorModel {
       'name': name,
       'pix': pix,
       'phone': phone,
-      'imageUrl': imageUrl,
+      'photoURL': photoURL,
       'email': email,
       'message': message,
       'creationTime': creationTime!.toIso8601String(),
@@ -53,7 +53,7 @@ class CreditorModel {
       name: map['name'],
       pix: map['pix'],
       phone: map['phone'],
-      imageUrl: map['imageUrl'],
+      photoURL: map['photoURL'],
       email: map['email'],
       message: map['message'],
       creationTime: DateTime.parse(map['creationTime']),

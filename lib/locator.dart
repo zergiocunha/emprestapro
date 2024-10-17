@@ -14,6 +14,7 @@ import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
+import 'package:emprestapro/services/sqlite_service.dart';
 import 'package:emprestapro/services/storage_service.dart';
 import 'package:emprestapro/services/whatsapp_service.dart';
 import 'package:get_it/get_it.dart';
@@ -45,6 +46,10 @@ void setupDependencies() {
 
   locator.registerFactory<FirestoreService>(
     () => FirestoreService(),
+  );
+
+  locator.registerSingletonAsync<SQLiteService>(
+    () async => SQLiteService().init(),
   );
 
   locator.registerFactory<UserRepository>(
@@ -111,6 +116,7 @@ void setupDependencies() {
       locator.get<AuthService>(),
       locator.get<SecureStorageService>(),
       locator.get<UserRepository>(),
+      locator.get<CreditorRepository>(),
     ),
   );
 
@@ -120,6 +126,7 @@ void setupDependencies() {
       creditorRepository: locator.get<CreditorRepository>(),
       loanRepository: locator.get<LoanRepository>(),
       consumerRepository: locator.get<ConsumerRepository>(),
+      transactionRepository: locator.get<TransactionRepository>(),
     ),
   );
 
@@ -147,6 +154,7 @@ void setupDependencies() {
     () => TransactionController(
       transactionRepository: locator.get<TransactionRepository>(),
       loanRepository: locator.get<LoanRepository>(),
+      homeController: locator.get<HomeController>(),
     ),
   );
 }

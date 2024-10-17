@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/features/home/home_controller.dart';
@@ -33,11 +35,11 @@ class ProfilePage extends StatelessWidget {
                 },
                 child: CircleAvatar(
                   radius: 60,
-                  backgroundImage: homeController.creditorModel.imageUrl != null
-                      ? NetworkImage(homeController.creditorModel.imageUrl!)
+                  backgroundImage: homeController.creditorModel.photoURL != null
+                      ? NetworkImage(homeController.creditorModel.photoURL!)
                       : null,
                   backgroundColor: AppColors.secoundaryBackground,
-                  child: homeController.creditorModel.imageUrl == null
+                  child: homeController.creditorModel.photoURL == null
                       ? const Icon(
                           Icons.person,
                           color: AppColors.primaryText,

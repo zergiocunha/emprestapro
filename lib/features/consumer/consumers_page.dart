@@ -98,7 +98,7 @@ class _ConsumersPageState extends State<ConsumersPage>
                       phoneNumber:
                           consumers[index].phone ?? 'Telefone não disponível',
                       email: consumers[index].email ?? 'Email não disponível',
-                      imageUrl: consumers[index].imageUrl!,
+                      imageUrl: consumers[index].photoURL!,
                       onTap: () async {
                         await Navigator.pushNamed(
                           context,
