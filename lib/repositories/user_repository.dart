@@ -3,12 +3,15 @@ import 'package:emprestapro/common/models/user_model.dart';
 import 'package:emprestapro/data/data_result.dart';
 import 'package:emprestapro/data/exceptions.dart';
 import 'package:emprestapro/services/firestore_service.dart';
+import 'package:emprestapro/services/sqlite_service.dart';
 
 class UserRepository {
   const UserRepository({
     required this.firestoreService,
+    required this.sqliteService,
   });
   final FirestoreService firestoreService;
+  final SQLiteService sqliteService;
 
   Future<DataResult<UserModel>> get({required String uid}) async {
     try {
@@ -40,6 +43,11 @@ class UserRepository {
       await firestoreService.insert(
         collection: Collections.users,
         uid: uid,
+        params: userModel.toMap(),
+      );
+
+      await sqliteService.insert(
+        table: Collections.users,
         params: userModel.toMap(),
       );
 

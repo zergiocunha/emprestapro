@@ -14,6 +14,7 @@ import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
+import 'package:emprestapro/services/sqlite_service.dart';
 import 'package:emprestapro/services/storage_service.dart';
 import 'package:emprestapro/services/whatsapp_service.dart';
 import 'package:get_it/get_it.dart';
@@ -47,10 +48,15 @@ void setupDependencies() {
     () => FirestoreService(),
   );
 
+  locator.registerSingletonAsync<SQLiteService>(
+    () async => SQLiteService().init(),
+  );
+
   locator.registerFactory<UserRepository>(
     () {
       return UserRepository(
         firestoreService: locator.get<FirestoreService>(),
+        sqliteService: locator.get<SQLiteService>(),
       );
     },
   );
