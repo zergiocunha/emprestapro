@@ -140,13 +140,13 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             topRight: Radius.circular(30),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   DescriptionValueWidget(
                     descrtiption: 'Empréstimo',
@@ -156,6 +156,11 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     descrtiption: 'Juros',
                     value:
                         'R\$${Calculation.feesAmount(widget.loan).toStringAsFixed(2)}',
+                  ),
+                  DescriptionValueWidget(
+                    descrtiption: 'Total',
+                    value:
+                        'R\$${(Calculation.feesAmount(widget.loan) + widget.loan.amount!).toStringAsFixed(2)}',
                   ),
                 ],
               ),
