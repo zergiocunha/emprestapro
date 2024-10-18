@@ -1,0 +1,243 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:emprestapro/common/constants/app_collors.dart';
+import 'package:emprestapro/common/constants/routes.dart';
+import 'package:emprestapro/common/models/consumer_model.dart';
+import 'package:emprestapro/common/models/loan_model.dart';
+import 'package:emprestapro/common/widgets/custom_dropdown.dart';
+import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/pages/home/home_controller.dart';
+import 'package:emprestapro/pages/loan/loan_controller.dart';
+import 'package:emprestapro/locator.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
+
+class AddLoanPage extends StatefulWidget {
+  final LoanModel? loan;
+
+  const AddLoanPage({
+    super.key,
+    this.loan,
+  });
+
+  @override
+  State<AddLoanPage> createState() => _AddLoanPageState();
+}
+
+class _AddLoanPageState extends State<AddLoanPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _amountController = TextEditingController();
+  final _interestRateController = TextEditingController();
+  final _dueDateController = TextEditingController();
+  final _loanController = locator.get<LoanController>();
+  bool get isEditing => widget.loan != null;
+
+  ConsumerModel? _selectedConsumer;
+  DateTime? _selectedDate = DateTime(
+      DateTime.now().year, DateTime.now().month + 1, DateTime.now().day);
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _interestRateController.dispose();
+    _dueDateController.dispose();
+    super.dispose();
+  }
+
+  void getData() async {
+    _dueDateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate!);
+    await _loanController.getUserData();
+    await _loanController.getCreditorData();
+    await _loanController.getConsumerList();
+    if (mounted) setState(() {});
+    if (isEditing) {
+      _amountController.text = widget.loan!.amount.toString();
+      _interestRateController.text = widget.loan!.fees.toString();
+      _dueDateController.text =
+          DateFormat('dd/MM/yyyy').format(widget.loan!.dueDate!);
+      _selectedConsumer = _loanController.consumersList.firstWhere(
+        (consumer) => consumer.uid == widget.loan!.consumerId,
+      );
+      _selectedDate = widget.loan!.dueDate;
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _dueDateController.text = DateFormat('dd/MM/yyyy').format(picked);
+      });
+    }
+  }
+
+  Future<void> _navigateToAddConsumer() async {
+    await Navigator.pushNamed(context, NamedRoute.addConsumer);
+    getData();
+  }
+
+  Future<void> _addLoan() async {
+    final loan = LoanModel(
+      uid: isEditing ? widget.loan!.uid : const Uuid().v1(),
+      consumerId: _selectedConsumer?.uid,
+      amount: double.parse(_amountController.text),
+      creditorId: _loanController.creditorModel.uid,
+      fees: double.parse(_interestRateController.text),
+      dueDate: _selectedDate,
+      creationTime: DateTime.now(),
+      concluded: false,
+    );
+    if (isEditing) {
+      await _loanController.update(loanModel: loan);
+    } else {
+      await _loanController.insert(newLoan: loan);
+    }
+    Navigator.popAndPushNamed(context, NamedRoute.home);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.secoundaryBackground,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: AppColors.secoundaryBackground,
+        elevation: 0,
+        title: Text(
+          isEditing ? 'Editar Empréstimo' : 'Adicionar Empréstimo',
+          style: const TextStyle(
+            color: AppColors.primaryText,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.background3D,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              CustomDropdownButtonFormField<ConsumerModel>(
+                labelText: 'Selecione o Cliente',
+                value: _selectedConsumer,
+                items: _loanController.consumersList.map((consumer) {
+                  return DropdownMenuItem<ConsumerModel>(
+                    value: consumer,
+                    child: Text(consumer.name!),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedConsumer = newValue;
+                  });
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return 'Selecione um cliente';
+                  }
+                  return null;
+                },
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _navigateToAddConsumer();
+                },
+                child: const Text(
+                  'Adicionar Novo Cliente',
+                  style: TextStyle(color: AppColors.primaryGreen),
+                ),
+              ),
+              const SizedBox(height: 16),
+              CustomTextFormField(
+                keyboardType: TextInputType.number,
+                labelText: 'Valor do Empréstimo',
+                hintText: 'Insira o valor...',
+                controller: _amountController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Insira um valor válido';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomTextFormField(
+                keyboardType: TextInputType.number,
+                labelText: 'Taxa de Juros (%)',
+                hintText: 'Insira a taxa de juros...',
+                controller: _interestRateController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Insira uma taxa de juros válida';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: AbsorbPointer(
+                  child: CustomTextFormField(
+                    labelText: 'Data de Vencimento',
+                    hintText: 'Escolha a data de vencimento...',
+                    controller: _dueDateController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Escolha uma data válida';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomElevatedButton(
+                    label: 'Cancelar',
+                    backgroundColor: AppColors.secoundaryRed,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  CustomElevatedButton(
+                    label: isEditing ? 'Editar' : 'Adicionar',
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        return await _addLoan();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

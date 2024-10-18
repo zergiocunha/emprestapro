@@ -1,17 +1,17 @@
 import 'package:emprestapro/common/models/address_model.dart';
 
 class ConsumerModel {
-  final String? uid;
-  final String? creditorId;
-  final String? name;
-  final String? pix;
-  final String? phone;
-  final String? photoURL;
-  final String? email;
-  final DateTime? creationTime;
-  final DateTime? updateTime;
-  final bool? active;
-  final AddressModel? address;
+  String? uid;
+  String? creditorId;
+  String? name;
+  String? pix;
+  String? phone;
+  String? photoURL;
+  String? email;
+  DateTime? creationTime;
+  DateTime? updateTime;
+  bool? active;
+  AddressModel? address;
 
   ConsumerModel({
     this.uid,

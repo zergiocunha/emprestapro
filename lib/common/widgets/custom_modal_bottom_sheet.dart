@@ -46,8 +46,9 @@ mixin CustomModalSheetMixin<T extends StatefulWidget> on State<T> {
                     ),
                     child: Text(
                       content,
-                      style: const TextStyle()
-                          .copyWith(color: AppColors.primaryGreen),
+                      style: const TextStyle().copyWith(
+                        color: AppColors.primaryText,
+                      ),
                     ),
                   ),
                   Padding(

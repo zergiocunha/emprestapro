@@ -1,20 +1,21 @@
 import 'package:emprestapro/common/models/consumer_model.dart';
-import 'package:emprestapro/features/consumer/add_consumer_page.dart';
-import 'package:emprestapro/features/consumer/consumer_details_page.dart';
-import 'package:emprestapro/features/consumer/consumers_page.dart';
-import 'package:emprestapro/features/loan/add_loan_page.dart';
-import 'package:emprestapro/features/profile/edit_message_page.dart';
-import 'package:emprestapro/features/transaction/add_transaction_page.dart';
+import 'package:emprestapro/common/models/transaction_model.dart';
+import 'package:emprestapro/pages/consumer/add_consumer_page.dart';
+import 'package:emprestapro/pages/consumer/consumer_details_page.dart';
+import 'package:emprestapro/pages/consumer/consumers_page.dart';
+import 'package:emprestapro/pages/loan/add_loan_page.dart';
+import 'package:emprestapro/pages/profile/edit_message_page.dart';
+import 'package:emprestapro/pages/transaction/add_transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
-import 'package:emprestapro/features/home/home_page_view.dart';
-import 'package:emprestapro/features/loan/loan_detail_page.dart';
-import 'package:emprestapro/features/loan/loans_page.dart';
-import 'package:emprestapro/features/profile/profile_page.dart';
-import 'package:emprestapro/features/sign_in/sign_in_page.dart';
-import 'package:emprestapro/features/sign_up/sign_up_page.dart';
-import 'package:emprestapro/features/splash/splash_page.dart';
+import 'package:emprestapro/pages/home/home_page_view.dart';
+import 'package:emprestapro/pages/loan/loan_detail_page.dart';
+import 'package:emprestapro/pages/loan/loans_page.dart';
+import 'package:emprestapro/pages/profile/profile_page.dart';
+import 'package:emprestapro/pages/sign_in/sign_in_page.dart';
+import 'package:emprestapro/pages/sign_up/sign_up_page.dart';
+import 'package:emprestapro/pages/splash/splash_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -35,23 +36,39 @@ class App extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const ProfilePage());
           case NamedRoute.loans:
             return MaterialPageRoute(builder: (_) => const LoansPage());
-          case NamedRoute.addLoan:
-            return MaterialPageRoute(builder: (_) => const AddLoanPage());
-          case NamedRoute.addConsumer:
-            return MaterialPageRoute(builder: (_) => const AddConsumerPage());
           case NamedRoute.consumers:
             return MaterialPageRoute(builder: (_) => const ConsumersPage());
           case NamedRoute.editMessage:
             return MaterialPageRoute(builder: (_) => const EditMessagePage());
+          case NamedRoute.addLoan:
+            final loan = settings.arguments == null
+                ? null
+                : settings.arguments as LoanModel;
+
+            return MaterialPageRoute(
+              builder: (_) => AddLoanPage(
+                loan: loan,
+              ),
+            );
+          case NamedRoute.addConsumer:
+            final consumer = settings.arguments == null
+                ? null
+                : settings.arguments as ConsumerModel;
+            return MaterialPageRoute(
+              builder: (_) => AddConsumerPage(consumer: consumer),
+            );
           case NamedRoute.loanDetail:
             final loan = settings.arguments as LoanModel;
             return MaterialPageRoute(
               builder: (_) => LoanDetailPage(loan: loan),
             );
           case NamedRoute.addTransaction:
-            final loan = settings.arguments as LoanModel;
+            final args = settings.arguments as Map<String, dynamic>;
             return MaterialPageRoute(
-              builder: (_) => AddTransactionPage(loan: loan),
+              builder: (context) => AddTransactionPage(
+                loan: args['loan'] as LoanModel,
+                transaction: args['transaction'] as TransactionModel?,
+              ),
             );
           case NamedRoute.consumerDetail:
             final consumer = settings.arguments as ConsumerModel;

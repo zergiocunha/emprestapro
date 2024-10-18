@@ -35,14 +35,17 @@ class Calculation {
   }
 
   static Map<String, dynamic> processTransaction(
-      TransactionModel transaction, LoanModel loan) {
+    TransactionModel transaction,
+    LoanModel loan,
+    bool isEditing,
+  ) {
     double feesAmount =
         double.parse(Calculation.feesAmount(loan).toStringAsFixed(2));
     TransactionStatus status;
     String message;
     final nextDueDate = DateTime(
       loan.dueDate!.year,
-      loan.dueDate!.month + 1,
+      isEditing ? loan.dueDate!.month + 1 : loan.dueDate!.month,
       loan.dueDate!.day,
     );
 
@@ -88,7 +91,7 @@ class Calculation {
   static double? sumTotalTransactionsAmount(List<TransactionModel> loans) {
     double total = 0;
     for (var loan in loans) {
-        total += loan.amount!;
+      total += loan.amount!;
     }
     return total;
   }

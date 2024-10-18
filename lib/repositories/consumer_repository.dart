@@ -50,6 +50,22 @@ class ConsumerRepository {
     }
   }
 
+  Future<DataResult<bool>> update({
+    required ConsumerModel consumerModel,
+  }) async {
+    try {
+      await firestoreService.update(
+        collection: Collections.consumers,
+        uid: consumerModel.uid!,
+        params: consumerModel.toMap(),
+      );
+
+      return DataResult.success(true);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
+
   Future<DataResult<bool>> delete({
     required ConsumerModel consumerModel,
   }) async {

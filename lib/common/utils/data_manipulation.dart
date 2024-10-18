@@ -13,11 +13,14 @@ class DataManipulation {
     required double loanAmount,
     required String dueDate,
     required double feeAmount,
+    String? pix = 'responda que irei enviar.',
   }) {
     return '''
 Oi, $clientName!
 
 Seu pagamento do juros de R\$${feeAmount.toStringAsFixed(2)}, ou quitação do empréstimo de R\$${(loanAmount + feeAmount).toStringAsFixed(2)}, venceu em $dueDate. Por favor, faça o acerto o quanto antes.
+
+Minha chave pix: $pix
 
 Qualquer dúvida, estou por aqui!
 
