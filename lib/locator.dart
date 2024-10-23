@@ -147,6 +147,7 @@ void setupDependencies() {
       consumerRepository: locator.get<ConsumerRepository>(),
       loanRepository: locator.get<LoanRepository>(),
       transactionRepository: locator.get<TransactionRepository>(),
+      homeController: locator.get<HomeController>(),
     ),
   );
 

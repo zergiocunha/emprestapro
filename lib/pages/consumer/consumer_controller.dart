@@ -1,5 +1,6 @@
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/pages/consumer/consumer_state.dart';
+import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/repositories/consumer_repository.dart';
 import 'package:emprestapro/repositories/loan_repository.dart';
 import 'package:emprestapro/repositories/transaction_repository.dart';
@@ -10,11 +11,13 @@ class ConsumerController extends ChangeNotifier {
   final ConsumerRepository consumerRepository;
   final LoanRepository loanRepository;
   final TransactionRepository transactionRepository;
+  final HomeController homeController;
 
   ConsumerController({
     required this.consumerRepository,
     required this.loanRepository,
     required this.transactionRepository,
+    required this.homeController,
   });
 
   ConsumerState _state = ConsumerInitialState();
@@ -38,6 +41,7 @@ class ConsumerController extends ChangeNotifier {
     result.fold(
       (error) => _changeState(ConsumerErrorState(message: error.message)),
       (transaction) {
+        homeController.consumers.add(newConsumer);
         _changeState(ConsumerSuccessState());
       },
     );
@@ -49,7 +53,8 @@ class ConsumerController extends ChangeNotifier {
   }) async {
     _changeState(ConsumerLoadingState());
 
-    final result = await consumerRepository.update(consumerModel: consumerModel);
+    final result =
+        await consumerRepository.update(consumerModel: consumerModel);
 
     result.fold(
       (error) => _changeState(ConsumerErrorState(message: error.message)),

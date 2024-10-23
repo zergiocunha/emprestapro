@@ -141,7 +141,10 @@ class HomeController extends ChangeNotifier {
     );
 
     result.fold(
-      (error) => _changeState(HomeErrorState(message: error.message)),
+      (error) {
+        transactons = [];
+        _changeState(HomeErrorState(message: error.message));
+      },
       (data) {
         transactons = data;
         _changeState(HomeSuccessState());

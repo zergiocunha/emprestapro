@@ -9,11 +9,13 @@ class HomeAppBar extends StatelessWidget {
     required this.photoUrl,
     required this.displayName,
     required this.amount,
+    required this.historicAmount,
   });
 
   final String photoUrl;
   final String displayName;
   final double amount;
+  final double historicAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -102,27 +104,66 @@ class HomeAppBar extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            const Row(
-              children: [
-                Text(
-                  'Total Emprestado',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
             Row(
               children: [
-                Text(
-                  'R\$' '${amount.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: AppColors.primaryText,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 32,
-                  ),
+                Column(
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Crédito Histórico',
+                          style: TextStyle(
+                            color: AppColors.primaryText,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'R\$' '${historicAmount.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: AppColors.primaryText,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 32,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Crédito em Mercado',
+                          style: TextStyle(
+                            color: AppColors.primaryText,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'R\$' '${amount.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: AppColors.primaryText,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 32,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),

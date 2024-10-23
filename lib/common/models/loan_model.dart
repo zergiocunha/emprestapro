@@ -3,6 +3,7 @@ class LoanModel {
   String? consumerId;
   String? creditorId;
   double? amount;
+  double? initialAmount;
   double? fees;
   DateTime? dueDate;
   DateTime? creationTime;
@@ -14,6 +15,7 @@ class LoanModel {
     this.consumerId,
     this.creditorId,
     this.amount,
+    this.initialAmount,
     this.fees,
     this.dueDate,
     this.creationTime,
@@ -27,6 +29,7 @@ class LoanModel {
       'consumerId': consumerId,
       'creditorId': creditorId,
       'amount': amount,
+      'initialAmount': initialAmount,
       'fees': fees,
       'dueDate': dueDate?.toIso8601String(),
       'creationTime': creationTime?.toIso8601String(),
@@ -41,6 +44,7 @@ class LoanModel {
       consumerId: map['consumerId'],
       creditorId: map['creditorId'],
       amount: map['amount'],
+      initialAmount: map['initialAmount'],
       fees: map['fees'],
       dueDate: map['dueDate'] != null ? DateTime.parse(map['dueDate']) : null,
       creationTime: map['creationTime'] != null ? DateTime.parse(map['creationTime']) : null,

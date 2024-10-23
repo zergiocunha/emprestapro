@@ -13,7 +13,6 @@ class SQLiteService {
   }
 
   SQLiteService._internal();
-  //TODO: Implementar DB Local
   Future<SQLiteService> init() async {
     try {
       var databasesPath = await getDatabasesPath();

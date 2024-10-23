@@ -48,7 +48,12 @@ class Validator {
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime formattedDueDate =
         DateTime(dueDate.year, dueDate.month, dueDate.day);
-    return (formattedDueDate.isBefore(today) || formattedDueDate == today) &&
-        !concluded;
+    return formattedDueDate.isBefore(today) && !concluded;
+  }
+
+  static bool isValidPhoneNumber(String phoneNumber) {
+    // Expressão regular para validar o formato (XX)XXXXX-XXXX
+    final regex = RegExp(r'^\(\d{2}\)\d{5}-\d{4}$');
+    return regex.hasMatch(phoneNumber);
   }
 }

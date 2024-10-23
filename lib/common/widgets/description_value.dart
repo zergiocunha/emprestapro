@@ -8,11 +8,13 @@ class DescriptionValueWidget extends StatelessWidget {
     required this.descrtiption,
     required this.value,
     this.descriptionSize,
+    this.valueColor,
   });
 
   final String descrtiption;
   final String value;
   final double? descriptionSize;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,8 @@ class DescriptionValueWidget extends StatelessWidget {
                 value,
                 maxLines: descriptionSize != null ? 2 : 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppColors.primaryText,
+                style: TextStyle(
+                  color: valueColor ?? AppColors.primaryText,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
