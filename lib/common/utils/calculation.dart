@@ -19,10 +19,13 @@ class Calculation {
     return loan.amount! * (loan.fees! / 100);
   }
 
-  static double minimumFeesToReceive({required List<LoanModel> loans, bool historic = false}) {
+  static double minimumFeesToReceive(
+      {required List<LoanModel> loans, bool historic = false}) {
     double total = 0;
     for (var loan in loans) {
-      double fee = historic ? loan.initialAmount! * (loan.fees! / 100) : loan.amount! * (loan.fees! / 100);
+      double fee = historic
+          ? loan.initialAmount! * (loan.fees! / 100)
+          : loan.amount! * (loan.fees! / 100);
       total += fee;
     }
     return total;
@@ -45,7 +48,7 @@ class Calculation {
     String message;
     final nextDueDate = DateTime(
       loan.dueDate!.year,
-      isEditing ? loan.dueDate!.month + 1 : loan.dueDate!.month,
+      isEditing ? loan.dueDate!.month : loan.dueDate!.month + 1,
       loan.dueDate!.day,
     );
 

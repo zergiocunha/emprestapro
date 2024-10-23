@@ -98,12 +98,12 @@ class _LoanDetailPageState extends State<LoanDetailPage>
             children: [
               DescriptionValueWidget(
                 descrtiption: 'Credito Histórico',
-                value:
-                    'R\$${widget.loan.initialAmount!.toStringAsFixed(2)}',
+                value: 'R\$${widget.loan.initialAmount!.toStringAsFixed(2)}',
               ),
               DescriptionValueWidget(
                 descrtiption: 'Data de Criação',
-                value: DateFormat('dd/MM/yyyy').format(widget.loan.creationTime!),
+                value:
+                    DateFormat('dd/MM/yyyy').format(widget.loan.creationTime!),
               ),
             ],
           ),
@@ -126,12 +126,12 @@ class _LoanDetailPageState extends State<LoanDetailPage>
                     key: UniqueKey(),
                     dismissThresholds: const {DismissDirection.endToStart: 0.5},
                     direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
+                    onDismissed: (direction) async {
                       if (confirmDelete!) {
-                        _transactionController.deleteTransaction(
+                        await _transactionController.deleteTransaction(
                           transactionModel: transactions[index],
                         );
-                        setState(() {});
+                        getData();
                       }
                     },
                     confirmDismiss: (direction) async {

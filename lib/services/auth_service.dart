@@ -63,7 +63,6 @@ class AuthService {
 
   Future<DataResult<User>> signInWithGoogle() async {
     try {
-      //TODO: esta dando erro aqui
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
       final GoogleSignInAuthentication gAuth = await gUser!.authentication;

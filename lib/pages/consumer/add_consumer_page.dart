@@ -2,6 +2,8 @@
 
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/address_model.dart';
+import 'package:emprestapro/common/utils/data_manipulation.dart';
+import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/pages/consumer/consumer_controller.dart';
 import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/locator.dart';
@@ -44,7 +46,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
     super.initState();
     if (isEditing) {
       _nameController.text = widget.consumer!.name ?? '';
-      _phoneController.text = widget.consumer!.phone ?? '';
+      _phoneController.text = formatPhoneNumber(widget.consumer!.phone);
       _emailController.text = widget.consumer!.email ?? '';
       _pixController.text = widget.consumer!.pix ?? '';
       _streetController.text = widget.consumer!.address!.street ?? '';
@@ -67,6 +69,14 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
     super.dispose();
   }
 
+  String formatPhoneNumber(String? phoneNumber) {
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      return '';
+    } else {
+      return DataManipulation.formatPhoneNumber(phoneNumber);
+    }
+  }
+
   Future<void> _addConsumer(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
       final newConsumer = ConsumerModel(
@@ -74,7 +84,9 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
         creditorId: _homeController.creditorModel.uid,
         name: _nameController.text,
         pix: _pixController.text,
-        phone: _phoneController.text,
+        phone: DataManipulation.removePhoneNumberFormatting(
+          _phoneController.text,
+        ),
         photoURL: '',
         email: _emailController.text,
         creationTime: DateTime.now(),
@@ -89,9 +101,11 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
       );
       if (isEditing) {
         await _consumerController.update(consumerModel: newConsumer);
+        setState(() {});
         Navigator.popAndPushNamed(context, NamedRoute.home);
       } else {
         await _consumerController.insert(newConsumer: newConsumer);
+        setState(() {});
         Navigator.pop(context);
       }
     }
@@ -146,12 +160,12 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   labelText: 'PIX',
                   hintText: 'Insira a chave PIX...',
                   controller: _pixController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Insira uma chave PIX válida';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Insira uma chave PIX válida';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
@@ -160,10 +174,10 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   hintText: 'Insira o telefone...',
                   controller: _phoneController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Insira um telefone válido';
+                    if (Validator.isValidPhoneNumber(value!)) {
+                      return null;
                     }
-                    return null;
+                    return 'Insira um telefone válido';
                   },
                 ),
                 const SizedBox(height: 16),
@@ -172,14 +186,14 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   labelText: 'Email',
                   hintText: 'Insira o email...',
                   controller: _emailController,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        !value.contains('@')) {
-                      return 'Insira um email válido';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null ||
+                  //       value.isEmpty ||
+                  //       !value.contains('@')) {
+                  //     return 'Insira um email válido';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
@@ -187,12 +201,12 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   labelText: 'Rua',
                   hintText: 'Insira o nome da rua...',
                   controller: _streetController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Insira uma rua válida';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Insira uma rua válida';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
@@ -200,12 +214,12 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   labelText: 'Cidade',
                   hintText: 'Insira a cidade...',
                   controller: _cityController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Insira uma cidade válida';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Insira uma cidade válida';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
@@ -213,12 +227,12 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   labelText: 'Estado',
                   hintText: 'Insira o estado...',
                   controller: _stateController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Insira um estado válido';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Insira um estado válido';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 16),
                 CustomTextFormField(
@@ -226,12 +240,12 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
                   labelText: 'CEP',
                   hintText: 'Insira o CEP...',
                   controller: _zipCodeController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Insira um CEP válido';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Insira um CEP válido';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 32),
                 Row(

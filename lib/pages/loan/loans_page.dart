@@ -139,9 +139,9 @@ class _LoansPageState extends State<LoansPage>
                           DismissDirection.endToStart: 0.5
                         },
                         direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
+                        onDismissed: (direction) async {
                           if (confirmDelete!) {
-                            _loanController.deleteLoanAndTransactions(
+                            await _loanController.deleteLoanAndTransactions(
                               loan: filteredLoans[index],
                             );
                             setState(() {});

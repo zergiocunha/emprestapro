@@ -55,4 +55,21 @@ Obrigado!
     });
     return transactions;
   }
+
+  // Método para formatar o número sem formatação (somente números) em (XX)XXXXX-XXXX
+  static String formatPhoneNumber(String phoneNumber) {
+    // Verifica se o número tem exatamente 11 dígitos
+    if (phoneNumber.length == 11) {
+      // Formata no padrão (XX)XXXXX-XXXX
+      return '(${phoneNumber.substring(0, 2)})${phoneNumber.substring(2, 7)}-${phoneNumber.substring(7)}';
+    } else {
+      throw const FormatException('Número de telefone inválido');
+    }
+  }
+
+  // Método para remover a formatação de (XX)XXXXX-XXXX e deixar só os números
+  static String removePhoneNumberFormatting(String phoneNumber) {
+    // Remove tudo que não é número
+    return phoneNumber.replaceAll(RegExp(r'\D'), '');
+  }
 }
