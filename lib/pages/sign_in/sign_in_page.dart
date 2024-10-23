@@ -84,7 +84,6 @@ class _SignInPageState extends State<SignInPage> {
         alignment: AlignmentDirectional.topCenter,
         children: [
           Positioned(
-            top: 10,
             left: 0,
             right: 0,
             child: Padding(
@@ -95,11 +94,19 @@ class _SignInPageState extends State<SignInPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/images/logo_nome.png',
+                        'assets/images/logo.png',
                         width: 200,
                         height: 100,
                       ),
                     ],
+                  ),
+                  const Text(
+                    'EmprestaPro',
+                    style: TextStyle(
+                      color: AppColors.secundaryGreen,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const Text(
                     'Bem vindo de volta',

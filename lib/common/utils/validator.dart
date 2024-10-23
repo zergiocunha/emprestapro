@@ -48,7 +48,7 @@ class Validator {
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime formattedDueDate =
         DateTime(dueDate.year, dueDate.month, dueDate.day);
-    return (formattedDueDate.isBefore(today) || formattedDueDate == today) &&
+    return formattedDueDate.isBefore(today) &&
         !concluded;
   }
 }

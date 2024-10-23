@@ -7,6 +7,7 @@ import 'package:emprestapro/common/extensions/loan_filter_ext.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
+import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/pages/loan/loan_controller.dart';
@@ -16,7 +17,6 @@ import 'package:emprestapro/pages/loan/widgets/loans_information_container.dart'
 import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class LoansPage extends StatefulWidget {
   const LoansPage({super.key});
@@ -65,8 +65,7 @@ class _LoansPageState extends State<LoansPage>
         case LoanFilter.overdue:
           _homeController.setFilterOnlyOverdue(false);
           return loan.dueDate != null &&
-              loan.dueDate!.isBefore(DateTime.now()) &&
-              !loan.concluded!;
+              Validator.isDueTodayOrPast(loan.dueDate!, loan.concluded!);
         default:
           _homeController.setFilterOnlyOverdue(false);
           return true;
@@ -119,145 +118,151 @@ class _LoansPageState extends State<LoansPage>
         centerTitle: false,
       ),
       body: StreamBuilder<HomeController>(
-          stream: null,
-          builder: (context, snapshot) {
-            return Stack(
-              children: [
-                Positioned.fill(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.only(top: 160, bottom: 10),
-                    itemCount: filteredLoans.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String consumerId = filteredLoans[index].consumerId ?? '';
-                      ConsumerModel consumerName = consumers.firstWhere(
-                        (consumer) => consumer.uid == consumerId,
-                        orElse: () => ConsumerModel(name: 'Desconhecido'),
-                      );
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Dismissible(
-                          dismissThresholds: const {
-                            DismissDirection.endToStart: 0.5
-                          },
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) {
-                            if (confirmDelete!) {
-                              _loanController.deleteLoanAndTransactions(
-                                loan: filteredLoans[index],
-                              );
-                              setState(() {});
-                            }
-                          },
-                          confirmDismiss: (direction) async {
-                            confirmDelete = await showCustomModalBottomSheet(
-                              context: context,
-                              content:
-                                  'Deseja realmente excluir este empréstimo?',
-                              actions: [
-                                Flexible(
-                                  child: CustomElevatedButton(
-                                    backgroundColor: AppColors.secoundaryBackground,
-                                    label: 'Cancelar',
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Flexible(
-                                  child: CustomElevatedButton(
-                                    label: 'Confirmar',
-                                    backgroundColor: AppColors.primaryRed,
-                                    onPressed: () {
-                                      if (mounted) {
-                                        Navigator.pop(context, true);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
+        stream: null,
+        builder: (context, snapshot) {
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: ListView.separated(
+                  padding: const EdgeInsets.only(top: 160, bottom: 10),
+                  itemCount: filteredLoans.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    String consumerId = filteredLoans[index].consumerId ?? '';
+                    ConsumerModel consumerName = consumers.firstWhere(
+                      (consumer) => consumer.uid == consumerId,
+                      orElse: () => ConsumerModel(name: 'Desconhecido'),
+                    );
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Dismissible(
+                        dismissThresholds: const {
+                          DismissDirection.endToStart: 0.5
+                        },
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          if (confirmDelete!) {
+                            _loanController.deleteLoanAndTransactions(
+                              loan: filteredLoans[index],
                             );
+                            setState(() {});
+                          }
+                        },
+                        confirmDismiss: (direction) async {
+                          confirmDelete = await showCustomModalBottomSheet(
+                            context: context,
+                            content:
+                                'Deseja realmente excluir este empréstimo?',
+                            actions: [
+                              Flexible(
+                                child: CustomElevatedButton(
+                                  backgroundColor:
+                                      AppColors.secoundaryBackground,
+                                  label: 'Cancelar',
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ),
+                              const SizedBox(width: 16.0),
+                              Flexible(
+                                child: CustomElevatedButton(
+                                  label: 'Confirmar',
+                                  backgroundColor: AppColors.primaryRed,
+                                  onPressed: () {
+                                    if (mounted) {
+                                      Navigator.pop(context, true);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
 
-                            return confirmDelete;
-                          },
-                          key: UniqueKey(),
-                          background: Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(16),
-                              ),
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.primaryRed,
-                                  AppColors.secondaryRed,
-                                  Colors.transparent,
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                stops: [0.0, 0.5, 1.0],
-                              ),
+                          return confirmDelete;
+                        },
+                        key: UniqueKey(),
+                        background: Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16),
                             ),
-                            constraints: const BoxConstraints(minHeight: 10),
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 16),
-                            child:
-                                const Icon(Icons.delete, color: Colors.white),
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.primaryRed,
+                                AppColors.secondaryRed,
+                                Colors.transparent,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: [0.0, 0.5, 1.0],
+                            ),
                           ),
-                          child: consumerName.phone == null
-                              ? Container()
-                              : LoanContainer(
-                                  consumerName: consumerName.name ?? '',
-                                  amount: filteredLoans[index].amount ?? 0,
-                                  fees: Calculation.feesAmount(
-                                      filteredLoans[index]),
-                                  secondaryName: 'secondaryName',
-                                  dueDate: filteredLoans[index].dueDate!,
-                                  imageUrl: consumerName.photoURL ?? '',
-                                  concluded: filteredLoans[index].concluded!,
-                                  phoneNumber: consumerName.phone!,
-                                  onPressed: () async {
-                                    await Navigator.pushNamed(
-                                      context,
-                                      NamedRoute.loanDetail,
-                                      arguments: filteredLoans[index],
-                                    );
-                                  }),
+                          constraints: const BoxConstraints(minHeight: 10),
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 16),
+                          child: const Icon(Icons.delete, color: Colors.white),
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      Column(
-                        children: [
-                          LoansInformationContainers(
-                            amountCredit:
-                                Calculation.totalBorrowed(filteredLoans),
-                            lastLoanDate: filteredLoans.isNotEmpty
-                                ? Calculation.nextToDueDate(filteredLoans)!
-                                : null,
-                            amountDividend:
-                                Calculation.minimumFeesToReceive(filteredLoans),
-                            evolution: evolutionCalc(
-                              Calculation.totalBorrowed(filteredLoans),
-                              Calculation.minimumFeesToReceive(filteredLoans),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
+                        child: consumerName.phone == null
+                            ? Container()
+                            : LoanContainer(
+                                consumerName: consumerName.name ?? '',
+                                amount: filteredLoans[index].amount ?? 0,
+                                historicAmount:
+                                    filteredLoans[index].initialAmount ?? 0,
+                                fees: Calculation.feesAmount(
+                                    filteredLoans[index]),
+                                secondaryName: 'secondaryName',
+                                dueDate: filteredLoans[index].dueDate!,
+                                imageUrl: consumerName.photoURL ?? '',
+                                concluded: filteredLoans[index].concluded!,
+                                phoneNumber: consumerName.phone!,
+                                onPressed: () async {
+                                  await Navigator.pushNamed(
+                                    context,
+                                    NamedRoute.loanDetail,
+                                    arguments: filteredLoans[index],
+                                  );
+                                }),
                       ),
-                    ],
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(
+                    color: Colors.transparent,
                   ),
                 ),
-              ],
-            );
-          }),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    Column(
+                      children: [
+                        LoansInformationContainers(
+                          historicCredit: Calculation.totalBorrowed(
+                              loans: filteredLoans, historic: true),
+                          lastLoanDate: filteredLoans.isNotEmpty
+                              ? Calculation.nextToDueDate(filteredLoans)!
+                              : null,
+                          amountDividend: Calculation.minimumFeesToReceive(
+                              loans: filteredLoans),
+                          credit:
+                              Calculation.totalBorrowed(loans: filteredLoans),
+                          evolutionInitial: evolutionCalc(
+                            Calculation.totalBorrowed(loans: filteredLoans),
+                            Calculation.minimumFeesToReceive(
+                                loans: filteredLoans),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -272,16 +277,18 @@ extension StringCasingExtension on String {
 class LoansInformationContainers extends StatelessWidget {
   const LoansInformationContainers({
     super.key,
-    required this.amountCredit,
+    required this.historicCredit,
     this.lastLoanDate,
     required this.amountDividend,
-    required this.evolution,
+    required this.credit,
+    required this.evolutionInitial,
   });
 
-  final double amountCredit;
+  final double historicCredit;
   final double amountDividend;
+  final double credit;
   final DateTime? lastLoanDate;
-  final double evolution;
+  final double evolutionInitial;
 
   @override
   Widget build(BuildContext context) {
@@ -289,13 +296,10 @@ class LoansInformationContainers extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         LoansInformationContainer(
-          containerName: 'Crédito',
-          amount: amountCredit,
-          secondaryName: 'Último',
-          secondaryInformation: lastLoanDate != null
-              ? DateFormat('dd/MM/yyyy').format(lastLoanDate!)
-              : '',
-        ),
+            containerName: 'Crédito Histórico',
+            amount: historicCredit,
+            secondaryName: 'Crédito em Mercado',
+            secondaryInformation: 'R\$${credit.toStringAsFixed(2)}'),
         LoansInformationContainer(
           containerName: 'Dividendo',
           amount: amountDividend,
@@ -304,7 +308,7 @@ class LoansInformationContainers extends StatelessWidget {
               : AppColors.primaryRed,
           secondaryName: 'Evolução',
           secondaryWidget: EvolutionContainer(
-            value: evolution,
+            value: evolutionInitial,
           ),
         ),
       ],

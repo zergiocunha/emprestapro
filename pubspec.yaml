@@ -39,7 +39,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/logo_nome.png
+    - assets/images/logo.png
     - assets/images/chart.png
     - assets/images/black_cilinder.png
     - assets/images/orange_cilinder.png

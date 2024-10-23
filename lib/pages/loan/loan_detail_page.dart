@@ -5,6 +5,7 @@ import 'package:emprestapro/common/models/transaction_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
+import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:emprestapro/pages/loan/widgets/loans_information_container.dart';
 import 'package:emprestapro/pages/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
@@ -92,6 +93,20 @@ class _LoanDetailPageState extends State<LoanDetailPage>
       ),
       body: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              DescriptionValueWidget(
+                descrtiption: 'Credito Histórico',
+                value:
+                    'R\$${widget.loan.initialAmount!.toStringAsFixed(2)}',
+              ),
+              DescriptionValueWidget(
+                descrtiption: 'Data de Criação',
+                value: DateFormat('dd/MM/yyyy').format(widget.loan.creationTime!),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -197,7 +212,7 @@ class LoanSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         LoansInformationContainer(
-          containerName: 'Crédito',
+          containerName: 'Crédito em Mercado',
           amount: loan.amount!,
           secondaryName: 'Data de Vencimento',
           secondaryInformation: DateFormat('dd/MM/yyyy').format(loan.dueDate!),

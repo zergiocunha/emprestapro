@@ -7,7 +7,6 @@ import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/widgets/custom_dropdown.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
-import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/pages/loan/loan_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +94,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
       uid: isEditing ? widget.loan!.uid : const Uuid().v1(),
       consumerId: _selectedConsumer?.uid,
       amount: double.parse(_amountController.text),
+      initialAmount: double.parse(_amountController.text),
       creditorId: _loanController.creditorModel.uid,
       fees: double.parse(_interestRateController.text),
       dueDate: _selectedDate,

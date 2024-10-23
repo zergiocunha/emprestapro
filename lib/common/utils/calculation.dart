@@ -6,11 +6,11 @@ import 'package:emprestapro/common/models/transaction_model.dart';
 class Calculation {
   Calculation._();
 
-  static double totalBorrowed(List<LoanModel> loans) {
+  static double totalBorrowed(
+      {required List<LoanModel> loans, bool historic = false}) {
     double total = 0;
-    loans = loans.where((loan) => loan.concluded == false).toList();
     for (var loan in loans) {
-      total += loan.amount!;
+      total += historic ? loan.initialAmount! : loan.amount!;
     }
     return total;
   }
@@ -19,10 +19,10 @@ class Calculation {
     return loan.amount! * (loan.fees! / 100);
   }
 
-  static double minimumFeesToReceive(List<LoanModel> loans) {
+  static double minimumFeesToReceive({required List<LoanModel> loans, bool historic = false}) {
     double total = 0;
     for (var loan in loans) {
-      double fee = loan.amount! * (loan.fees! / 100);
+      double fee = historic ? loan.initialAmount! * (loan.fees! / 100) : loan.amount! * (loan.fees! / 100);
       total += fee;
     }
     return total;

@@ -59,7 +59,11 @@ class _HomePageState extends State<HomePage> {
             child: HomeAppBar(
               photoUrl: homeController.creditorModel.photoURL ?? '',
               displayName: homeController.creditorModel.name ?? '',
-              amount: Calculation.totalBorrowed(homeController.loans),
+              amount: Calculation.totalBorrowed(loans: homeController.loans),
+              historicAmount: Calculation.totalBorrowed(
+                loans: homeController.loans,
+                historic: true,
+              ),
             ),
           ),
           if (alertCount > 0)
@@ -94,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 HomeInfoContainer(
                   dueDateTitle: 'Juros Mínimo a Receber',
                   dueAmount:
-                      Calculation.minimumFeesToReceive(homeController.loans),
+                      Calculation.minimumFeesToReceive(loans: homeController.loans),
                   debitTitle: 'Data do Próximo',
                   dueDate: nextToDueDate != null
                       ? DateFormat('dd/MM/yyyy').format(nextToDueDate)
