@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
+import 'package:emprestapro/common/utils/data_manipulation.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,9 @@ class _ConsumerInfoContainerState extends State<ConsumerInfoContainer> {
                     ),
                     DescriptionValueWidget(
                       descrtiption: 'Telefone',
-                      value: widget.consumerModel.phone ?? 'Não informado',
+                      value: DataManipulation.formatPhoneNumber(
+                        widget.consumerModel.phone.toString(),
+                      ),
                     ),
                   ],
                 ),

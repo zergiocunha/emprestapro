@@ -19,6 +19,8 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       decoration: BoxDecoration(
         gradient: AppColors.background3D,
@@ -32,7 +34,11 @@ class HomeAppBar extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+        ),
         child: Column(
           children: [
             Row(
@@ -121,17 +127,17 @@ class HomeAppBar extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          'R\$' '${historicAmount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            color: AppColors.primaryText,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 32,
-                          ),
+                    SizedBox(
+                      width: (screenWidth / 2) - 35,
+                      child: AutoSizeText(
+                        'R\$${historicAmount.toStringAsFixed(2)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.primaryText,
+                          fontSize: 32,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -151,17 +157,17 @@ class HomeAppBar extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          'R\$' '${amount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            color: AppColors.primaryText,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 32,
-                          ),
+                    SizedBox(
+                      width: (screenWidth / 2) - 35,
+                      child: AutoSizeText(
+                        'R\$${amount.toStringAsFixed(2)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.primaryText,
+                          fontSize: 32,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
