@@ -43,7 +43,13 @@ class _HomePageState extends State<HomePage> {
     int alertCount = homeController.loans.isNotEmpty
         ? homeController.loans
             .where((x) =>
-                (x.dueDate!.isBefore(DateTime.now()) ||
+                (x.dueDate!.isBefore(
+                      DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day + 3,
+                      ),
+                    ) ||
                     x.dueDate! == DateTime.now()) &&
                 !x.concluded!)
             .toList()
@@ -97,8 +103,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 HomeInfoContainer(
                   dueDateTitle: 'Juros Mínimo a Receber',
-                  dueAmount:
-                      Calculation.minimumFeesToReceive(loans: homeController.loans),
+                  dueAmount: Calculation.minimumFeesToReceive(
+                      loans: homeController.loans),
                   debitTitle: 'Data do Próximo',
                   dueDate: nextToDueDate != null
                       ? DateFormat('dd/MM/yyyy').format(nextToDueDate)

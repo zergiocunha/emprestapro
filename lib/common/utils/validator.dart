@@ -48,7 +48,14 @@ class Validator {
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime formattedDueDate =
         DateTime(dueDate.year, dueDate.month, dueDate.day);
-    return formattedDueDate.isBefore(today) && !concluded;
+    return formattedDueDate.isBefore(
+          today.add(
+            const Duration(
+              days: 3,
+            ),
+          ),
+        ) &&
+        !concluded;
   }
 
   static bool isValidPhoneNumber(String phoneNumber) {

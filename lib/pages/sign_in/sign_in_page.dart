@@ -124,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
           Positioned(
             // top: 300,
-            bottom: 0,
+            bottom: -20,
             left: 0,
             right: 0,
             child: Container(

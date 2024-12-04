@@ -38,23 +38,30 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          inputFormatters: widget.keyboardType == TextInputType.number
+          inputFormatters: widget.keyboardType == TextInputType.phone
               ? [
-                  FilteringTextInputFormatter.allow(
-                    RegExp(r'[0-9.]'),
-                  ),
-                  CommaToDotInputFormatter(),
+                  FilteringTextInputFormatter.digitsOnly,
+                  PhoneInputFormatter(), // Aplicar a formatação de telefone
                 ]
-              : null,
+              : widget.keyboardType == TextInputType.number
+                  ? [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'[0-9.]'),
+                      ),
+                      CommaToDotInputFormatter(),
+                    ]
+                  : null,
           keyboardType: widget.isRichText == true
               ? TextInputType.multiline
               : widget.keyboardType, // Permitir múltiplas linhas
           controller: widget.controller,
           obscureText: widget.obscureText ?? false,
           validator: widget.validator,
-          style: TextStyle(
-              color: widget.inputTextColor ?? AppColors.primaryText),
-          maxLines: widget.isRichText == true ? null : 1, // Expande o campo quando isRichText for true
+          style:
+              TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
+          maxLines: widget.isRichText == true
+              ? null
+              : 1, // Expande o campo quando isRichText for true
           decoration: InputDecoration(
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: AppColors.secoundaryText),
@@ -105,5 +112,34 @@ class CommaToDotInputFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     String newText = newValue.text.replaceAll(',', '.');
     return newValue.copyWith(text: newText);
+  }
+}
+
+class PhoneInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    // Remove caracteres não numéricos
+    String cleanText = newValue.text.replaceAll(RegExp(r'\D'), '');
+
+    // Formatar no padrão (XX)XXXXX-XXXX
+    if (cleanText.length > 10) {
+      cleanText = cleanText.replaceFirstMapped(
+          RegExp(r'^(\d{2})(\d{5})(\d{4})$'),
+          (Match m) => '(${m[1]})${m[2]}-${m[3]}');
+    } else if (cleanText.length > 6) {
+      cleanText = cleanText.replaceFirstMapped(
+          RegExp(r'^(\d{2})(\d{4})(\d{0,4})$'),
+          (Match m) => '(${m[1]})${m[2]}-${m[3]}');
+    } else if (cleanText.length > 2) {
+      cleanText = cleanText.replaceFirstMapped(
+          RegExp(r'^(\d{2})(\d{0,5})$'), (Match m) => '(${m[1]})${m[2]}');
+    }
+
+    // Retornar o texto formatado
+    return TextEditingValue(
+      text: cleanText,
+      selection: TextSelection.collapsed(offset: cleanText.length),
+    );
   }
 }
