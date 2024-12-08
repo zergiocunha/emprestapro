@@ -4,4 +4,5 @@ enum TransactionStatus {
   partiallyPaid,
   loanConcluded,
   invalid,
+  succesWithoutCalculate,
 }

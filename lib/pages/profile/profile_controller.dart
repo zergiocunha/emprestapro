@@ -86,6 +86,10 @@ class ProfileController extends ChangeNotifier {
     await creditorRepository.update(creditorModel: creditorModel);
   }
 
+  Future<void> updateCreditor({required CreditorModel creditorModel}) async {
+    await creditorRepository.update(creditorModel: creditorModel);
+  }
+
   // Função para alterar o nome do usuário
   void changeName() async {
     _changeState(ProfileLoadingState());

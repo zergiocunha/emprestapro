@@ -7,13 +7,27 @@ import 'package:emprestapro/pages/profile/profile_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  bool light = true;
   @override
   Widget build(BuildContext context) {
     final profileController = locator.get<ProfileController>();
     final homeController = locator.get<HomeController>();
+
+    Future<void> toogleCalculation() async {
+      homeController.creditorModel.calculate =
+          !homeController.creditorModel.calculate!;
+      profileController.updateCreditor(
+        creditorModel: homeController.creditorModel,
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -49,6 +63,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 homeController.creditorModel.name ?? 'Não informado',
                 style: const TextStyle(
@@ -58,6 +73,32 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Switch(
+                    value: homeController.creditorModel.calculate!,
+                    activeColor: AppColors.primaryGreen,
+                    inactiveThumbColor: AppColors.primaryRed,
+                    onChanged: (bool value) async {
+                      await toogleCalculation();
+                      setState(() {
+                        homeController.creditorModel.calculate = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    "Calcular",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryText,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
               ProfileButton(
                 icon: Icons.edit,
                 text: "Alterar Nome",
@@ -77,12 +118,11 @@ class ProfilePage extends StatelessWidget {
                   await Navigator.pushNamed(context, NamedRoute.editMessage);
                 },
               ),
-              const SizedBox(height: 15),
-              ProfileButton(
-                icon: Icons.description,
-                text: "Acordos",
-                onTap: () => profileController.showAgreements(),
-              ),
+              // ProfileButton(
+              //   icon: Icons.description,
+              //   text: "Acordos",
+              //   onTap: () => profileController.showAgreements(),
+              // ),
               const SizedBox(height: 15),
               ProfileButton(
                 icon: Icons.delete,

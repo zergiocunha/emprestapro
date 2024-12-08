@@ -10,6 +10,7 @@ import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_popup.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
+import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/pages/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
   final _transactionController = locator.get<TransactionController>();
+  final _homeController = locator.get<HomeController>();
   final _transactionTimeController = TextEditingController();
   DateTime? _selectedTransactionTime = DateTime.now();
   bool get isEditing => widget.transaction != null;
@@ -96,12 +98,18 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     } else {
       await _transactionController.insert(newTransaction: transaction);
     }
-    final processResult =
-        Calculation.processTransaction(transaction, widget.loan, isEditing);
-    await _transactionController.updateLoan(
-        loan: processResult['loan'] as LoanModel);
+    if (_homeController.creditorModel.calculate!) {
+      final processResult =
+          Calculation.processTransaction(transaction, widget.loan, isEditing);
+      await _transactionController.updateLoan(
+          loan: processResult['loan'] as LoanModel);
 
-    return processResult;
+      return processResult;
+    }
+    return {
+      'status': TransactionStatus.succesWithoutCalculate,
+      'message': "Transação realizada com sucesso!"
+    };
   }
 
   _transactionIsNotValid(

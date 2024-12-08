@@ -11,6 +11,7 @@ class CreditorModel {
   DateTime? updateTime;
   List<String>? loanIds;
   bool? active;
+  bool? calculate;
 
   CreditorModel({
     this.uid,
@@ -25,6 +26,7 @@ class CreditorModel {
     this.updateTime,
     this.loanIds,
     this.active,
+    this.calculate,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,6 +43,7 @@ class CreditorModel {
       'updateTime': updateTime?.toIso8601String(),
       'loanIds': loanIds,
       'active': active,
+      'calculate': calculate,
     };
   }
 
@@ -57,9 +60,11 @@ class CreditorModel {
       email: map['email'],
       message: map['message'],
       creationTime: DateTime.parse(map['creationTime']),
-      updateTime: map['updateTime'] != null ?DateTime.parse(map['updateTime']) : null,
+      updateTime:
+          map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,
       loanIds: List<String>.from(map['loanIds']),
       active: map['active'],
+      calculate: map['calculate'],
     );
   }
 }
