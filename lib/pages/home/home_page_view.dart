@@ -36,7 +36,7 @@ class _HomePageViewState extends State<HomePageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: homeController.pageController,
@@ -47,10 +47,10 @@ class _HomePageViewState extends State<HomePageView> {
           ProfilePage(),
         ],
       ),
-      floatingActionButton: homeController.showFloatingButton.value
-          ? const CustomFloatingActionButton()
-          : null,
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      // floatingActionButton: homeController.showFloatingButton.value
+      //     ? const CustomFloatingActionButton()
+      //     : null,
+      // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: CustomBottomAppBar(
         controller: homeController.pageController,
@@ -63,7 +63,7 @@ class _HomePageViewState extends State<HomePageView> {
             onPressed: () {
               homeController.pageController.jumpToPage(0);
               setState(() {
-                homeController.showFloatingButton.value = true;
+                homeController.showFloatingButton.value = false;
               });
             },
           ),
@@ -74,11 +74,10 @@ class _HomePageViewState extends State<HomePageView> {
             onPressed: () {
               homeController.pageController.jumpToPage(1);
               setState(() {
-                homeController.showFloatingButton.value = true;
+                homeController.showFloatingButton.value = false;
               });
             },
           ),
-          if (homeController.showFloatingButton.value) CustomBottomAppBarItem.empty(),
           CustomBottomAppBarItem(
             label: 'consumers',
             primaryIcon: Icons.people,
@@ -86,7 +85,7 @@ class _HomePageViewState extends State<HomePageView> {
             onPressed: () {
               homeController.pageController.jumpToPage(2);
               setState(() {
-                homeController.showFloatingButton.value = true;
+                homeController.showFloatingButton.value = false;
               });
             },
           ),

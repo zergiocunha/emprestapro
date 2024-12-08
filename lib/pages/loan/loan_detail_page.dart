@@ -6,6 +6,7 @@ import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
+import 'package:emprestapro/common/widgets/custom_circular_button.dart';
 import 'package:emprestapro/pages/loan/widgets/loans_information_container.dart';
 import 'package:emprestapro/pages/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
@@ -173,7 +174,9 @@ class _LoanDetailPageState extends State<LoanDetailPage>
               ),
             ),
           ),
-          ElevatedButton.icon(
+          CustomCircularButton(
+            icon: Icons.add,
+            label: 'Adicionar Transação',
             onPressed: () {
               Navigator.pushNamed(
                 context,
@@ -181,18 +184,12 @@ class _LoanDetailPageState extends State<LoanDetailPage>
                 arguments: {'loan': widget.loan},
               ).then((success) {
                 if (success == true) {
-                  Navigator.pop(context);
-                  _homeController.jumpToHomePage();
+                  setState(() {
+                    getData();
+                  });
                 }
               });
             },
-            icon: const Icon(Icons.add),
-            label: const Text('Adicionar Transação'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryGreen,
-              foregroundColor: AppColors.primaryText,
-              minimumSize: const Size(double.infinity, 50),
-            ),
           ),
           const SizedBox(height: 16),
         ],

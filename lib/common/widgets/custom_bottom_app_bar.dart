@@ -8,6 +8,7 @@ class CustomBottomAppBar extends StatefulWidget {
   final PageController controller;
   final Color? selectedItemColor;
   final List<CustomBottomAppBarItem> children;
+
   const CustomBottomAppBar({
     Key? key,
     this.selectedItemColor,
@@ -21,10 +22,14 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
+  int _currentIndex = 0;
+
   @override
   void initState() {
     widget.controller.addListener(() {
-      setState(() {});
+      setState(() {
+        _currentIndex = widget.controller.page?.round() ?? 0;
+      });
     });
     super.initState();
   }
@@ -43,27 +48,27 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
       shape: const CircularNotchedRectangle(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: widget.children.map(
-          (item) {
-            bool currentItem;
-            currentItem = widget.children.indexOf(item) ==
-                widget.controller.selectedBottomAppBarItemIndex;
+        children: List.generate(
+          widget.children.length,
+          (index) {
+            final item = widget.children[index];
+            final isSelected = index == _currentIndex;
+
             return Expanded(
               child: InkWell(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(30),
-                ),
-                onTap: item.onPressed,
-                onTapUp: (_) {
-                  widget.controller.setBottomAppBarItemIndex =
-                      widget.children.indexOf(item);
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                onTap: () {
+                  widget.controller.jumpToPage(index);
+                  setState(() {
+                    _currentIndex = index;
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Icon(
+                    isSelected ? item.primaryIcon : item.secondaryIcon,
                     size: 36.0,
-                    currentItem ? item.primaryIcon : item.secondaryIcon,
-                    color: currentItem
+                    color: isSelected
                         ? widget.selectedItemColor
                         : AppColors.secoundaryText,
                   ),
@@ -71,7 +76,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               ),
             );
           },
-        ).toList(),
+        ),
       ),
     );
   }

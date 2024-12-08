@@ -120,7 +120,7 @@ class _AddConsumerPageState extends State<AddConsumerPage> {
         backgroundColor: AppColors.secoundaryBackground,
         elevation: 0,
         title: Text(
-          isEditing ? 'Editar Consumidor' : 'Adicionar Consumidor',
+          isEditing ? 'Editar Consumidor' : 'Adicionar Cliente',
           style: const TextStyle(
             color: AppColors.primaryText,
             fontSize: 24,

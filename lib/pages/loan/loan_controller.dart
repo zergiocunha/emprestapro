@@ -58,6 +58,7 @@ class LoanController extends ChangeNotifier {
     result.fold(
       (error) => _changeState(AddLoansErrorState(message: error.message)),
       (data) {
+        homeController.loans.add(newLoan);
         _changeState(AddLoansSuccessState());
       },
     );

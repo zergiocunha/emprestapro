@@ -40,7 +40,7 @@ class ConsumerController extends ChangeNotifier {
 
     result.fold(
       (error) => _changeState(ConsumerErrorState(message: error.message)),
-      (transaction) {
+      (consumer) {
         homeController.consumers.add(newConsumer);
         _changeState(ConsumerSuccessState());
       },

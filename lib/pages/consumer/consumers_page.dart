@@ -1,6 +1,7 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
+import 'package:emprestapro/common/widgets/custom_circular_button.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/pages/consumer/consumer_controller.dart';
@@ -47,6 +48,7 @@ class _ConsumersPageState extends State<ConsumersPage>
       body: Stack(
         children: [
           Positioned.fill(
+            bottom: 50,
             child: ListView.separated(
               padding: const EdgeInsets.only(top: 16, bottom: 10),
               itemCount: consumers.length,
@@ -116,6 +118,22 @@ class _ConsumersPageState extends State<ConsumersPage>
               ),
             ),
           ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: CustomCircularButton(
+              icon: Icons.add,
+              label: 'Adicionar Cliente',
+              onPressed: () async {
+                await Navigator.pushNamed(
+                  context,
+                  NamedRoute.addConsumer,
+                );
+                setState(() {});
+              },
+            ),
+          )
         ],
       ),
     );

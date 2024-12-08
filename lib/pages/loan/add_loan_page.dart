@@ -106,7 +106,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
     } else {
       await _loanController.insert(newLoan: loan);
     }
-    Navigator.popAndPushNamed(context, NamedRoute.home);
+    Navigator.pop(context);
   }
 
   @override

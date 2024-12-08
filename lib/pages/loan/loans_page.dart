@@ -8,6 +8,7 @@ import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/utils/validator.dart';
+import 'package:emprestapro/common/widgets/custom_circular_button.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
 import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/pages/loan/loan_controller.dart';
@@ -123,6 +124,7 @@ class _LoansPageState extends State<LoansPage>
           return Stack(
             children: [
               Positioned.fill(
+                bottom: 50,
                 child: ListView.separated(
                   padding: const EdgeInsets.only(top: 160, bottom: 10),
                   itemCount: filteredLoans.length,
@@ -259,6 +261,22 @@ class _LoansPageState extends State<LoansPage>
                   ],
                 ),
               ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                left: 0,
+                child: CustomCircularButton(
+                  icon: Icons.add,
+                  label: 'Adicionar Empréstimo',
+                  onPressed: () async {
+                    await Navigator.pushNamed(
+                      context,
+                      NamedRoute.addLoan,
+                    );
+                    setState(() {});
+                  },
+                ),
+              )
             ],
           );
         },
