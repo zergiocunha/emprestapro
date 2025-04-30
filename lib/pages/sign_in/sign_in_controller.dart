@@ -131,6 +131,7 @@ class SignInController extends ChangeNotifier {
       phone: userModel.phoneNumber,
       updateTime: userModel.updateTime,
       userId: userModel.uid,
+      calculate: false,
     );
   }
 }
