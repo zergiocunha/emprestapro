@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class NamedRoute {
   NamedRoute._();
 
@@ -14,4 +16,5 @@ class NamedRoute {
   static const String loanDetail = "/loan_detail";
   static const String consumerDetail = "/consumer_detail";
   static const String editMessage = "/edit_message";
+  static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 }

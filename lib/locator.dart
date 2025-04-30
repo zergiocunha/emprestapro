@@ -13,15 +13,22 @@ import 'package:emprestapro/repositories/transaction_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
+import 'package:emprestapro/services/notification_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:emprestapro/services/sqlite_service.dart';
 import 'package:emprestapro/services/storage_service.dart';
 import 'package:emprestapro/services/whatsapp_service.dart';
 import 'package:get_it/get_it.dart';
 
+import 'services/firebase_messaging_service.dart';
+
 final locator = GetIt.instance;
 
 void setupDependencies() {
+  locator.registerFactory<NotificationService>(
+    () => NotificationService(),
+  );
+
   locator.registerFactory<AuthService>(
     () => AuthService(),
   );
@@ -158,4 +165,12 @@ void setupDependencies() {
       homeController: locator.get<HomeController>(),
     ),
   );
+
+  locator.registerFactory<FirebaseMessagingService>(
+    () => FirebaseMessagingService(
+      locator.get<NotificationService>(),
+    ),
+  );
+
+  locator.get<FirebaseMessagingService>().initialize();
 }

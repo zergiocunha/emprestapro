@@ -10,6 +10,8 @@ import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/notification_service.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -19,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final homeController = locator.get<HomeController>();
+  final notificationController = locator.get<NotificationService>();
 
   Future<void> getDatas() async {
     await homeController.getUser();
@@ -27,6 +30,24 @@ class _HomePageState extends State<HomePage> {
     await homeController.getConsumersByCreditor();
     await homeController.getTransactionsByCreditor();
     if (mounted) setState(() {});
+  }
+
+  bool valor = false;
+
+  showNotification() {
+    setState(() {
+      valor = !valor;
+      if (valor) {
+        notificationController.showLocalNotification(
+          CustomNotification(
+            id: 1,
+            title: 'Teste',
+            body: 'Acesse o app!',
+            payload: '/notificacao',
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -196,7 +217,10 @@ class _HomePageState extends State<HomePage> {
                         QuickServiceContainer(
                           quickContainerIcon: Icons.receipt_long,
                           quickContainerTitle1: 'Histórico',
-                          onTap: () {},
+                          onTap: () {
+                            print('Histórico');
+                            showNotification();
+                          },
                         ),
                       ],
                     ),
