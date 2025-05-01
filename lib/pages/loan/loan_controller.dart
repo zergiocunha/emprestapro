@@ -126,7 +126,7 @@ class LoanController extends ChangeNotifier {
       fieldName: 'creditorId',
       value: homeController.creditorModel.uid!,
     );
-
+    _consumersList.clear();
     result.fold(
         (error) => _changeState(AddLoansErrorState(message: error.message)),
         (data) {
