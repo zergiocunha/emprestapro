@@ -66,6 +66,8 @@ class _AddLoanPageState extends State<AddLoanPage> {
         (consumer) => consumer.uid == widget.loan!.consumerId,
       );
       _selectedDate = widget.loan!.dueDate;
+    } else if (_loanController.consumersList.isNotEmpty) {
+      _selectedConsumer = _loanController.consumersList.first;
     }
   }
 
