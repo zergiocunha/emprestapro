@@ -218,11 +218,11 @@ class _AddTransactionPageState extends State<AddTransactionPage>
               ),
               const SizedBox(height: 16),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomToggle(
-                    onText: 'Calculando',
-                    offText: 'Não Calculando',
+                    description: 'Cálculo',
                     colorOn: AppColors.primaryGreen,
                     colorOff: AppColors.secoundaryRed,
                     initialValue: _homeController.creditorModel.calculate!,

@@ -75,8 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 30),
               CustomToggle(
-                onText: 'Calculando',
-                offText: 'Não calculando',
+                description: 'Cálculo',
                 colorOn: AppColors.primaryGreen,
                 colorOff: AppColors.primaryRed,
                 initialValue: homeController.creditorModel.calculate!,
