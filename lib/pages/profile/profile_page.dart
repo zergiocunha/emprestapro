@@ -2,6 +2,7 @@
 
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
+import 'package:emprestapro/common/widgets/custom_toogle.dart';
 import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/pages/profile/profile_controller.dart';
 import 'package:emprestapro/locator.dart';
@@ -73,30 +74,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Switch(
-                    value: homeController.creditorModel.calculate!,
-                    activeColor: AppColors.primaryGreen,
-                    inactiveThumbColor: AppColors.primaryRed,
-                    onChanged: (bool value) async {
-                      await toogleCalculation();
-                      setState(() {
-                        homeController.creditorModel.calculate = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    "Calcular",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryText,
-                    ),
-                  ),
-                ],
+              CustomToggle(
+                description: 'Cálculo',
+                colorOn: AppColors.primaryGreen,
+                colorOff: AppColors.primaryRed,
+                initialValue: homeController.creditorModel.calculate!,
+                onChanged: (value) async {
+                  await toogleCalculation();
+                  setState(() {
+                    homeController.creditorModel.calculate = value;
+                  });
+                },
               ),
               const SizedBox(height: 15),
               ProfileButton(

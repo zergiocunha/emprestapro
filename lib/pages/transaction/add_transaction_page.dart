@@ -7,10 +7,13 @@ import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/models/transaction_model.dart';
 import 'package:emprestapro/common/utils/calculation.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/common/widgets/custom_popup.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/common/widgets/custom_toogle.dart';
 import 'package:emprestapro/common/widgets/description_value.dart';
 import 'package:emprestapro/pages/home/home_controller.dart';
+import 'package:emprestapro/pages/profile/profile_controller.dart';
 import 'package:emprestapro/pages/transaction/transaction_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +34,13 @@ class AddTransactionPage extends StatefulWidget {
   _AddTransactionPageState createState() => _AddTransactionPageState();
 }
 
-class _AddTransactionPageState extends State<AddTransactionPage> {
+class _AddTransactionPageState extends State<AddTransactionPage>
+    with CustomModalSheetMixin {
   final _formKey = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
   final _transactionController = locator.get<TransactionController>();
   final _homeController = locator.get<HomeController>();
+  final _profileController = locator.get<ProfileController>();
   final _transactionTimeController = TextEditingController();
   DateTime? _selectedTransactionTime = DateTime.now();
   bool get isEditing => widget.transaction != null;
@@ -122,6 +127,14 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     return true;
   }
 
+  Future<void> toogleCalculation() async {
+    _homeController.creditorModel.calculate =
+        !_homeController.creditorModel.calculate!;
+    _profileController.updateCreditor(
+      creditorModel: _homeController.creditorModel,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,6 +215,41 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     },
                   ),
                 ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomToggle(
+                    description: 'Cálculo',
+                    colorOn: AppColors.primaryGreen,
+                    colorOff: AppColors.secoundaryRed,
+                    initialValue: _homeController.creditorModel.calculate!,
+                    onChanged: (value) async {
+                      await toogleCalculation();
+                      setState(() {
+                        _homeController.creditorModel.calculate = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.info_outline,
+                      color: AppColors.primaryText,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      showCustomModalBottomSheet(
+                        buttonText: 'Ok',
+                        context: context,
+                        content:
+                            'Subtrai ou soma ao valor do empréstimo, dependendo do valor da transação. Além disso, atualiza data de vencimento do empréstimo para o mês que vem.',
+                      );
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 32),
               Row(
