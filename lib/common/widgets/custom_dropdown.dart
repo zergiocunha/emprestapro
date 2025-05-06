@@ -24,10 +24,12 @@ class CustomDropdownButtonFormField<T> extends StatefulWidget {
   });
 
   @override
-  State<CustomDropdownButtonFormField<T>> createState() => _CustomDropdownButtonFormFieldState<T>();
+  State<CustomDropdownButtonFormField<T>> createState() =>
+      _CustomDropdownButtonFormFieldState<T>();
 }
 
-class _CustomDropdownButtonFormFieldState<T> extends State<CustomDropdownButtonFormField<T>> {
+class _CustomDropdownButtonFormFieldState<T>
+    extends State<CustomDropdownButtonFormField<T>> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,7 +41,8 @@ class _CustomDropdownButtonFormFieldState<T> extends State<CustomDropdownButtonF
           items: widget.items,
           onChanged: widget.onChanged,
           validator: widget.validator,
-          style: TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
+          style:
+              TextStyle(color: widget.inputTextColor ?? AppColors.primaryText),
           decoration: InputDecoration(
             labelText: widget.labelText,
             labelStyle: const TextStyle(color: AppColors.secoundaryText),
@@ -55,7 +58,8 @@ class _CustomDropdownButtonFormFieldState<T> extends State<CustomDropdownButtonF
             ),
           ),
           dropdownColor: widget.fillColor ?? AppColors.secoundaryBackground,
-          icon: const Icon(Icons.arrow_drop_down, color: AppColors.secoundaryText),
+          icon: const Icon(Icons.arrow_drop_down,
+              color: AppColors.secoundaryText),
         ),
       ],
     );

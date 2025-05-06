@@ -52,10 +52,14 @@ class ConsumerModel {
       phone: map['phone'],
       photoURL: map['photoURL'],
       email: map['email'],
-      creationTime: map['creationTime'] != null ? DateTime.parse(map['creationTime']) : null,
-      updateTime: map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,
+      creationTime: map['creationTime'] != null
+          ? DateTime.parse(map['creationTime'])
+          : null,
+      updateTime:
+          map['updateTime'] != null ? DateTime.parse(map['updateTime']) : null,
       active: map['active'],
-      address: map['address'] != null ? AddressModel.fromMap(map['address']) : null,
+      address:
+          map['address'] != null ? AddressModel.fromMap(map['address']) : null,
     );
   }
 }

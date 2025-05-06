@@ -1,12 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:emprestapro/common/constants/app_collors.dart';
-import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/models/consumer_model.dart';
 import 'package:emprestapro/common/models/loan_model.dart';
 import 'package:emprestapro/common/widgets/custom_dropdown.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/common/widgets/custom_consumer_modal.dart';
+import 'package:emprestapro/pages/consumer/consumer_controller.dart';
+import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/pages/loan/loan_controller.dart';
 import 'package:emprestapro/locator.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +28,15 @@ class AddLoanPage extends StatefulWidget {
   State<AddLoanPage> createState() => _AddLoanPageState();
 }
 
-class _AddLoanPageState extends State<AddLoanPage> {
+class _AddLoanPageState extends State<AddLoanPage> with CustomModalSheetMixin {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _interestRateController = TextEditingController();
   final _dueDateController = TextEditingController();
   final _loanController = locator.get<LoanController>();
   bool get isEditing => widget.loan != null;
+  final _consumerController = locator.get<ConsumerController>();
+  final _homeController = locator.get<HomeController>();
 
   ConsumerModel? _selectedConsumer;
   DateTime? _selectedDate = DateTime(
@@ -66,8 +71,6 @@ class _AddLoanPageState extends State<AddLoanPage> {
         (consumer) => consumer.uid == widget.loan!.consumerId,
       );
       _selectedDate = widget.loan!.dueDate;
-    } else if (_loanController.consumersList.isNotEmpty) {
-      _selectedConsumer = _loanController.consumersList.first;
     }
   }
 
@@ -84,11 +87,6 @@ class _AddLoanPageState extends State<AddLoanPage> {
         _dueDateController.text = DateFormat('dd/MM/yyyy').format(picked);
       });
     }
-  }
-
-  Future<void> _navigateToAddConsumer() async {
-    await Navigator.pushNamed(context, NamedRoute.addConsumer);
-    getData();
   }
 
   Future<void> _addLoan() async {
@@ -165,7 +163,21 @@ class _AddLoanPageState extends State<AddLoanPage> {
               ),
               TextButton(
                 onPressed: () async {
-                  await _navigateToAddConsumer();
+                  // await _navigateToAddConsumer();
+                  final newConsumer = await showModalBottomSheet<ConsumerModel>(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => CustomConsumerModal(
+                      creditorId: _homeController.creditorModel.uid!,
+                      isEditing: false,
+                    ),
+                  );
+                  await _consumerController.insert(newConsumer: newConsumer!);
+                  _loanController.consumersList.add(newConsumer);
+                  setState(() {
+                    _selectedConsumer = newConsumer;
+                  });
                 },
                 child: const Text(
                   'Adicionar Novo Cliente',
