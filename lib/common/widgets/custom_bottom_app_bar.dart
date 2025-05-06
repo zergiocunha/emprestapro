@@ -1,7 +1,6 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:emprestapro/common/constants/app_collors.dart';
-import 'package:emprestapro/common/extensions/page_controller_ext.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomAppBar extends StatefulWidget {

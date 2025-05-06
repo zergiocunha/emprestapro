@@ -1,6 +1,5 @@
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/widgets/custom_bottom_app_bar.dart';
-import 'package:emprestapro/common/widgets/custom_floating_action_button.dart';
 import 'package:emprestapro/pages/consumer/consumers_page.dart';
 import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/pages/home/home_page.dart';
@@ -36,7 +35,6 @@ class _HomePageViewState extends State<HomePageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: homeController.pageController,
@@ -47,10 +45,6 @@ class _HomePageViewState extends State<HomePageView> {
           ProfilePage(),
         ],
       ),
-      // floatingActionButton: homeController.showFloatingButton.value
-      //     ? const CustomFloatingActionButton()
-      //     : null,
-      // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: CustomBottomAppBar(
         controller: homeController.pageController,
