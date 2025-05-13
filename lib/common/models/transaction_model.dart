@@ -4,6 +4,7 @@ class TransactionModel {
   final String? creditorId;
   final String? loanId;
   final double? amount;
+  final double? feesAmount;
   final DateTime? transactionTime;
   final DateTime? creationTime;
   final DateTime? updateTime;
@@ -14,6 +15,7 @@ class TransactionModel {
     this.creditorId,
     this.loanId,
     this.amount,
+    this.feesAmount,
     this.transactionTime,
     this.creationTime,
     this.updateTime,
@@ -26,6 +28,7 @@ class TransactionModel {
       'creditorId': creditorId,
       'loanId': loanId,
       'amount': amount,
+      'feesAmount': feesAmount,
       'transactionTime': transactionTime?.toIso8601String(),
       'creationTime': creationTime?.toIso8601String(),
       'updateTime': updateTime?.toIso8601String(),
@@ -40,6 +43,7 @@ class TransactionModel {
       creditorId: map['creditorId'],
       loanId: map['loanId'],
       amount: map['amount'],
+      feesAmount: map['feesAmount'],
       transactionTime: map['transactionTime'] != null
           ? DateTime.parse(map['transactionTime'])
           : null,

@@ -253,12 +253,29 @@ class TransactionContainer extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Data: ${DateFormat('dd/MM/yyyy').format(transaction.transactionTime!)}',
-                  style: const TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 16,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Data: ${DateFormat('dd/MM/yyyy').format(transaction.transactionTime!)}',
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      transaction.feesAmount! > 0
+                          ? 'Juros: R\$${transaction.feesAmount!.toStringAsFixed(2)}'
+                          : 'Juros: N/A',
+                      style: const TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
                   'Valor: R\$${transaction.amount!.toStringAsFixed(2)}',

@@ -91,10 +91,11 @@ class Calculation {
     return {'loan': loan, 'status': status, 'message': message};
   }
 
-  static double? sumTotalTransactionsAmount(List<TransactionModel> loans) {
+  static double? sumTotalTransactionsAmount(
+      List<TransactionModel> transactions) {
     double total = 0;
-    for (var loan in loans) {
-      total += loan.amount!;
+    for (var loan in transactions) {
+      total += loan.feesAmount!;
     }
     return total;
   }

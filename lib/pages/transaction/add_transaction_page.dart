@@ -80,6 +80,16 @@ class _AddTransactionPageState extends State<AddTransactionPage>
     }
   }
 
+  double _buildFeesAmount() {
+    final amount = double.parse(_textEditingController.text);
+    final feesAmount = Calculation.feesAmount(widget.loan);
+
+    if (_homeController.creditorModel.calculate!) {
+      return amount > feesAmount ? feesAmount : amount;
+    }
+    return 0;
+  }
+
   Future<Map<String, dynamic>> _addTransaction() async {
     final transaction = TransactionModel(
       uid: isEditing ? widget.transaction!.uid : const Uuid().v1(),
@@ -89,6 +99,7 @@ class _AddTransactionPageState extends State<AddTransactionPage>
       amount: double.parse(_textEditingController.text),
       transactionTime: _selectedTransactionTime ?? DateTime.now(),
       creationTime: DateTime.now(),
+      feesAmount: _buildFeesAmount(),
     );
 
     if (_transactionIsNotValid(transaction, widget.loan)) {
