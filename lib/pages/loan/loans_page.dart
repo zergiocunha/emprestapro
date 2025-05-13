@@ -222,6 +222,8 @@ class _LoansPageState extends State<LoansPage>
                                     NamedRoute.loanDetail,
                                     arguments: filteredLoans[index],
                                   );
+                                  await _homeController.getLoansByCreditor();
+                                  setState(() {});
                                 }),
                       ),
                     );
