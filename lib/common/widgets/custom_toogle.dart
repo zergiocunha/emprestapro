@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:flutter/material.dart';
 
@@ -9,13 +11,13 @@ class CustomToggle extends StatefulWidget {
   final Color colorOff;
 
   const CustomToggle({
-    Key? key,
+    super.key,
     this.initialValue = false,
     required this.onChanged,
     required this.description,
     this.colorOn = AppColors.primaryGreen,
     this.colorOff = AppColors.primaryRed,
-  }) : super(key: key);
+  });
 
   @override
   _CustomToggleState createState() => _CustomToggleState();

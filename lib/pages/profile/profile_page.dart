@@ -6,6 +6,7 @@ import 'package:emprestapro/common/widgets/custom_toogle.dart';
 import 'package:emprestapro/pages/home/home_controller.dart';
 import 'package:emprestapro/pages/profile/profile_controller.dart';
 import 'package:emprestapro/locator.dart';
+import 'package:emprestapro/pages/sign_in/sign_in_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -106,11 +107,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   await Navigator.pushNamed(context, NamedRoute.editMessage);
                 },
               ),
-              // ProfileButton(
-              //   icon: Icons.description,
-              //   text: "Acordos",
-              //   onTap: () => profileController.showAgreements(),
-              // ),
               const SizedBox(height: 15),
               ProfileButton(
                 icon: Icons.delete,
@@ -127,7 +123,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   await profileController.logOut();
                   profileController.dispose();
                   homeController.clearData();
-                  Navigator.pushNamed(context, NamedRoute.signIn);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignInPage()),
+                    (route) => false,
+                  );
                 },
                 backgroundColor: AppColors.primaryRed,
                 textColor: AppColors.primaryText,

@@ -1,3 +1,4 @@
+import 'package:emprestapro/common/constants/messages.dart';
 import 'package:emprestapro/common/extensions/data_ext.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
@@ -53,6 +54,10 @@ class SignInController extends ChangeNotifier {
       password,
     );
 
+    if (userData.data == null) {
+      _changeState(SignInErrorState(userData.error!.message));
+      throw Exception(Messages.googleErrorMessages["invalid-credential"]);
+    }
     final result = await _userReposiory.get(
       uid: userData.data!.uid!,
     );
@@ -73,50 +78,56 @@ class SignInController extends ChangeNotifier {
     );
   }
 
-  Future<void> signInWithGoogle() async {
-    _changeState(SignInLoadingState());
+  Future<String?> signInWithGoogle() async {
+    try {
+      _changeState(SignInLoadingState());
 
-    final user = await _authService.signInWithGoogle();
+      final user = await _authService.signInWithGoogle();
 
-    DataResult<UserModel> loggedUserModelData = await _userReposiory.get(
-      uid: user.data!.uid,
-    );
-
-    if (loggedUserModelData.data == null) {
-      final userMap = user.data!.toMap();
-
-      final newUserModel = UserModel.fromMap(
-        map: userMap,
-        displayName: user.data!.displayName,
-      );
-
-      _userReposiory.insert(
+      DataResult<UserModel> loggedUserModelData = await _userReposiory.get(
         uid: user.data!.uid,
-        userModel: newUserModel,
       );
 
-      final creditorModel = _createCreditorModel(newUserModel);
+      if (loggedUserModelData.data == null) {
+        final userMap = user.data!.toMap();
 
-      _creditorRepository.insert(
-        creditorModel: creditorModel,
+        final newUserModel = UserModel.fromMap(
+          map: userMap,
+          displayName: user.data!.displayName,
+        );
+
+        _userReposiory.insert(
+          uid: user.data!.uid,
+          userModel: newUserModel,
+        );
+
+        final creditorModel = _createCreditorModel(newUserModel);
+
+        _creditorRepository.insert(
+          creditorModel: creditorModel,
+        );
+
+        loggedUserModelData = await _userReposiory.get(uid: user.data!.uid);
+      }
+      loggedUserModelData.fold(
+        (error) => _changeState(SignInErrorState(error.message)),
+        (data) async {
+          await secureStorage.write(
+            key: "CURRENT_USER",
+            value: data.toJson(),
+          );
+
+          loggedUserModelData.fold(
+            (error) => _changeState(SignInErrorState(error.message)),
+            (_) => _changeState(SignInSuccessState()),
+          );
+        },
       );
-
-      loggedUserModelData = await _userReposiory.get(uid: user.data!.uid);
+      return "";
+    } catch (e) {
+      _changeState(SignInErrorState(e.toString()));
+      return Messages.googleErrorMessages["sign_in_failed"];
     }
-    loggedUserModelData.fold(
-      (error) => _changeState(SignInErrorState(error.message)),
-      (data) async {
-        await secureStorage.write(
-          key: "CURRENT_USER",
-          value: data.toJson(),
-        );
-
-        loggedUserModelData.fold(
-          (error) => _changeState(SignInErrorState(error.message)),
-          (_) => _changeState(SignInSuccessState()),
-        );
-      },
-    );
   }
 
   CreditorModel _createCreditorModel(UserModel userModel) {
