@@ -240,11 +240,11 @@ class _AddTransactionPageState extends State<AddTransactionPage>
                       color: AppColors.primaryText,
                       size: 30,
                     ),
-                    onPressed: () {
-                      showCustomModalBottomSheet(
-                        buttonText: 'Ok',
+                    onPressed: () async {
+                      await popup(
+                        title: 'Como funciona o cálculo?',
                         context: context,
-                        content:
+                        message:
                             'Subtrai ou soma ao valor do empréstimo, dependendo do valor da transação. Além disso, atualiza data de vencimento do empréstimo para o mês que vem.',
                       );
                     },

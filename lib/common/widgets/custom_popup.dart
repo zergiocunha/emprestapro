@@ -8,50 +8,72 @@ Future<void> popup({
   Color? buttonColor,
   Color? backgroundColor,
 }) async {
-  await showDialog(
+  await showGeneralDialog(
     context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: backgroundColor ??
-            AppColors.secoundaryBackground, // Cor de fundo do AlertDialog
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), // Bordas arredondadas
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: AppColors.primaryText, // Cor do texto do título
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          message,
-          style: const TextStyle(
-            color: AppColors.primaryText, // Cor do texto do conteúdo
-            fontSize: 16,
-          ),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: buttonColor ?? AppColors.primaryGreen, // Cor do botão
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), // Bordas do botão
+    barrierDismissible: true,
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 300),
+    pageBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      return Center(
+        child: Material(
+          color: Colors.transparent,
+          child: AlertDialog(
+            backgroundColor: backgroundColor ?? AppColors.secoundaryBackground,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Text(
+              title,
+              style: const TextStyle(
+                color: AppColors.primaryText,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            child: const Text(
-              'Ok',
-              style: TextStyle(
-                color: AppColors.secoundaryBackground, // Cor do texto do botão
+            content: Text(
+              message,
+              style: const TextStyle(
+                color: AppColors.primaryText,
                 fontSize: 16,
               ),
             ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: buttonColor ?? AppColors.primaryGreen,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Ok',
+                  style: TextStyle(
+                    color: AppColors.secoundaryBackground,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+      );
+    },
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      var scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        ),
+      );
+
+      return ScaleTransition(
+        scale: scaleAnimation,
+        child: child,
       );
     },
   );

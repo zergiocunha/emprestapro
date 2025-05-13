@@ -4,7 +4,10 @@ import 'package:emprestapro/common/constants/app_collors.dart';
 import 'package:emprestapro/common/constants/routes.dart';
 import 'package:emprestapro/common/utils/validator.dart';
 import 'package:emprestapro/common/widgets/custom_elevated_button.dart';
+import 'package:emprestapro/common/widgets/custom_modal_bottom_sheet.dart';
+import 'package:emprestapro/common/widgets/custom_progress_indicator.dart';
 import 'package:emprestapro/common/widgets/custom_text_form_field.dart';
+import 'package:emprestapro/common/widgets/custom_popup.dart';
 import 'package:emprestapro/common/widgets/square_tile.dart';
 import 'package:emprestapro/pages/sign_in/sign_in_controller.dart';
 import 'package:emprestapro/pages/sign_in/sign_in_state.dart';
@@ -18,7 +21,7 @@ class SignInPage extends StatefulWidget {
   State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInPageState extends State<SignInPage> with CustomModalSheetMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -44,32 +47,36 @@ class _SignInPageState extends State<SignInPage> {
     switch (state.runtimeType) {
       case SignInLoadingState:
         showDialog(
+          barrierColor: AppColors.secoundaryBackground.withOpacity(0.01),
           context: context,
-          builder: (context) => const CircularProgressIndicator(),
+          builder: (context) => const CustomProgressIndicator(),
         );
         break;
       case SignInSuccessState:
         break;
       case SignInErrorState:
-        //!TODO: DEFINIR TRATATIVA
-        // Navigator.pop(context);
+        Navigator.pop(context);
         break;
     }
   }
 
-  validateAndSignIn() async {
-    final valid =
-        _formKey.currentState != null && _formKey.currentState!.validate();
-    if (valid) {
+  Future<String?> validateAndSignIn() async {
+    try {
+      final valid =
+          _formKey.currentState != null && _formKey.currentState!.validate();
+
+      if (!valid) {
+        return "Formulário inválido";
+      }
+
       await _signInController.signIn(
         email: _emailController.text,
         password: _passwordController.text,
       );
 
-      Navigator.popAndPushNamed(
-        context,
-        NamedRoute.home,
-      );
+      return "";
+    } on Exception catch (e) {
+      return e.toString();
     }
   }
 
@@ -109,21 +116,15 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   const Text(
-                    'Bem vindo de volta',
-                    style:
-                        TextStyle(color: AppColors.primaryText, fontSize: 32),
-                  ),
-                  const Text(
                     'Faça login para acesar sua conta',
-                    style: TextStyle(
-                        color: AppColors.secoundaryText, fontSize: 18),
+                    style:
+                        TextStyle(color: AppColors.primaryText, fontSize: 18),
                   ),
                 ],
               ),
             ),
           ),
           Positioned(
-            // top: 300,
             bottom: -20,
             left: 0,
             right: 0,
@@ -176,7 +177,24 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                             CustomElevatedButton(
                               label: 'Login',
-                              onPressed: () async => await validateAndSignIn(),
+                              onPressed: () async {
+                                final result = await validateAndSignIn();
+                                if (result!.isEmpty) {
+                                  Navigator.popAndPushNamed(
+                                    context,
+                                    NamedRoute.home,
+                                  );
+                                } else {
+                                  await popup(
+                                    context: context,
+                                    title: 'Erro ao fazer login',
+                                    message: result,
+                                    buttonColor: AppColors.primaryGreen,
+                                    backgroundColor:
+                                        AppColors.secoundaryBackground,
+                                  );
+                                }
+                              },
                             )
                           ],
                         ),
@@ -227,14 +245,27 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       const SizedBox(height: 32),
                       SquareTile(
-                          imagePath: 'assets/images/google_logo.png',
-                          onTap: () async {
-                            await _signInController.signInWithGoogle();
+                        imagePath: 'assets/images/google_logo.png',
+                        onTap: () async {
+                          final result =
+                              await _signInController.signInWithGoogle();
+
+                          if (result!.isEmpty) {
                             Navigator.popAndPushNamed(
                               context,
                               NamedRoute.home,
                             );
-                          }),
+                          } else {
+                            await popup(
+                              context: context,
+                              title: 'Erro ao fazer login com Google',
+                              message: result,
+                              buttonColor: AppColors.primaryGreen,
+                              backgroundColor: AppColors.secoundaryBackground,
+                            );
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),

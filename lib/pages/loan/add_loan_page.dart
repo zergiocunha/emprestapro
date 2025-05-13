@@ -173,6 +173,9 @@ class _AddLoanPageState extends State<AddLoanPage> with CustomModalSheetMixin {
                       isEditing: false,
                     ),
                   );
+
+                  if (newConsumer == null) return;
+
                   await _consumerController.insert(newConsumer: newConsumer!);
                   _loanController.consumersList.add(newConsumer);
                   setState(() {
