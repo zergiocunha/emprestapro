@@ -1,6 +1,20 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum FilterOperator {
+  isEqualTo,
+  isLessThanOrEqualTo,
+  isGreaterThan,
+  // ... outros operadores conforme necessário
+}
+
+class FilterCondition {
+  final dynamic value;
+  final FilterOperator operator;
+
+  const FilterCondition(this.value, this.operator);
+}
+
 class FirestoreService {
   FirestoreService() : _db = FirebaseFirestore.instance;
 
@@ -73,6 +87,42 @@ class FirestoreService {
     } catch (e) {
       log('FirestoreService - getByField - Error: $e');
       throw ('FirestoreService - getByField - Error: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getByFilter({
+    required String collection,
+    Map<String, FilterCondition>? filters,
+  }) async {
+    try {
+      Query query = _db.collection(collection);
+
+      if (filters != null) {
+        filters.forEach((field, condition) {
+          switch (condition.operator) {
+            case FilterOperator.isEqualTo:
+              query = query.where(field, isEqualTo: condition.value);
+              break;
+            case FilterOperator.isLessThanOrEqualTo:
+              query = query.where(field, isLessThanOrEqualTo: condition.value);
+              break;
+            case FilterOperator.isGreaterThan:
+              query = query.where(field, isGreaterThan: condition.value);
+              break;
+          }
+        });
+      }
+
+      final querySnapshot = await query.get();
+      final documents = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .where((data) => data.isNotEmpty)
+          .toList();
+
+      return documents;
+    } catch (e) {
+      log('FirestoreService - getByFilter - Error: $e');
+      throw ('FirestoreService - getByFilter - Error: $e');
     }
   }
 

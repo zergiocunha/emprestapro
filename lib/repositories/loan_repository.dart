@@ -34,6 +34,32 @@ class LoanRepository {
     }
   }
 
+  Future<DataResult<List<LoanModel>>> getOverduLoans({
+    required String creditorId,
+  }) async {
+    try {
+      final result = await firestoreService.getByFilter(
+        collection: Collections.loans,
+        filters: {
+          'creditorId ': FilterCondition(creditorId, FilterOperator.isEqualTo),
+          'dueDate': FilterCondition(
+              DateTime.now(), FilterOperator.isLessThanOrEqualTo),
+          'concluded': const FilterCondition(false, FilterOperator.isEqualTo),
+        },
+      );
+
+      if (result.isEmpty) {
+        throw const LoanDataException(code: 'not-found');
+      }
+
+      final loanModels =
+          result.map((doc) => LoanModel.fromMap(map: doc)).toList();
+      return DataResult.success(loanModels);
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
+
   Future<DataResult<bool>> insert({
     required LoanModel loanModel,
   }) async {

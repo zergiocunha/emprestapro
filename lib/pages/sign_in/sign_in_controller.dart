@@ -3,10 +3,12 @@ import 'package:emprestapro/common/extensions/data_ext.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
 import 'package:emprestapro/data/data.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:emprestapro/pages/sign_in/sign_in_state.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
+import 'package:emprestapro/services/loan_check_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -70,10 +72,11 @@ class SignInController extends ChangeNotifier {
           value: data.toJson(),
         );
 
-        result.fold(
-          (error) => _changeState(SignInErrorState(error.message)),
-          (_) => _changeState(SignInSuccessState()),
-        );
+        result.fold((error) => _changeState(SignInErrorState(error.message)),
+            (_) {
+          _changeState(SignInSuccessState());
+          startScheduleLoanCheck();
+        });
       },
     );
   }
@@ -118,15 +121,24 @@ class SignInController extends ChangeNotifier {
           );
 
           loggedUserModelData.fold(
-            (error) => _changeState(SignInErrorState(error.message)),
-            (_) => _changeState(SignInSuccessState()),
-          );
+              (error) => _changeState(SignInErrorState(error.message)), (_) {
+            _changeState(SignInSuccessState());
+            startScheduleLoanCheck();
+          });
         },
       );
       return "";
     } catch (e) {
       _changeState(SignInErrorState(e.toString()));
       return Messages.googleErrorMessages["sign_in_failed"];
+    }
+  }
+
+  void startScheduleLoanCheck() {
+    try {
+      locator.get<LoanCheckService>().initialize();
+    } on Exception catch (e) {
+      print(e.toString());
     }
   }
 

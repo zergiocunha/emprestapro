@@ -1,10 +1,12 @@
 import 'package:emprestapro/common/extensions/data_ext.dart';
 import 'package:emprestapro/common/models/creditor_model.dart';
 import 'package:emprestapro/common/models/user_model.dart';
+import 'package:emprestapro/locator.dart';
 import 'package:emprestapro/pages/sign_up/sign_up_state.dart';
 import 'package:emprestapro/repositories/creditor_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
+import 'package:emprestapro/services/loan_check_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -81,12 +83,22 @@ class SignUpController extends ChangeNotifier {
           );
 
           _changeState(SignUpSuccessState());
+
+          startScheduleLoanCheck();
         },
       );
       return true;
     } catch (e) {
       _changeState(SignUpErrorState(e.toString()));
       return false;
+    }
+  }
+
+  void startScheduleLoanCheck() {
+    try {
+      locator.get<LoanCheckService>().initialize();
+    } on Exception catch (e) {
+      print(e.toString());
     }
   }
 

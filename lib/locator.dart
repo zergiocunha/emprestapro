@@ -13,6 +13,8 @@ import 'package:emprestapro/repositories/transaction_repository.dart';
 import 'package:emprestapro/repositories/user_repository.dart';
 import 'package:emprestapro/services/auth_service.dart';
 import 'package:emprestapro/services/firestore_service.dart';
+import 'package:emprestapro/services/loan_check_service.dart';
+import 'package:emprestapro/services/notification_service.dart';
 import 'package:emprestapro/services/secure_storage.dart';
 import 'package:emprestapro/services/sqlite_service.dart';
 import 'package:emprestapro/services/storage_service.dart';
@@ -52,6 +54,12 @@ void setupDependencies() {
     () async => SQLiteService().init(),
   );
 
+  locator.registerFactory<NotificationService>(
+    () => NotificationService(),
+  );
+
+  locator.get<NotificationService>().initialize();
+
   locator.registerFactory<UserRepository>(
     () {
       return UserRepository(
@@ -90,6 +98,14 @@ void setupDependencies() {
         firestoreService: locator.get<FirestoreService>(),
       );
     },
+  );
+
+  locator.registerFactory<LoanCheckService>(
+    () => LoanCheckService(
+      locator.get<LoanRepository>(),
+      locator.get<SecureStorageService>(),
+      locator.get<CreditorRepository>(),
+    ),
   );
 
   locator.registerFactory<ProfileController>(
